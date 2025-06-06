@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import InputForm from './InputForm';
 import ButtonForm from './buttonForm';
 import axios from 'axios';
+import ImageUpload from '../../components/ImageUpload'
 
 const FormBox = () => {
     const styleButton = {
@@ -19,6 +20,7 @@ const FormBox = () => {
   const inputSenha = useRef<HTMLInputElement>(null);
   const inputCurso = useRef<HTMLInputElement>(null);
   const inputDepartamento = useRef<HTMLInputElement>(null);
+  const inputImagem = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,11 +53,18 @@ const FormBox = () => {
         alignContent: 'center',
         padding: '20px'      
       }}>
+        <ImageUpload/>
+        
         <InputForm label="Nome" placeholder="Digite seu nome" ref={inputNome} />
+        
         <InputForm label="Email" placeholder="Digite seu e-mail" ref={inputEmail} />
+        
         <InputForm label="Senha" placeholder="Digite sua senha" type="password" ref={inputSenha} />
+        
         <InputForm label="Curso" placeholder="Digite seu curso" ref={inputCurso} />
+        
         <InputForm label="Departamento" placeholder="Digite seu Departamento" ref={inputDepartamento} />
+        
         <ButtonForm label='Criar Conta' type='submit' style={styleButton} />
       </form>
     </>
