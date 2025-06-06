@@ -5,13 +5,13 @@ import ButtonForm from './buttonForm';
 import axios from 'axios';
 
 const FormBox = () => {
-  const styleButton = {
-    backgroundColor: '#A4FED3',
-    color: '#222E50',
-    borderColor: '#222E50',
-    width: '25%',
-    borderRadius: '10px',
-  };
+    const styleButton = {
+        backgroundColor: '#A4FED3', // verde
+        color: '#222E50',
+        borderColor: '#222E50',
+        width : '25%',
+        borderRadius: '10px',
+    };
 
   // Referências para cada input
   const inputNome = useRef<HTMLInputElement>(null);
@@ -41,13 +41,13 @@ const FormBox = () => {
 
   return (
     <div style={{
-      backgroundColor: '#ededed',
+      backgroundColor: '#ededed', 
       width: "50%",
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
+      justifyContent: 'space-between',  
       alignItems: 'center',
-      padding: '20px'
+      padding: '20px'      
     }}>
       <form onSubmit={handleSubmit}>
         <InputForm label="Nome" placeholder="Digite seu nome" ref={inputNome} />

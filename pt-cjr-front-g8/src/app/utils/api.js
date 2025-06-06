@@ -8,3 +8,5 @@ export async function postUsuario(data){
         const post = await api.post('/usuarios', data)
     return; 
 }
+
+
