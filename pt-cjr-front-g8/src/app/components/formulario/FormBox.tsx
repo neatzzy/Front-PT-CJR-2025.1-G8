@@ -9,7 +9,7 @@ const FormBox = () => {
         backgroundColor: '#A4FED3', // verde
         color: '#222E50',
         borderColor: '#222E50',
-        width : '25%',
+        width : '50%',
         borderRadius: '10px',
     };
 
@@ -40,16 +40,17 @@ const FormBox = () => {
   };
 
   return (
-    <div style={{
-      backgroundColor: '#ededed', 
-      width: "50%",
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',  
-      alignItems: 'center',
-      padding: '20px'      
-    }}>
-      <form onSubmit={handleSubmit}>
+    <>
+      <form onSubmit={handleSubmit} style={{
+        backgroundColor: '#ededed', 
+        width: "50%",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        alignContent: 'center',
+        padding: '20px'      
+      }}>
         <InputForm label="Nome" placeholder="Digite seu nome" ref={inputNome} />
         <InputForm label="Email" placeholder="Digite seu e-mail" ref={inputEmail} />
         <InputForm label="Senha" placeholder="Digite sua senha" type="password" ref={inputSenha} />
@@ -57,7 +58,7 @@ const FormBox = () => {
         <InputForm label="Departamento" placeholder="Digite seu Departamento" ref={inputDepartamento} />
         <ButtonForm label='Criar Conta' type='submit' style={styleButton} />
       </form>
-    </div>
+    </>
   );
 };
 
