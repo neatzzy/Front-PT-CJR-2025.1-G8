@@ -21,7 +21,7 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
         <p
           style={{
             color: '#000000',
-            fontSize: '1.25rem',
+            fontSize: '1.55rem',
           }}
         >
           {label}
@@ -44,5 +44,7 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
     )
   }
 )
+
+InputForm.displayName = 'InputForm'
 
 export default InputForm
