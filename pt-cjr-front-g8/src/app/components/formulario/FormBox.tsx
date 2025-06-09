@@ -12,6 +12,7 @@ const FormBox = () => {
         borderColor: '#222E50',
         width : '50%',
         borderRadius: '10px',
+        margin: '10px'
     };
 
   // Referências para cada input
@@ -46,12 +47,13 @@ const FormBox = () => {
       <form onSubmit={handleSubmit} style={{
         backgroundColor: '#ededed', 
         width: "50%",
+        height: 'auto',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         alignContent: 'center',
-        padding: '20px'      
+        padding: '20px',    
       }}>
         <ImageUpload/>
         

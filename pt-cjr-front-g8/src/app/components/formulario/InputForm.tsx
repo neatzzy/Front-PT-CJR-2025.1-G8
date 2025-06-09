@@ -15,8 +15,7 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
           display: 'flex',
           flexDirection: 'column',
           gap: '5px',
-          width: '75%',
-          margin: '20px'
+          width: '50%',
         }}
       >
         <p
