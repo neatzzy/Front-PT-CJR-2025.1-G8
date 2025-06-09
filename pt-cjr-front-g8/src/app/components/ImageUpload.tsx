@@ -55,7 +55,7 @@ const ImageUpload: React.FC = () => {
           height: 'auto',
           borderRadius: '50%',
           objectFit: 'cover', // mantém o conteúdo centralizado e sem distorções
-          border: '10px solid rgba(0, 0, 0, 0.1)', // borda suave
+          border: '5px solid #222E50', // borda suave
           padding: '2px',
         }}
       />
@@ -66,7 +66,7 @@ const ImageUpload: React.FC = () => {
         style={{
           width: '10%',
           height: 'fit-content',
-          border: '2px solid rgba(0, 0, 0, 0.1)', // borda suave
+          border: '2px solid #222E50', // borda suave
           borderRadius: '50%', // bordas arredondadas para suavizar o botão
           padding: '5px',
           cursor: 'pointer',
@@ -74,7 +74,7 @@ const ImageUpload: React.FC = () => {
         }}
         onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'}
         onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'}
-      >
+        >
         <img
           src={EditIcon.src}
           alt="Edit"

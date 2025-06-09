@@ -12,7 +12,7 @@ const FormBox = () => {
         borderColor: '#222E50',
         width : '50%',
         borderRadius: '10px',
-        margin: '20px'
+        margin: '10px'
     };
 
   // Referências para cada input

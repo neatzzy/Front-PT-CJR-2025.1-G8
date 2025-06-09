@@ -7,15 +7,17 @@ const novoUsuarioPage = () => {
  
       <main style={{ 
         display: 'flex',
+        padding: '0px',
         flexDirection: 'row',
-        justifyContent: 'center' }}>
+        justifyContent: 'center',
+        height: '100vh' }}>
           
           <Image
             src="/image/usuarioImagePage.png"
             alt="alunos"
             width={800}
             height={600}
-            style={{ maxWidth: '50%', height: 'auto' }} 
+            style={{ width: '50%', height: 'auto' }} 
           />
           
           <FormBox />
