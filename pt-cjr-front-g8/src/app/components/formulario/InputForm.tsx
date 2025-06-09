@@ -15,14 +15,14 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
           display: 'flex',
           flexDirection: 'column',
           gap: '5px',
-          width: '50%',
-          margin: '10px'
+          width: '75%',
+          margin: '20px'
         }}
       >
         <p
           style={{
             color: '#000000',
-            fontSize: '1.25rem',
+            fontSize: '1.55rem',
           }}
         >
           {label}
@@ -45,5 +45,7 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
     )
   }
 )
+
+InputForm.displayName = 'InputForm'
 
 export default InputForm
