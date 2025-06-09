@@ -10,20 +10,19 @@ const novoUsuarioPage = () => {
         margin: '0px',
         padding: '0px',
         boxSizing: 'border-box',
-        height: '100vh',
+        minHeight: 'fit-content',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between' }}>
           
-          <div style={{ width: '50%', height: '100%', position: 'relative' }}>
-            <Image
-              src="/image/usuarioImagePage.png"
-              alt="alunos"
-              fill
-              style={{ objectFit: 'cover' }} // ou 'contain', dependendo do efeito desejado
-            />
-          </div>
-
+          <Image
+            src="/image/usuarioImagePage.png"
+            alt="alunos"
+            width={800}
+            height={600}
+            style={{ maxWidth: '100%', height: 'auto' }} 
+          />
+          
           <FormBox />
 
       </main>
