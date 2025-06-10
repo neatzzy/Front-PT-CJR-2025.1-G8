@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import DefaultImage from "../../../public/image/upload-photo-here.png";
+import cameraImage from "../../../public/svg/cameraImage.svg";
 import EditIcon from "../../../public/svg/edit.svg";
 import UploadingAnimation from "../../../public/gif/uploading.gif";
 import { StaticImageData } from 'next/image';
 
+interface ImageUploadProps {
+  onImageChange?: (file: File | null) => void;
+}
 
-const ImageUpload: React.FC = () => {
-   const [avatarURL, setAvatarURL] = useState<string | StaticImageData>(DefaultImage);
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
+  const [avatarURL, setAvatarURL] = useState<string | StaticImageData>(cameraImage);
   const fileUploadRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,29 +30,65 @@ const ImageUpload: React.FC = () => {
       const localImageURL = URL.createObjectURL(uploadedFile);
       setAvatarURL(localImageURL); // atualiza o avatar com a imagem local
 
+      // Notifica o componente pai
+      if (onImageChange) {
+        onImageChange(uploadedFile);
+      }
+
     } catch (error) {
       console.error("Erro ao carregar imagem:", error);
     }
   };
 
-
-   return (
-    <div className="relative h-96 w-96 m-8">
-      <img 
+  return (
+    <div
+      className="
+        w-1/2
+        max-h-1/4
+        mt-12
+        m-5
+        flex
+        flex-col
+        justify-center
+        items-center
+        gap-0.5
+      "
+    >
+      <img
         src={typeof avatarURL === 'string' ? avatarURL : avatarURL.src}
         alt="Avatar"
-        className="h-96 w-96 rounded-full"
+        className="
+          w-1/2
+          h-auto
+          rounded-full
+          object-cover
+          border-[5px]
+          border-[#222E50]
+          p-0.5
+        "
       />
 
       <button
         type="button"
         onClick={handleImageUpload}
-        className="flex-center absolute bottom-12 right-14 h-9 w-9 rounded-full"
+        className="
+          w-[10%]
+          h-auto
+          border-2
+          border-[#222E50]
+          rounded-full
+          p-[5px]
+          cursor-pointer
+          transition-colors
+          duration-200
+          hover:bg-black/10
+          focus:bg-black/10
+        "
       >
         <img
           src={EditIcon.src}
           alt="Edit"
-          className="object-cover"
+          className="w-full h-auto object-cover"
         />
       </button>
 
