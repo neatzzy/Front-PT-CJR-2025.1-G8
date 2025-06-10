@@ -4,6 +4,7 @@ import InputForm from './InputForm';
 import ButtonForm from './buttonForm';
 import axios from 'axios';
 import ImageUpload from '../../components/ImageUpload'
+import { useState } from 'react';
 
 const FormBox = () => {
   // Referências para cada input
@@ -12,26 +13,36 @@ const FormBox = () => {
   const inputSenha = useRef<HTMLInputElement>(null);
   const inputCurso = useRef<HTMLInputElement>(null);
   const inputDepartamento = useRef<HTMLInputElement>(null);
-  const inputImagem = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const dados = {
-      nome: inputNome.current?.value,
-      email: inputEmail.current?.value,
-      senha: inputSenha.current?.value,
-      curso: inputCurso.current?.value,
-      departamento: inputDepartamento.current?.value
-    };
+    // Cria o FormData para envio multipart/form-data
+    const formData = new FormData();
+    if (inputNome.current?.value) formData.append('nome', inputNome.current.value);
+    if (inputEmail.current?.value) formData.append('email', inputEmail.current.value);
+    if (inputSenha.current?.value) formData.append('senha', inputSenha.current.value);
+    if (inputCurso.current?.value) formData.append('curso', inputCurso.current.value);
+    if (inputDepartamento.current?.value) formData.append('departamento', inputDepartamento.current.value);
+    if (selectedImage) formData.append('fotoPerfil', selectedImage);
 
     try {
-      const response = await axios.post('http://localhost:5000/usuario', dados); // ajuste a URL para sua rota real
+      const response = await axios.post(
+        'http://localhost:5000/usuario',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       console.log('Usuário cadastrado:', response.data);
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
     }
   };
+
 
   return (
     <form
@@ -47,7 +58,7 @@ const FormBox = () => {
         p-5
       "
     >
-      <ImageUpload />
+      <ImageUpload onImageChange={setSelectedImage} />
 
       <InputForm label="Nome" placeholder="Digite seu nome" ref={inputNome} />
 
