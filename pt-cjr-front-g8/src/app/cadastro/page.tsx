@@ -1,5 +1,5 @@
 import React from 'react'
-import FormBox from '../../components/formulario/FormBox'
+import FormBox from '../components/formulario/FormBox'
 import Image from 'next/image';
 
 const novoUsuarioPage = () => {
