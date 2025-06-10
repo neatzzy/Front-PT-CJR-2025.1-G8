@@ -28,10 +28,10 @@ const FormBox = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/usuario', dados); // ajuste a URL para sua rota real
-      console.log('Usuário cadastrado:', response.data);
-    } catch (error) {
-      console.error('Erro ao cadastrar usuário:', error);
+      const response = await axios.post('http://localhost:5000/usuario/login', dados); // ajuste a URL para sua rota real
+      console.log('Login feito com sucesso:', response.data);
+    } catch (error: any) {
+      console.log('Erro no login:', error.response?.data?.message || error.message);
     }
   };
 
