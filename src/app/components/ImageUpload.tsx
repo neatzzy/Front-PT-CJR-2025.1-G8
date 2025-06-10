@@ -6,9 +6,12 @@ import EditIcon from "../../../public/svg/edit.svg";
 import UploadingAnimation from "../../../public/gif/uploading.gif";
 import { StaticImageData } from 'next/image';
 
+interface ImageUploadProps {
+  onImageChange?: (file: File | null) => void;
+}
 
-const ImageUpload: React.FC = () => {
-   const [avatarURL, setAvatarURL] = useState<string | StaticImageData>(cameraImage);
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
+  const [avatarURL, setAvatarURL] = useState<string | StaticImageData>(cameraImage);
   const fileUploadRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,65 +30,67 @@ const ImageUpload: React.FC = () => {
       const localImageURL = URL.createObjectURL(uploadedFile);
       setAvatarURL(localImageURL); // atualiza o avatar com a imagem local
 
+      // Notifica o componente pai
+      if (onImageChange) {
+        onImageChange(uploadedFile);
+      }
+
     } catch (error) {
       console.error("Erro ao carregar imagem:", error);
     }
   };
 
-
-   return (
-    <div style={{
-      width: '50%', 
-      height: 'fit-content',
-      maxHeight: '25%', 
-      margin: '20px',
-      marginTop: '50px',
-      display: 'flex', 
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignContent: 'center',
-      alignItems: 'center',
-      gap: '2px',
-    }}>
-      <img 
+  return (
+    <div
+      className="
+        w-1/2
+        max-h-1/4
+        mt-12
+        m-5
+        flex
+        flex-col
+        justify-center
+        items-center
+        gap-0.5
+      "
+    >
+      <img
         src={typeof avatarURL === 'string' ? avatarURL : avatarURL.src}
         alt="Avatar"
-        style={{
-          width: '50%',
-          height: 'auto',
-          borderRadius: '50%',
-          objectFit: 'cover', // mantém o conteúdo centralizado e sem distorções
-          border: '5px solid #222E50', // borda suave
-          padding: '2px',
-        }}
+        className="
+          w-1/2
+          h-auto
+          rounded-full
+          object-cover
+          border-[5px]
+          border-[#222E50]
+          p-0.5
+        "
       />
 
       <button
         type="button"
         onClick={handleImageUpload}
-        style={{
-          width: '10%',
-          height: 'fit-content',
-          border: '2px solid #222E50', // borda suave
-          borderRadius: '50%', // bordas arredondadas para suavizar o botão
-          padding: '5px',
-          cursor: 'pointer',
-          transition: 'background-color 0.2s ease',
-        }}
-        onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'}
-        onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'}
-        >
+        className="
+          w-[10%]
+          h-auto
+          border-2
+          border-[#222E50]
+          rounded-full
+          p-[5px]
+          cursor-pointer
+          transition-colors
+          duration-200
+          hover:bg-black/10
+          focus:bg-black/10
+        "
+      >
         <img
           src={EditIcon.src}
           alt="Edit"
-          style={{
-            width: '100%',
-            height: 'auto',
-            objectFit: 'cover'
-          }}
+          className="w-full h-auto object-cover"
         />
       </button>
-
 
       <input
         type="file"
