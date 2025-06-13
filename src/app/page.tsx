@@ -3,15 +3,12 @@ import React, { useEffect, useState } from 'react';
 import FeedUserHeader from './components/header/FeedUserHeader';
 import CardProfessorFeed from './components/card/CardProfessorFeed';
 import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
+import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 
-async function handlerSearchChange(search : string) {
-  
-}
-
-const Feed: React.FC = () => {
+function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
   const [avaliacoesTodosProfessores, setAvaliacoesTodosProfessores] = useState<any[]>([]);
-  
+
   // Carrega os novos professores apenas uma vez ao montar
   useEffect(() => {
     const include = 'professor,disciplina,comentarios';
@@ -41,13 +38,33 @@ const Feed: React.FC = () => {
     }
   };
 
+  const selectOrderOptions = [
+    {
+      value : 'professor', 
+      text: 'Nome'
+    },
+    {
+      value : 'disciplina', 
+      text: 'Matéria'
+    },
+    {
+      value : 'updateAt', 
+      text: 'Recentes'
+    },
+    {
+      value : 'creatAt', 
+      text: 'Antigas'
+    },
+  ];
+
   return (
     <>
       <FeedUserHeader />
 
       <main className="bg-[#ededed] h-fit min-h-screen w-full flex flex-col items-center p-10">
+        
         {/* Novos Professores */}
-        <section className="w-fit min-w-full bg-green-100 h-auto">
+        <section className="w-fit min-w-full bg-green-100 h-auto h-min-fit">
           <div className="flex flex-row justify-between items-center h-fit p-2 bg-white">
             <h2 className="text-2xl center text-black">Novos Professores</h2>
 
@@ -65,20 +82,19 @@ const Feed: React.FC = () => {
                 placeholder="Buscar Professor(a)"
                 className="rounded-full px-4 py-2 border-2 border-black bg-white text-black placeholder-gray-400 w-full text-center pl-10"
                 style={{ minWidth: 250 }}
-                onChange={handlerSearchChange}
+                onChange={handlerSearchChange} 
               />
             </div>
           </div>
 
-          <div className="flex flex-row gap-6 justify-between py-1">
+          <div className="flex flex-row gap-8 justify-center py-5 h-fit">
             {avaliacoesNovosProfessores.map((avaliacao) => (
               <CardProfessorFeed
                 key={avaliacao.id}
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
-                img="/rick.png"
-                updateAt={avaliacao.updateAt || ''}
-              />
+                img="/image/girafales.jpeg"
+                updateAt={avaliacao.updateAt || ''} />
             ))}
           </div>
         </section>
@@ -89,23 +105,27 @@ const Feed: React.FC = () => {
         <section className="w-fit min-w-full bg-green-100 h-auto">
           <div className="flex flex-row justify-between items-center h-fit p-2 bg-red-100">
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
-            <button className="bg-[#00bfff] text-white px-6 py-2 rounded-lg shadow">Ordenar</button>
+            <SeletorOrdenacaoFeed 
+              defaultValue='Ordenar'
+              options={selectOrderOptions}
+            />
           </div>
-          <div className="flex flex-wrap gap-4 justify-start">
+          
+          <div className="flex flex-row gap-8 justify-center py-5 h-fit">
             {avaliacoesTodosProfessores.map((avaliacao) => (
               <CardProfessorFeed
                 key={avaliacao.id}
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
-                img="/rick.png"
-                updateAt={avaliacao.updateAt || ''}
-              />
+                img="/image/girafales.jpeg"
+                updateAt={avaliacao.updateAt || ''} />
             ))}
           </div>
         </section>
+        
       </main>
     </>
   );
-};
+}
 
 export default Feed;
