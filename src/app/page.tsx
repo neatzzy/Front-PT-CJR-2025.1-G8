@@ -20,7 +20,11 @@ function Feed() {
     
     async function fetchNovosProfessores(includeParams : string) {
       try {
-        const response = await getAllAvaliacao({ include : includeParams  });
+        const response = await getAllAvaliacao({ 
+          include : includeParams, 
+          order : orderValue  
+        });
+        
         setAvaliacoesNovosProfessores(response.data.data || []);
         setAvaliacoesTodosProfessores(response.data.data || []);
       } catch (error) {
@@ -31,7 +35,7 @@ function Feed() {
     fetchNovosProfessores(includeQuery);
   }, []);
 
-  // Atualiza apenas Todos os Professores ao buscar
+  
   const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>, includeParams : string = "") => {
     const value = e.target.value;
     setSearchValue(value);
@@ -58,15 +62,22 @@ function Feed() {
   };
 
   const hadlerOrderChange = async (value: 'asc' | 'desc', includeParams: string = "") => {
-    setOrderValue(value);
+    setOrderValue(value); // mantém o estado atualizado para futuros renders
 
     try {
-      const response = await getAllAvaliacao({ include: includeParams, search: searchValue, sort: sortValue, order: orderValue });
+      const response = await getAllAvaliacao({
+        include: includeParams,
+        search: searchValue,
+        sort: sortValue,
+        order: value, 
+      });
+
       setAvaliacoesTodosProfessores(response.data.data || []);
     } catch (error) {
       setAvaliacoesTodosProfessores([]);
     }
   };
+
 
   const formatDate = (date : Date) => {
     return new Date(date)
@@ -86,19 +97,19 @@ function Feed() {
   const selectOrderOptions = [
     {
       value : 'professor', 
-      text: 'Nome'
+      label: 'Nome'
     },
     {
       value : 'disciplina', 
-      text: 'Matéria'
+      label: 'Matéria'
     },
     {
       value : 'updatedAt', 
-      text: 'Atualização'
+      label: 'Atualização'
     },
     {
       value : 'createdAt', 
-      text: 'Criação'
+      label: 'Criação'
     },
   ];
 
@@ -109,27 +120,9 @@ function Feed() {
       <main className="bg-[#ededed] h-fit min-h-screen w-full flex flex-col items-center p-10">
         
         {/* Novos Professores */}
-        <section className="w-fit min-w-full bg-green-100 h-auto h-min-fit">
-          <div className="flex flex-row justify-between items-center h-fit p-2 bg-white">
+        <section className="w-fit min-w-full h-auto h-min-fit bg-white-100 ">
+          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
             <h2 className="text-2xl center text-black">Novos Professores</h2>
-
-            <div className="relative" style={{ minWidth: 250 }}>
-              <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                {/* Lupa SVG */}
-                <svg width="18" height="18" fill="none" stroke="gray" strokeWidth="2" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="7" />
-                  <line x1="16.5" y1="16.5" x2="21" y2="21" />
-                </svg>
-              </span>
-
-              <input
-                type="text"
-                placeholder="Buscar Professor(a)"
-                className="rounded-full px-4 py-2 border-2 border-black bg-white text-black placeholder-gray-400 w-full text-center pl-10"
-                style={{ minWidth: 250 }}
-                onChange={e => handlerSearchChange(e, includeQuery)}
-              />
-            </div>
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
@@ -148,9 +141,29 @@ function Feed() {
         <hr className="w-full border-black border-2 my-2" />
 
         {/* Todos os Professores */}
-        <section className="w-fit min-w-full bg-green-100 h-auto">
-          <div className="flex flex-row justify-between items-center h-fit p-2 bg-red-100">
+        <section className="w-fit min-w-full h-auto">
+
+           {/* Cabecalho */}
+          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
+
+            {/* Input do nome do professor */}
+            <div className="relative h-10" style={{ minWidth: '25%' }}>
+              <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none h-10">
+                {/* Lupa SVG */}
+                <svg width="18" height="18" fill="none" stroke="gray" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="16.5" y1="16.5" x2="21" y2="21" />
+                </svg>
+              </span>
+
+              <input
+                type="text"
+                placeholder="Buscar Professor(a)"
+                className="rounded-full px-4 py-2 border-2 border-black bg-white text-black placeholder-gray-400 w-full text-center pl-10 min-h-fit"
+                onChange={e => handlerSearchChange(e, includeQuery)}
+              />
+            </div>
 
             <div className='flex flex-row items-center justify-between gap-x-10 h-auto w-fit'> 
               <ToggleFeed 
