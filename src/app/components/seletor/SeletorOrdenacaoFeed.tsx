@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface Option {
   value: string;
@@ -8,23 +8,26 @@ interface Option {
 interface SelectProps {
   defaultValue?: string;
   options?: Option[];
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const SeletorOrdenacaoFeed: React.FC<SelectProps> = ({
   defaultValue = "Ordenar",
   options = [],
+  value = "",
+  onChange,
 }) => {
-  const [valorSelecionado, setValorSelecionado] = useState('');
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValorSelecionado(e.target.value);
-    console.log('Selecionado:', e.target.value); // Aqui você pode lidar com a ordenação
+    if (onChange) {
+      onChange(e.target.value);
+    }
   };
 
   return (
     <div className="w-48">
       <select
-        value={valorSelecionado}
+        value={value}
         onChange={handleChange}
         className="w-full p-2 border rounded-lg bg-white text-gray-800"
       >
@@ -42,4 +45,3 @@ const SeletorOrdenacaoFeed: React.FC<SelectProps> = ({
 };
 
 export default SeletorOrdenacaoFeed;
-

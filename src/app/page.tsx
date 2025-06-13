@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import FeedUserHeader from './components/header/FeedUserHeader';
 import CardProfessorFeed from './components/card/CardProfessorFeed';
 import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
@@ -8,13 +8,16 @@ import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
   const [avaliacoesTodosProfessores, setAvaliacoesTodosProfessores] = useState<any[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const includeQuery = 'professor,disciplina,comentarios';
 
   // Carrega os novos professores apenas uma vez ao montar
   useEffect(() => {
-    const include = 'professor,disciplina,comentarios';
-    async function fetchNovosProfessores() {
+    
+    async function fetchNovosProfessores(includeParams : string) {
       try {
-        const response = await getAllAvaliacao({ include });
+        const response = await getAllAvaliacao({ include : includeParams  });
         setAvaliacoesNovosProfessores(response.data.data || []);
         setAvaliacoesTodosProfessores(response.data.data || []);
       } catch (error) {
@@ -22,20 +25,33 @@ function Feed() {
         setAvaliacoesTodosProfessores([]);
       }
     }
-    fetchNovosProfessores();
+    fetchNovosProfessores(includeQuery);
   }, []);
 
   // Atualiza apenas Todos os Professores ao buscar
-  const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>, includeParams : string = "") => {
     const value = e.target.value;
+    setSearchValue(value);
 
-    const include = 'professor,disciplina,comentarios';
     try {
-      const response = await getAllAvaliacao({ include, search: value });
+      const response = await getAllAvaliacao({ include: includeParams, search: value, sort: selectedOrder});
       setAvaliacoesTodosProfessores(response.data.data || []);
     } catch (error) {
       setAvaliacoesTodosProfessores([]);
     }
+  };
+
+  // Função chamada toda vez que o seletor muda
+  const handleOrderChange = async (value: string, includeParams : string = "") => {
+    setSelectedOrder(value);
+
+    try {
+      const response = await getAllAvaliacao({ include: includeParams, search: searchValue, sort: value});
+      setAvaliacoesTodosProfessores(response.data.data || []);
+    } catch (error) {
+      setAvaliacoesTodosProfessores([]);
+    }
+    
   };
 
   const selectOrderOptions = [
@@ -48,12 +64,12 @@ function Feed() {
       text: 'Matéria'
     },
     {
-      value : 'updateAt', 
-      text: 'Recentes'
+      value : 'updatedAt', 
+      text: 'Atualização'
     },
     {
-      value : 'creatAt', 
-      text: 'Antigas'
+      value : 'createdAt', 
+      text: 'Criação'
     },
   ];
 
@@ -82,7 +98,7 @@ function Feed() {
                 placeholder="Buscar Professor(a)"
                 className="rounded-full px-4 py-2 border-2 border-black bg-white text-black placeholder-gray-400 w-full text-center pl-10"
                 style={{ minWidth: 250 }}
-                onChange={handlerSearchChange} 
+                onChange={e => handlerSearchChange(e, includeQuery)}
               />
             </div>
           </div>
@@ -107,7 +123,9 @@ function Feed() {
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
             <SeletorOrdenacaoFeed 
               defaultValue='Ordenar'
+              value={selectedOrder}
               options={selectOrderOptions}
+              onChange={e => handleOrderChange(e, includeQuery)}
             />
           </div>
           
