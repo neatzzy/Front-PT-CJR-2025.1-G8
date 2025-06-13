@@ -29,7 +29,7 @@ const SeletorOrdenacaoFeed: React.FC<SelectProps> = ({
       <select
         value={value}
         onChange={handleChange}
-        className="w-full p-2 border rounded-lg bg-white text-gray-800"
+        className="w-full p-2 border rounded-lg bg-white text-gray-800 h-10"
       >
         <option value="" disabled>
           {defaultValue}

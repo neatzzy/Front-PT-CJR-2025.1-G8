@@ -4,12 +4,15 @@ import FeedUserHeader from './components/header/FeedUserHeader';
 import CardProfessorFeed from './components/card/CardProfessorFeed';
 import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
 import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
+import ToggleFeed from './components/seletor/toggleFeed';
 
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
   const [avaliacoesTodosProfessores, setAvaliacoesTodosProfessores] = useState<any[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<string>("");
+  const [sortValue, setSortValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
+  const [orderValue, setOrderValue] = useState<'asc' | 'desc'>('asc');
+
   const includeQuery = 'professor,disciplina,comentarios';
 
   // Carrega os novos professores apenas uma vez ao montar
@@ -34,7 +37,7 @@ function Feed() {
     setSearchValue(value);
 
     try {
-      const response = await getAllAvaliacao({ include: includeParams, search: value, sort: selectedOrder});
+      const response = await getAllAvaliacao({ include: includeParams, search: value, sort: sortValue, order: orderValue});
       setAvaliacoesTodosProfessores(response.data.data || []);
     } catch (error) {
       setAvaliacoesTodosProfessores([]);
@@ -42,17 +45,43 @@ function Feed() {
   };
 
   // Função chamada toda vez que o seletor muda
-  const handleOrderChange = async (value: string, includeParams : string = "") => {
-    setSelectedOrder(value);
+  const hadlerSortChange = async (value: string, includeParams : string = "") => {
+    setSortValue(value);
 
     try {
-      const response = await getAllAvaliacao({ include: includeParams, search: searchValue, sort: value});
+      const response = await getAllAvaliacao({ include: includeParams, search: searchValue, sort: value, order: orderValue});
       setAvaliacoesTodosProfessores(response.data.data || []);
     } catch (error) {
       setAvaliacoesTodosProfessores([]);
     }
     
   };
+
+  const hadlerOrderChange = async (value: 'asc' | 'desc', includeParams: string = "") => {
+    setOrderValue(value);
+
+    try {
+      const response = await getAllAvaliacao({ include: includeParams, search: searchValue, sort: sortValue, order: orderValue });
+      setAvaliacoesTodosProfessores(response.data.data || []);
+    } catch (error) {
+      setAvaliacoesTodosProfessores([]);
+    }
+  };
+
+  const formatDate = (date : Date) => {
+    return new Date(date)
+      .toLocaleString('pt-BR', 
+        {
+          hour: '2-digit',
+          minute: '2-digit',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour12: false,
+          timeZone: 'UTC'
+        }
+      );
+  }
 
   const selectOrderOptions = [
     {
@@ -110,7 +139,7 @@ function Feed() {
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"
-                updatedAt={avaliacao.updatedAt || ''} 
+                updatedAt={avaliacao.updatedAt ? formatDate(avaliacao.updatedAt) : ''} 
               />
             ))}
           </div>
@@ -122,12 +151,22 @@ function Feed() {
         <section className="w-fit min-w-full bg-green-100 h-auto">
           <div className="flex flex-row justify-between items-center h-fit p-2 bg-red-100">
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
-            <SeletorOrdenacaoFeed 
-              defaultValue='Ordenar'
-              value={selectedOrder}
-              options={selectOrderOptions}
-              onChange={e => handleOrderChange(e, includeQuery)}
-            />
+
+            <div className='flex flex-row items-center justify-between gap-x-10 h-auto w-fit'> 
+              <ToggleFeed 
+                value={orderValue} 
+                onToggle={e => hadlerOrderChange(e, includeQuery)}
+              />
+
+              <SeletorOrdenacaoFeed 
+                defaultValue='Ordenar'
+                value={sortValue}
+                options={selectOrderOptions}
+                onChange={e => hadlerSortChange(e, includeQuery)}
+              />
+
+            </div>
+
           </div>
           
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
@@ -137,7 +176,7 @@ function Feed() {
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"
-                updatedAt={avaliacao.updatedAt || ''} 
+                updatedAt={avaliacao.updatedAt ? formatDate(avaliacao.updatedAt) : ''} 
               />
             ))}
           </div>
