@@ -110,7 +110,8 @@ function Feed() {
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"
-                updateAt={avaliacao.updateAt || ''} />
+                updatedAt={avaliacao.updatedAt || ''} 
+              />
             ))}
           </div>
         </section>
@@ -136,7 +137,8 @@ function Feed() {
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"
-                updateAt={avaliacao.updateAt || ''} />
+                updatedAt={avaliacao.updatedAt || ''} 
+              />
             ))}
           </div>
         </section>
