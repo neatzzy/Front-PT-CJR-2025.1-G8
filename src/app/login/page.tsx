@@ -14,16 +14,30 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); 
-    setError(""); 
 
-    //LOGICA DE SIMULAÇÃO INTEGRAÇÃO BACKEND (APENAS TESTE E SUBSTITUIR NO FUTURO)
-    if (email === "teste@cjr.com" && senha === "123") {
-      // Se o login estiver correto, navega para dashboard
-      alert("Login bem-sucedido!");
-      router.push("/dashboard"); // Alterar "/dashboard" para página principal
-    } else {
-      setError("Usuário não cadastrado");
-    }
+    setError("");
+    fetch("http://localhost:5000/usuario/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, senha }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message || "Erro ao fazer login");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // Exemplo: salvar token/localStorage se necessário
+        // localStorage.setItem("token", data.token);
+        router.push("/");
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
   };
 
   return (
@@ -90,7 +104,7 @@ export default function Home() {
               >
                 Entrar
               </button>
-              <Link href="/usuario/novo">
+              <Link href="/cadastro">
                 <button
                   type="button"
                   className="bg-[#22a27a] border border-black text-white text-lg rounded-full px-10 py-2 transition hover:bg-[#179478] font-semibold shadow-sm cursor-pointer"
