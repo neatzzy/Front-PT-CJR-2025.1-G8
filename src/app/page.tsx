@@ -78,6 +78,10 @@ function Feed() {
     }
   };
 
+  const HandlerOpenModalNewAvaliacao = async () => {
+    return 0;
+  }
+
 
   const formatDate = (date : Date) => {
     return new Date(date)
@@ -123,6 +127,14 @@ function Feed() {
         <section className="w-fit min-w-full h-auto h-min-fit bg-white-100 ">
           <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
             <h2 className="text-2xl center text-black">Novos Professores</h2>
+
+              <button
+                className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
+                onClick={HandlerOpenModalNewAvaliacao}
+              >
+                + Avaliações
+              </button>
+
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
@@ -147,6 +159,7 @@ function Feed() {
           <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
 
+            
             {/* Input do nome do professor */}
             <div className="relative h-10" style={{ minWidth: '25%' }}>
               <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none h-10">
