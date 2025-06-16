@@ -1,17 +1,20 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import {
   FaBell,
   FaSignOutAlt,
   FaBuilding,
   FaEnvelope,
   FaArrowLeft,
-  FaEdit,
-  FaTrash,
 } from "react-icons/fa";
+import Publicacoes from "./components/publicacoes";
+import EditarPerfilModal from "./components/editarPerfil";
 
 export default function PerfilPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <main className="min-h-screen w-full bg-[#e5fdf1] flex flex-col">
       {/* Header */}
@@ -20,7 +23,12 @@ export default function PerfilPage() {
         <div className="flex items-center gap-8">
           <FaBell size={28} className="text-black" />
           <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a]">
-            <Image src="/image/morty.png" alt="Avatar" width={48} height={48} />
+            <Image
+              src="/image/fotoPerfil.png"
+              alt="Avatar"
+              width={48}
+              height={48}
+            />
           </div>
           <FaSignOutAlt size={28} className="text-black" />
         </div>
@@ -54,7 +62,10 @@ export default function PerfilPage() {
             {/* Info + Botões */}
             <div className="pt-20 pb-6 px-8 flex flex-col items-center">
               <div className="flex w-full justify-end gap-4 mb-2">
-                <button className="bg-[#a4ffe2] border border-black text-[#179478] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#71d2b6] transition">
+                <button
+                  className="bg-[#a4ffe2] border border-black text-[#179478] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#71d2b6] transition"
+                  onClick={() => setModalOpen(true)}
+                >
                   Editar Perfil
                 </button>
                 <button className="bg-[#ffb6b6] border border-black text-[#b94a4a] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#ff8a8a] transition">
@@ -74,65 +85,16 @@ export default function PerfilPage() {
               </div>
             </div>
             {/* Publicações */}
-            <div className="border-t px-8 py-6">
-              <h3 className="font-bold text-lg mb-4">Publicações</h3>
-              {/* Card de publicação */}
-              {[1, 2].map((pub) => (
-                <div
-                  key={pub}
-                  className="bg-[#4fffc7] rounded-2xl p-4 mb-6 shadow flex flex-col"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#22a27a]">
-                      <Image
-                        src="/image/morty.png"
-                        alt="Avatar"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div>
-                      <span className="font-bold">Simpson Gamer</span>
-                      <span className="text-gray-600 text-sm ml-2">
-                        {pub === 1
-                          ? "17/04/2024, às 21:42 · Games Eduuu · Gameplay"
-                          : "15/04/2024, às 21:42 · Player Barbie · Youtuber"}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-gray-800 mb-2">
-                    Você está no canal Simpson Gamer. Esse canal é bom demais!
-                  </p>
-                  <div className="flex items-center gap-4 text-gray-700 mt-1">
-                    <span className="flex items-center gap-1 text-base">
-                      <svg
-                        width="20"
-                        height="20"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="inline"
-                      >
-                        <circle cx="10" cy="10" r="8" />
-                      </svg>
-                      {pub === 1 ? "2 comentários" : "5 comentários"}
-                    </span>
-                    <button className="ml-auto hover:text-[#179478]">
-                      <FaEdit />
-                    </button>
-                    <button className="hover:text-[#b94a4a]">
-                      <FaTrash />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Publicacoes />
           </div>
         </div>
 
         {/* Espaço lateral direito */}
         <aside className="w-1/5 bg-[#e5fdf1]" />
       </section>
+
+      {/* Modal de edição de perfil */}
+      <EditarPerfilModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </main>
   );
 }
