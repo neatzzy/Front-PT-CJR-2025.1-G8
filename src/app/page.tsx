@@ -5,6 +5,7 @@ import CardProfessorFeed from './components/card/CardProfessorFeed';
 import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
 import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 import ToggleFeed from './components/seletor/toggleFeed';
+import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
 
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
@@ -12,6 +13,7 @@ function Feed() {
   const [sortValue, setSortValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [orderValue, setOrderValue] = useState<'asc' | 'desc'>('asc');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const includeQuery = 'professor,disciplina,comentarios';
 
@@ -78,11 +80,6 @@ function Feed() {
     }
   };
 
-  const HandlerOpenModalNewAvaliacao = async () => {
-    return 0;
-  }
-
-
   const formatDate = (date : Date) => {
     return new Date(date)
       .toLocaleString('pt-BR', 
@@ -117,6 +114,8 @@ function Feed() {
     },
   ];
 
+
+
   return (
     <>
       <FeedUserHeader />
@@ -130,7 +129,7 @@ function Feed() {
 
               <button
                 className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
-                onClick={HandlerOpenModalNewAvaliacao}
+                onClick={() => setModalOpen(true)}
               >
                 + Avaliações
               </button>
@@ -207,7 +206,8 @@ function Feed() {
             ))}
           </div>
         </section>
-        
+        <CriarAvaliacaoModal open={modalOpen} onClose={() => setModalOpen(false)} />
+          
       </main>
     </>
   );
