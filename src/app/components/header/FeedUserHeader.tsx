@@ -4,57 +4,26 @@ import Image from 'next/image';
 
 const FeedUserHeader = () => {
   return (
-   <header style={{
-    backgroundColor: '#a4fed3',
-    height: '10%',
-    width: '100%',
-    padding: '10px', 
-    display: 'flex', 
-    flexDirection: 'row',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-   }}>
-
-    <div
-      style={{
-        height: '100%',
-        width: 'auto',
-        display: 'flex',
-        alignItems: 'center',
-        marginRight: '20px', // Espaço entre a imagem e o conteúdo à direita
-      }}
+    <header
+      className="bg-[#a4fed3] w-full py-2 px-4 flex flex-row flex-wrap justify-between items-center h-[10%]"
     >
-      <Image
-        src="/image/UnbLogo.png"
-        alt="LogoUnB"
-        width={60}
-        height={60}
-      />
-    </div>
-      <a href='/login'>
-        <button 
-          style={{
-            backgroundColor: '#00ABED',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'solid 2px #ffffff',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            fontSize: '1.2rem',
-            transition: 'background-color 0.3s ease',
-            height: '100%',
-            width: 'fit-content',
-            minWidth: '35px',
-          }}
-          
-        > 
+      <div className="flex items-center mr-5 h-full w-auto">
+        <Image
+          src="/image/UnbLogo.png"
+          alt="LogoUnB"
+          width={60}
+          height={60}
+        />
+      </div>
+      <a href="/login">
+        <button
+          className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
+        >
           Login
         </button>
       </a>
-
-   </header>
-  )
-}
+    </header>
+  );
+};
 
 export default FeedUserHeader;
