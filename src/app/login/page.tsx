@@ -16,7 +16,7 @@ export default function Home() {
     e.preventDefault(); 
 
     setError("");
-    fetch("http://localhost:5000/usuario/login", {
+    fetch("http://localhost:5000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,8 +31,6 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        // Exemplo: salvar token/localStorage se necessário
-        // localStorage.setItem("token", data.token);
         router.push("/");
       })
       .catch((err) => {
