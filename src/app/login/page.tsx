@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -31,6 +32,7 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
+        localStorage.setItem('token', data.access_token);
         router.push("/");
       })
       .catch((err) => {
