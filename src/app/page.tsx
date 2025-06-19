@@ -18,11 +18,11 @@ function Feed() {
   const [modalTeacherOpen, setModalTeacherOpen] = useState<boolean>(false);
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
 
-  const includeQuery = 'professor,disciplina,comentarios';
-
+  
   const token = localStorage.getItem("token");
-
+  
   useEffect(() => {
+    
     async function fetchProfessores(includeParams: string) {
       try {
         const responseAllTeacher = await getAllAvaliacao({
@@ -37,7 +37,7 @@ function Feed() {
           order: 'desc',
           sort: 'createdAt'
         });
-
+        
         setAvaliacoesNovosProfessores(responseNewTeacher.data.data || []);
         setAvaliacoesTodosProfessores(responseAllTeacher.data.data || []);
       } catch (error) {
@@ -45,6 +45,7 @@ function Feed() {
         setAvaliacoesTodosProfessores([]);
       }
     }
+    const includeQuery = 'professor,disciplina,comentarios';
 
     fetchProfessores(includeQuery);
   }, 
@@ -100,7 +101,7 @@ function Feed() {
           <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 rounded-full">
             <h2 className="text-2xl center text-black">Novos Professores</h2>
             
-            <Protected >
+            <Protected singin={true}>
                <div className='flex flex-row w-fit gap-x-10 h-fit'>
                   <button
                       className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
