@@ -97,7 +97,7 @@ function Feed() {
 
         {/* Novos Professores */}
         <section className="w-fit min-w-full h-auto h-min-fit bg-white-100 ">
-          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
+          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 rounded-full">
             <h2 className="text-2xl center text-black">Novos Professores</h2>
             
             <Protected >
@@ -137,7 +137,8 @@ function Feed() {
         {/* Todos os Professores */}
         <section className="w-fit min-w-full h-auto">
 
-          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 border rounded-full">
+           {/* Cabecalho */}
+          <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 rounded-full">
             <h2 className="text-2xl center text-black">Todos os Professores</h2>
            
             <input
@@ -174,8 +175,7 @@ function Feed() {
             ))}
           </div>
         </section>
-
-        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
+        <CriarAvaliacaoModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       </main>
     </>
