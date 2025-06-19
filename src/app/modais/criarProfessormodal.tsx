@@ -1,24 +1,86 @@
-import React from "react";
-import Image from "next/image";
+import React, { useState, useRef } from "react";
+import UploadImageProfessor from "./uploadImageProfessor";
+import { X } from "lucide-react";
 
 interface CriarProfessorModalProps {
     open: boolean;
     onClose: () => void;
 }
 
-export default function CriarProfessorModal({open, onClose,}: CriarProfessorModalProps) {
-    if (!open) return null;
+export default function CriarProfessorModal({ open, onClose /*backend*/ }: CriarProfessorModalProps) {
+  const [nome, setNome] = useState('');
+  const [departamento, setDepartamento] = useState('');
+  const [disciplinas, setDisciplinas] = useState('');
+  const [fotoFile, setFotoFile] = useState<File | null>(null);
+  const [fotoPreviewUrl, setFotoPreviewUrl] = useState<string | null>(null); 
 
-    return (
-        <div className="fixed inset-0 felx justify-center items-center transition-colors
-            visible bg-black/30">
-            <h1 className="text-2xl text-center font-bold mt-10">Novo Professor</h1>
-            <button
-            onClick={onClose}
-            className="absolute top-2 right-2 p-1 rounded-lg
-                text-gray-400 bg-white hover:bg-gray-50 hover:text-gray-600 cursor-pointer">
-            X
-            </button>
-        </div>
-    );
-};
+  const handlePhotoSelect = (file: File | null, previewUrl: string | null) => {
+    setFotoFile(file);
+    setFotoPreviewUrl(previewUrl);
+  };
+
+  const handleSave = () => {
+    const professorData = { nome, departamento, disciplinas, fotoFile };
+    console.log("Dados do professor a serem salvos:", professorData);
+    onClose();
+    setNome('');
+    setDepartamento('');
+    setDisciplinas('');
+    setFotoFile(null);
+    setFotoPreviewUrl(null);
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-center items-center transition-colors bg-black/30">
+      <div className="relative bg-gray-100 p-6 sm:p-8 md:p-10 rounded-lg shadow-2xl w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3
+       max-h-[90vh] overflow-y-auto flex flex-col items-center">
+       
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 p-1 rounded-lg text-gray-400 hover:bg-emerald-500 hover:text-white
+          cursor-pointer">    
+            <X />
+        </button>
+
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">Adicionar Novo Professor</h1> 
+
+        <UploadImageProfessor
+          onFileSelect={handlePhotoSelect} />
+
+        <input
+          type="text"
+          placeholder="Nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400
+          focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"/>
+
+        <input
+          type="text"
+          placeholder="Departamento"
+          value={departamento}
+          onChange={(e) => setDepartamento(e.target.value)}
+          className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400
+          focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"/>
+
+        <input
+          type="text"
+          placeholder="Disciplina(s)"
+          value={disciplinas}
+          onChange={(e) => setDisciplinas(e.target.value)}
+          className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400
+          focus:outline-none focus:ring-2 focus:ring-blue-400 mb-6"/>
+
+        <button
+          onClick={handleSave}
+          className="w-full px-6 py-3 rounded-lg font-bold text-lg bg-green-600 text-white hover:bg-green-700
+          focus:outline-none focus:ring-2 focus:ring-green-500">
+          Salvar
+        </button>
+
+      </div>
+    </div>
+  );
+}
