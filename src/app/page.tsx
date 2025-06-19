@@ -106,14 +106,14 @@ function Feed() {
                       className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
                       onClick={() => setModalTeacherOpen(true)}
                   >
-                      + Professores
+                      Adicionar Professor
                   </button>
 
                   <button
                       className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
                       onClick={() => setModalAssessmentOpen(true)}
                   >
-                      + Avaliações
+                      Adicionar Avaliação
                   </button>
               </div>
             </Protected>
@@ -175,7 +175,7 @@ function Feed() {
             ))}
           </div>
         </section>
-        <CriarAvaliacaoModal open={modalOpen} onClose={() => setModalOpen(false)} />
+        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
 
       </main>
     </>
