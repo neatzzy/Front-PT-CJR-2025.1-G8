@@ -4,17 +4,16 @@ import Image from 'next/image';
 import Protected from '../Protected';
 import { FaBell, FaSignOutAlt} from "react-icons/fa";
 import { getCurrentUserAuthorized } from "../../utils/api/apiUser"
-import { api } from "@/app/utils/api/api";
 
 
 function FeedUserHeader(){
   const [user, setUser] = useState<Record<string, any> | null>(null);
   
+  
   useEffect(() => {
-   const fetchUser = async () => {
-      if (typeof window === "undefined") return;
-
+    const fetchUser = async () => {
       const token = localStorage.getItem("token");
+      
       if (!token) return;
 
       try {
@@ -27,12 +26,19 @@ function FeedUserHeader(){
     fetchUser();
   }, []);
 
+  async function handlerLogout() {
+    localStorage.removeItem('token');
+    window.location.href = "/"; 
+  } 
+
+  async function handlerPerfilUser() {
+     window.location.href = `/usuario/${user ? user.id : null}`;
+  }
+
   const avatarSrc =
     user && user.fotoPerfil
       ? `data:image/png;base64,${user.fotoPerfil}`
       : "/image/fotoPerfil.png";
-
-  const nome = user ? user.nome : 'Não tem';
 
   return (
     <header
@@ -47,8 +53,6 @@ function FeedUserHeader(){
         />
       </div>
 
-      <h1 className="color-back font-3"> {nome}</h1>
-      
       <Protected singin={false}>
         <a href="/login">
           <button
@@ -61,16 +65,26 @@ function FeedUserHeader(){
 
       <Protected singin={true}>
           <div className="flex items-center gap-8">
-            <FaBell size={28} className="text-black" />
+            <FaBell 
+              size={28} 
+              className="text-black" 
+            />
+            
             <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a]">
               <Image
                 src={avatarSrc}
                 alt="Avatar"
                 width={48}
                 height={48}
+                onClick={handlerPerfilUser}
               />
             </div>
-            <FaSignOutAlt size={28} className="text-black" />
+
+            <FaSignOutAlt 
+              size={28} 
+              className="text-black" 
+              onClick={handlerLogout}
+            />
           </div>
       </Protected>
     </header>

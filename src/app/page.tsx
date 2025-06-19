@@ -19,8 +19,6 @@ function Feed() {
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
 
   
-  const token = localStorage.getItem("token");
-  
   useEffect(() => {
     
     async function fetchProfessores(includeParams: string) {
