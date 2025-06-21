@@ -8,6 +8,7 @@ import { FaBell, FaSignOutAlt, FaArrowLeft } from "react-icons/fa";
 import Perfil from "./components/Perfil";
 import Publicacoes from "./components/Publicacoes";
 import EditarPerfilModal from "./components/EditarPerfil";
+import FeedUserHeader from "@/app/components/header/FeedUserHeader";
 
 export default function PerfilPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -44,22 +45,7 @@ export default function PerfilPage() {
   return (
     <main className="min-h-screen w-full bg-[#ededed] flex flex-col">
       {/* Header */}
-      <header className="w-full h-20 bg-[#a4ffe2] flex items-center justify-between px-8">
-        <Image src="/image/UnbLogo.png" alt="UnB Logo" width={60} height={60} />
-        <div className="flex items-center gap-8">
-          <FaBell size={28} className="text-black" />
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a]">
-            <Image
-              src={perfilData.avatarUrl || "/image/fotoPerfil.png"}
-              alt="Avatar"
-              width={48}
-              height={48}
-            />
-          </div>
-          <FaSignOutAlt size={28} className="text-black" />
-        </div>
-      </header>
-
+      <FeedUserHeader />
       {/* Conteúdo central */}
       <section className="flex flex-1 w-full">
         {/* Sidebar esquerda */}
@@ -93,7 +79,6 @@ export default function PerfilPage() {
         {/* Sidebar direita */}
         <aside className="w-1/5 bg-[#ededed]" />
       </section>
-
       {/* Modal de edição de perfil */}
       <EditarPerfilModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </main>
