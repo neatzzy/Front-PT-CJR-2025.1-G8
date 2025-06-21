@@ -42,7 +42,7 @@ export default function PerfilPage() {
   }
 
   return (
-    <main className="min-h-screen w-full bg-[#e5fdf1] flex flex-col">
+    <main className="min-h-screen w-full bg-[#ededed] flex flex-col">
       {/* Header */}
       <header className="w-full h-20 bg-[#a4ffe2] flex items-center justify-between px-8">
         <Image src="/image/UnbLogo.png" alt="UnB Logo" width={60} height={60} />
@@ -63,7 +63,7 @@ export default function PerfilPage() {
       {/* Conteúdo central */}
       <section className="flex flex-1 w-full">
         {/* Sidebar esquerda */}
-        <aside className="w-1/5 bg-[#e5fdf1] flex flex-col items-center pt-10">
+        <aside className="w-1/5 bg-[#ededed] flex flex-col items-center pt-10">
           <button
             className="bg-white rounded-full p-3 shadow-md border border-black"
             onClick={() => router.back()}
@@ -91,7 +91,7 @@ export default function PerfilPage() {
         </div>
 
         {/* Sidebar direita */}
-        <aside className="w-1/5 bg-[#e5fdf1]" />
+        <aside className="w-1/5 bg-[#ededed]" />
       </section>
 
       {/* Modal de edição de perfil */}
