@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
-import Perfil from "./components/Perfil";
-import Publicacoes from "./components/Publicacoes";
-import EditarPerfilModal from "./components/EditarPerfil";
-import ExcluirPerfilModal from "./components/ExcluirPerfil";
+import Perfil from "../../components/usuario/Perfil";
+import Publicacoes from "../../components/usuario/Publicacoes";
+import EditarPerfilModal from "../../components/usuario/EditarPerfil";
+import ExcluirPerfilModal from "../../components/usuario/ExcluirPerfil";
 import FeedUserHeader from "@/app/components/header/FeedUserHeader";
 import { FaArrowLeft } from "react-icons/fa";
 import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
