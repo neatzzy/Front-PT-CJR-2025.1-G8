@@ -1,8 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import Select from "react-select";
+import AsyncSelect from "react-select/async";
 import { X } from "lucide-react";
 import CriarProfessorModal from "./criarProfessormodal";
+import { fetchProfessors, fetchDisciplina, createAvaliacao } from "../utils/api/apiModalAvaliacao";
 
 interface CriarAvaliacaoModalProps {
     open: boolean;
@@ -13,12 +14,65 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
     if (!open) return null;
 
     const [CriarProfessorOpen, setCriarProfessorOpen] = useState<boolean>(false);
+    const [selectedProfessor, setSelectedProfessor] = useState<any>(null);
+    const [selectedDisciplina, setSelectedDisciplina] = useState<any>(null);
+    const [avaliacaoText, setAvaliacaoText] = useState<string>("");
+
     const handleOpenCriarProfessorModal = () => {
         setCriarProfessorOpen(true);
     };
     const handleCloseCriarProfessorModal = () => {
         setCriarProfessorOpen(false);
     }
+
+    const ProfessorOptions = async (inputValue: string) => {
+        if (inputValue.length < 2 && !selectedProfessor) { 
+            return [];
+        }
+        const professors = await fetchProfessors(inputValue); 
+        const Options = professors.map((prof: any) => ({
+            value: prof.id,
+            label: prof.nome,
+        }));
+        return Options;
+    };
+
+    const DisciplinaOptions = async (inputValue: string) => {
+        if (inputValue.length < 2 && !selectedDisciplina) { 
+            return []; 
+        }
+        const disciplina = await fetchDisciplina(inputValue); 
+        const Options = disciplina.map((prof: any) => ({
+            value: prof.id,
+            label: prof.nome,
+        }));
+        return Options;
+    };
+
+    const handleSubmit = async () => {
+        if (!selectedProfessor || !selectedDisciplina || !avaliacaoText) {
+            alert("Por favor, preencha todos os campos.");
+            return;
+        }
+        const avaliacaoData = {
+            professorId: selectedProfessor.value,
+            disciplinaId: selectedDisciplina.value,
+            avaliacao: avaliacaoText,
+        }
+        try {
+            const response = await createAvaliacao(avaliacaoData, /*autenticacion*/)
+            console.log('Avaliação enviada com sucesso!', response);
+            alert("Avaliação criada com sucesso!");
+            onClose();
+            setSelectedProfessor(null);
+            setSelectedDisciplina(null);
+            setAvaliacaoText("");
+        }
+        catch (error) {
+            alert("Erro ao criar avaliação.");
+        }
+    };
+
 
     return (
         <div className="fixed inset-0 z-50 flex justify-center items-center transition-colors bg-black/80">
@@ -38,20 +92,26 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                     <X />
                 </button>
 
-                <Select
+                <AsyncSelect
                     className="cursor-pointer"
-                    options={[]} //backend 
+                    loadOptions={ProfessorOptions}
+                    defaultOptions
+                    cacheOptions
                     placeholder="Nome do professor"
                     isClearable 
                     isSearchable 
+                    onChange={(option) => setSelectedProfessor(option)}
                     />
 
-                <Select
+                <AsyncSelect
                     className="cursor-pointer"
-                    options={[]} //backend
+                    loadOptions={DisciplinaOptions} 
+                    defaultOptions
+                    cacheOptions
                     placeholder="Disciplina"
                     isClearable
                     isSearchable
+                    onChange={(option) => setSelectedDisciplina(option)}
                     />
 
                 <div className="bg-white rounded-lg p-2 border border-gray-400">
@@ -64,6 +124,8 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                     className="w-full h-57 p-4 rounded-lg border border-gray-200 text-gray-800
                             resize-y"
                     placeholder="Escreva sua avaliação aqui..."
+                    value={avaliacaoText}
+                    onChange={(e) => setAvaliacaoText(e.target.value)}
                 ></textarea>
                 </div>
 
@@ -74,7 +136,7 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                         Adicionar Professor
                 </button>
                 <button
-                    // onClick={handleSubmit} // submeter o formulário
+                    onClick={handleSubmit}
                     className="
                     px-6 py-2 rounded-lg font-semibold
                     bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer">
