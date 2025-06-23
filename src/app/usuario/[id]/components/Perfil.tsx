@@ -10,6 +10,7 @@ interface PerfilProps {
   avatarUrl: string;
   onEditar: () => void;
   onExcluir: () => void;
+  showButtons?: boolean;
 }
 
 export default function Perfil({
@@ -20,6 +21,7 @@ export default function Perfil({
   avatarUrl,
   onEditar,
   onExcluir,
+  showButtons,
 }: PerfilProps) {
   const avatarSrc = avatarUrl ? avatarUrl : "/image/fotoPerfil.png";
 
@@ -49,22 +51,24 @@ export default function Perfil({
               <span>{email}</span>
             </div>
           </div>
-          <div className="flex flex-col gap-2 items-end">
-            <button
-              className="bg-[#a4ffe2] border border-black text-[#179478] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#71d2b6] transition active:scale-95 w-[140px]"
-              onClick={onEditar}
-              type="button"
-            >
-              Editar Perfil
-            </button>
-            <button
-              className="bg-[#ffb6b6] border border-black text-[#b94a4a] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#ff8a8a] transition active:scale-95 w-[140px]"
-              onClick={onExcluir}
-              type="button"
-            >
-              Excluir Perfil
-            </button>
-          </div>
+          {showButtons && (
+            <div className="flex flex-col gap-2 items-end">
+              <button
+                className="bg-[#a4ffe2] border border-black text-[#179478] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#71d2b6] transition active:scale-95 w-[140px]"
+                onClick={onEditar}
+                type="button"
+              >
+                Editar Perfil
+              </button>
+              <button
+                className="bg-[#ffb6b6] border border-black text-[#b94a4a] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#ff8a8a] transition active:scale-95 w-[140px]"
+                onClick={onExcluir}
+                type="button"
+              >
+                Excluir Perfil
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

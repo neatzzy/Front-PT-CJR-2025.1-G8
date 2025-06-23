@@ -1,79 +1,155 @@
 "use client";
 
-import Image from "next/image";
-import {
-  FaBell,
-  FaSignOutAlt,
-  FaBuilding,
-  FaEnvelope,
-  FaArrowLeft,
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter, useParams } from "next/navigation";
+import Perfil from "./components/Perfil";
+import Publicacoes from "./components/Publicacoes";
+import EditarPerfilModal from "./components/EditarPerfil";
+import ExcluirPerfilModal from "./components/ExcluirPerfil";
+import FeedUserHeader from "@/app/components/header/FeedUserHeader";
+import { FaArrowLeft } from "react-icons/fa";
+import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 
-function Publicacoes() {
-  const publicacoes = [
-    {
-      id: 1,
-      nome: "Simpson Gamer",
-      avatar: "/image/fotoPerfil.png",
-      info: "17/04/2024, às 21:42 · Games Eduuu · Gameplay",
-      texto: "Você está no canal Simpson Gamer. Esse canal é bom demais!",
-      comentarios: 2,
-    },
-    {
-      id: 2,
-      nome: "Simpson Gamer",
-      avatar: "/image/fotoPerfil.png",
-      info: "15/04/2024, às 21:42 · Player Barbie · Youtuber",
-      texto: "Você está no canal Simpson Gamer. Esse canal é bom demais!",
-      comentarios: 5,
-    },
-  ];
+export default function PerfilPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [excluirOpen, setExcluirOpen] = useState(false);
+  const [excluirLoading, setExcluirLoading] = useState(false);
+  const [excluirError, setExcluirError] = useState("");
+  const [perfilData, setPerfilData] = useState<any>(null);
+  const [isOwner, setIsOwner] = useState(false);
+  const router = useRouter();
+  const params = useParams();
+
+  useEffect(() => {
+    async function fetchPerfil() {
+      try {
+        const id =
+          typeof params.id === "string"
+            ? params.id
+            : Array.isArray(params.id)
+              ? params.id[0]
+              : "";
+        if (!id) {
+          setPerfilData(null);
+          setIsOwner(false);
+          return;
+        }
+        const res = await axios.get(`http://localhost:5000/usuario/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setPerfilData(res.data);
+
+        // Verifica se o usuário logado é o dono do perfil usando a nova API
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userRes = await getCurrentUserAuthorized(token);
+          setIsOwner(userRes.data.id === res.data.id);
+        } else {
+          setIsOwner(false);
+        }
+      } catch (err: any) {
+        setPerfilData(null);
+        setIsOwner(false);
+      }
+    }
+    fetchPerfil();
+  }, [params.id]);
+
+  async function handleExcluirPerfil(senha: string) {
+    setExcluirLoading(true);
+    setExcluirError("");
+    try {
+      const id =
+        typeof params.id === "string"
+          ? params.id
+          : Array.isArray(params.id)
+            ? params.id[0]
+            : "";
+      if (!id) {
+        setExcluirLoading(false);
+        setExcluirError("ID do usuário não encontrado.");
+        return;
+      }
+      await axios.delete(`http://localhost:5000/usuario/${id}`, {
+        data: { senha },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setExcluirLoading(false);
+      setExcluirOpen(false);
+      // Redireciona para a página inicial ou login após exclusão
+      router.push("/");
+    } catch (err: any) {
+      setExcluirLoading(false);
+      setExcluirError(
+        err && err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "Erro ao excluir perfil. Tente novamente.",
+      );
+    }
+  }
+
+  if (!perfilData) {
+    return (
+      <main className="min-h-screen w-full bg-[#e5fdf1] flex items-center justify-center">
+        <span>Carregando...</span>
+      </main>
+    );
+  }
 
   return (
-    <div className="border-t px-8 py-6">
-      <h3 className="font-bold text-lg mb-4">Publicações</h3>
-      {publicacoes.map((pub) => (
-        <div
-          key={pub.id}
-          className="bg-[#4fffc7] rounded-2xl p-4 mb-6 shadow flex flex-col"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#22a27a]">
-              <Image src={pub.avatar} alt="Avatar" width={40} height={40} />
-            </div>
-            <div>
-              <span className="font-bold">{pub.nome}</span>
-              <span className="text-gray-600 text-sm ml-2">{pub.info}</span>
-            </div>
-          </div>
-          <p className="text-gray-800 mb-2">{pub.texto}</p>
-          <div className="flex items-center gap-4 text-gray-700 mt-1">
-            <span className="flex items-center gap-1 text-base">
-              <svg
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="inline"
-              >
-                <circle cx="10" cy="10" r="8" />
-              </svg>
-              {pub.comentarios} comentários
-            </span>
-            <button className="ml-auto hover:text-[#179478]">
-              <FaEdit />
-            </button>
-            <button className="hover:text-[#b94a4a]">
-              <FaTrash />
-            </button>
+    <main className="min-h-screen w-full bg-[#ededed] flex flex-col">
+      {/* Header */}
+      <FeedUserHeader />
+      {/* Conteúdo central */}
+      <section className="flex flex-1 w-full">
+        {/* Sidebar esquerda */}
+        <aside className="w-1/5 bg-[#ededed] flex flex-col items-center pt-10">
+          <button
+            className="bg-white rounded-full p-3 shadow-md border border-black"
+            onClick={() => router.back()}
+          >
+            <FaArrowLeft size={32} />
+          </button>
+        </aside>
+
+        {/* Conteúdo principal centralizado */}
+        <div className="flex-1 flex flex-col items-center pt-10">
+          <div>
+            <Perfil
+              nome={perfilData.nome}
+              curso={perfilData.curso}
+              departamento={perfilData.departamento}
+              email={perfilData.email}
+              avatarUrl={perfilData.avatarUrl}
+              onEditar={() => setModalOpen(true)}
+              onExcluir={() => setExcluirOpen(true)}
+              showButtons={isOwner}
+            />
+            <Publicacoes />
           </div>
         </div>
-      ))}
-    </div>
+
+        {/* Sidebar direita */}
+        <aside className="w-1/5 bg-[#ededed]" />
+      </section>
+      {/* Modal de edição de perfil */}
+      <EditarPerfilModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      {/* Modal de exclusão de perfil */}
+      <ExcluirPerfilModal
+        open={excluirOpen}
+        onClose={() => {
+          setExcluirOpen(false);
+          setExcluirError("");
+        }}
+        onConfirm={handleExcluirPerfil}
+        loading={excluirLoading}
+        error={excluirError}
+      />
+    </main>
   );
 }
-
-export default Publicacoes;
