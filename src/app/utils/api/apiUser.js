@@ -13,3 +13,11 @@ export async function getCurrentUserAuthorized(token) {
 
     return await api.get(endpoint, config);
 }
+
+export async function getUserById(id) {
+    const endpoint = '/usuario';
+
+    const router = endpoint + "/" + id;
+
+    return await api.get(router);
+}

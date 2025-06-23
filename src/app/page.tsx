@@ -6,7 +6,6 @@ import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
 import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 import ToggleFeed from './components/seletor/toggleFeed';
 import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
-import { useRouter } from "next/navigation";
 import Protected from './components/Protected';
 
 function Feed() {
