@@ -138,7 +138,11 @@ export default function PerfilPage() {
         <aside className="w-1/5 bg-[#ededed]" />
       </section>
       {/* Modal de edição de perfil */}
-      <EditarPerfilModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditarPerfilModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        userId={perfilData.id}
+      />
       {/* Modal de exclusão de perfil */}
       <ExcluirPerfilModal
         open={excluirOpen}
