@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -16,7 +17,7 @@ export default function Home() {
     e.preventDefault(); 
 
     setError("");
-    fetch("http://localhost:5000/usuario/login", {
+    fetch("http://localhost:5000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,8 +32,7 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        // Exemplo: salvar token/localStorage se necessário
-        // localStorage.setItem("token", data.token);
+        localStorage.setItem('token', data.access_token);
         router.push("/");
       })
       .catch((err) => {
