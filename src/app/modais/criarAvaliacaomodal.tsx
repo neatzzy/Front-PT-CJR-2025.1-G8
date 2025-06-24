@@ -42,9 +42,9 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
             return []; 
         }
         const disciplina = await fetchDisciplina(inputValue); 
-        const Options = disciplina.map((prof: any) => ({
-            value: prof.id,
-            label: prof.nome,
+        const Options = disciplina.map((disciplina: any) => ({
+            value: disciplina.id,
+            label: disciplina.nome,
         }));
         return Options;
     };

@@ -1,14 +1,11 @@
 import axios from "axios";
+import { File } from "buffer";
 
 interface ProfessorData {
     professorNome: string;
-    professorId: number;
-    departamentoNome: string;
-    departamentoId: number;
-    disciplinaNome?: string;
-    disciplinaId?: number;
-
-    
+    professorDepartamento: string;
+    professorDisciplina: string;
+    professorFoto?: File;
 }
 
 export async function createProfessor(professorData: ProfessorData){

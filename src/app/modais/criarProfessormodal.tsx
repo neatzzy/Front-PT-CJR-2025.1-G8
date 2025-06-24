@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import UploadImageProfessor from "./uploadImageProfessor";
 import { X } from "lucide-react";
+import { createProfessor } from "../utils/api/apiModalProfessor";
 
 interface CriarProfessorModalProps {
     open: boolean;
@@ -10,7 +11,7 @@ interface CriarProfessorModalProps {
 export default function CriarProfessorModal({ open, onClose /*backend*/ }: CriarProfessorModalProps) {
   const [nome, setNome] = useState('');
   const [departamento, setDepartamento] = useState('');
-  const [disciplinas, setDisciplinas] = useState('');
+  const [disciplina, setDisciplina] = useState('');
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoPreviewUrl, setFotoPreviewUrl] = useState<string | null>(null); 
 
@@ -19,15 +20,30 @@ export default function CriarProfessorModal({ open, onClose /*backend*/ }: Criar
     setFotoPreviewUrl(previewUrl);
   };
 
-  const handleSave = () => {
-    const professorData = { nome, departamento, disciplinas, fotoFile };
-    console.log("Dados do professor a serem salvos:", professorData);
-    onClose();
-    setNome('');
-    setDepartamento('');
-    setDisciplinas('');
-    setFotoFile(null);
-    setFotoPreviewUrl(null);
+  const handleSave = async () => {
+    if (!nome || !departamento || !disciplina) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+    const professorData = {
+      professorNome: nome,
+      professorDepartamento: departamento,
+      professorDisciplina: disciplina,
+      professorFoto: fotoFile,
+    }
+    try {
+        const response = await createProfessor(professorData, /*autenticacaozinha*/)
+        console.log('Professor cadastrado com sucesso!', response);
+        alert("Professor disponivel para avaliação!");
+        onClose();
+        setNome("")
+        setDepartamento("");
+        setDisciplina("");
+        setFotoPreviewUrl(null);
+    }
+    catch (error) {
+        alert("Erro ao cadastrar Professor.")
+    }
   };
 
   if (!open) return null;
@@ -68,8 +84,8 @@ export default function CriarProfessorModal({ open, onClose /*backend*/ }: Criar
         <input
           type="text"
           placeholder="Disciplina(s)"
-          value={disciplinas}
-          onChange={(e) => setDisciplinas(e.target.value)}
+          value={disciplina}
+          onChange={(e) => setDisciplina(e.target.value)}
           className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400
           focus:outline-none focus:ring-2 focus:ring-blue-400 mb-6"/>
 
