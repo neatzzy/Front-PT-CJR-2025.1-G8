@@ -18,7 +18,7 @@ const PerfilProfessor = ({
   avatar
 }: PerfilProfessorProps) => {
 
-    const avatarSrc = avatar ? avatar : "/image/fotoPerfil.png";
+    const avatarSrc = avatar ? `data:image/png;base64,${avatar}` : "/image/fotoPerfil.png";
 
   return (
     <div className='w-full h-fit flex flex-col '> 

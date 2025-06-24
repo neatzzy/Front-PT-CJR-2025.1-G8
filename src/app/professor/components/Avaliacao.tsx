@@ -1,6 +1,10 @@
-import React from 'react'
-import { FaRegComment } from 'react-icons/fa';
+import React, { useState } from 'react'
+import { FaRegComment , FaRegEdit} from 'react-icons/fa';
+import { IoIosTrash } from "react-icons/io";
 import Image from 'next/image';
+import Protected from '@/app/components/Protected';
+import Comentario from './Comentario';
+import { formatDate } from '@/app/utils/format';
 
 interface avaliacao{
     id : number;
@@ -11,7 +15,6 @@ interface avaliacao{
     disciplina : string; 
     conteudo : string;
     comentarios : any[];
-
 }
 
 const Avaliacao = ({
@@ -24,7 +27,23 @@ const Avaliacao = ({
     conteudo, 
     comentarios
 } : avaliacao) => {
-     const avatarSrc = avatarUser ? avatarUser : "/image/fotoPerfil.png";
+    const avatarSrc = avatarUser ? `data:image/png;base64,${avatarUser}`: "/image/fotoPerfil.png";
+    const [comentariosAbertos, setComentariosAbertos] = useState(false);
+
+    // Handlers para os ícones
+    const handleCommentClick = () => {
+        setComentariosAbertos((prev) => !prev);
+    };
+
+    const handleEditClick = () => {
+        // ação ao clicar em editar
+        alert('Editar avaliação ' + id);
+    };
+
+    const handleTrashClick = () => {
+        // ação ao clicar em deletar
+        alert('Deletar avaliação ' + id);
+    };
 
   return (
     <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-x1 items-start justify-center gap-3'>
@@ -41,7 +60,6 @@ const Avaliacao = ({
                 <p className='text-gray-700'> · {updatedAt} </p>
                 <p className='text-gray-700'> · {nomeProfessor} </p>
                 <p className='text-gray-700'> · {disciplina} </p>
-
             </div>
 
             {/* conteudo da avalicao */}
@@ -50,12 +68,48 @@ const Avaliacao = ({
             </div>
 
             {/* comentarios da avalicao */}
-            <div className='flex flex-row gap-4 h-fit w-full items-center justify-start'>
-                < FaRegComment />
-                <p className='w-fit text-black text-base'>{comentarios.length} comentários</p>
+            <div className='flex flex-row gap-4 h-fit w-full items-center justify-between'>
+                <div className='flex flex-row gap-4 w-fit items-center'>
+                    <FaRegComment 
+                        color="black" 
+                        size={28} 
+                        style={{ cursor: "pointer" }} 
+                        onClick={handleCommentClick}
+                    />
+                    <p className='w-fit text-black text-base'>{comentarios.length} comentários</p>
+                </div>
 
+                <Protected singin={true}>
+                    <div className='flex flex-row gap-4 w-fit items-center'>
+                        <FaRegEdit 
+                            color="black" 
+                            size={28} 
+                            style={{ cursor: "pointer" }} 
+                            onClick={handleEditClick}
+                        />
+                        <IoIosTrash 
+                            color="black" 
+                            size={32} 
+                            style={{ cursor: "pointer" }} 
+                            onClick={handleTrashClick}
+                        />
+                    </div>
+                </Protected>
             </div>
 
+            {/* Renderiza comentários se aberto */}
+            {comentariosAbertos && (
+                <div className='w-full w-min-fit h-fit p-2'>
+                    {comentarios.map(comentario => (
+                        <Comentario 
+                            key={comentario.id}
+                            conteudo={comentario.conteudo || ''}
+                            updatedAt={formatDate(comentario.updatedAt)}
+                            userId={comentario.usuarioID}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
       
     </div>

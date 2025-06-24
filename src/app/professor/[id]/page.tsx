@@ -67,20 +67,29 @@ function ProfessorPage() {
 
     const avaliacao = {};
 
+    function handlerBackPage() {
+        window.history.back();
+    }
+
     return (
         <>
             <FeedUserHeader />
 
             <main className="min-h-screen w-full bg-[#ededed] flex flex-row justify-center">
+
                 {/* Sidebar esquerda */}
                 <aside className="w-1/5 bg-[#ededed] flex flex-col items-end p-10">
                     <button
                         className="bg-white rounded-full p-3 shadow-md border border-black"
 
                     >
-                        <FaArrowLeft size={32} />
+                        <FaArrowLeft 
+                            size={32} 
+                            onClick={handlerBackPage}
+                        />
                     </button>
                 </aside>
+
                 {/* Conteúdo principal centralizado */}
                 <div className="flex flex-col items-start w-1/2 h-fit">
 
