@@ -121,6 +121,7 @@ function Feed() {
             {avaliacoesNovosProfessores.map((avaliacao) => (
               <CardProfessorFeed
                 key={avaliacao.id}
+                professorID = {avaliacao?.professorID}
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"
@@ -165,6 +166,7 @@ function Feed() {
             {avaliacoesTodosProfessores.map((avaliacao) => (
               <CardProfessorFeed
                 key={avaliacao.id}
+                professorID = {avaliacao?.professorID}
                 nome={avaliacao.professor?.nome}
                 disciplina={avaliacao.disciplina?.nome}
                 img="/image/girafales.jpeg"

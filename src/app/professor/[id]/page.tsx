@@ -3,17 +3,18 @@
 import React, {useEffect, useState} from 'react'
 import FeedUserHeader from '@/app/components/header/FeedUserHeader'
 import { FaArrowLeft } from "react-icons/fa";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import PerfilProfessor from '../components/PerfilProfessor';
 import Avaliacao from '../components/Avaliacao';
 import { getProfessorById } from '../../utils/api/apiProfessor'
 import { getAllAvaliacao } from '@/app/utils/api/apiAvaliacao';
+import { formatDate } from '@/app/utils/format';
 
 
 interface Professor {
     id : number;
     nome : string;
-    deparamento : string;
+    departamento : string;
     disciplinas : any[];
     avatar : string;
 }
@@ -28,7 +29,7 @@ function ProfessorPage() {
     useEffect(() => {
         async function fetchPerfil() {
             const { id } = params;
-            const includeQuery = "?include=professor,disciplina,comentarios,usuario";
+            const includeQuery = "?include=disciplina,comentarios,usuario";
             
             try{
 
@@ -37,11 +38,24 @@ function ProfessorPage() {
                     include:includeQuery,
                 };
 
-                const response = await getAllAvaliacao(queryParams);
+                const responseProfessor = await getProfessorById(id);
 
-                setAvaliacoes(response.data);
+                const professorData = {
+                    id : responseProfessor.data.id,
+                    nome : responseProfessor.data.nome,
+                    departamento : responseProfessor.data.departamento,
+                    disciplinas : responseProfessor.data.disciplinas.map((item: { disciplina: { nome: string } }) => item.disciplina.nome), 
+                    avatar : "",
+                };
+                
+                setProfessor(professorData);
+
+                const responseAvalicao = await getAllAvaliacao(queryParams);
+
+                setAvaliacoes(responseAvalicao.data?.data);
 
             }catch(err){
+                setProfessor(null)
                 setAvaliacoes([]);
             }
             
@@ -72,7 +86,7 @@ function ProfessorPage() {
 
                     <PerfilProfessor
                         nome={professor?.nome || 'Jacinto'}
-                        departamento={professor?.deparamento || 'Cicaralho'}
+                        departamento={professor?.departamento || 'Cicaralho'}
                         disciplinas={professor?.disciplinas || ['segurança','estrutura de dados', 'Banco de dados', 'sistemas de informação']}
                         avatar={professor?.avatar || ''}
                     />
@@ -86,24 +100,21 @@ function ProfessorPage() {
                             <h3 className='text-black font-bold'> Avaliações </h3>
                         </div>
 
-
-                        <Avaliacao 
-                            id={avaliacao.id ? avaliacao.id : 1}
-                            avatarUser={avaliacao.avatarUser || ""}
-                            nomeUser={avaliacao.nomeUser || "baiano"}
-                            updatedAt={avaliacao.updatedAt || "15/06"}
-                            nomeProfessor={avaliacao.nomeProfessor || "Jacinto"}
-                            disciplina={avaliacao.disciplina || "Segurança"}
-                            conteudo={avaliacao.conteudo || "kdghbaskjdgbhaksdb"}
-                            comentarios={avaliacao.comentarios || []}
-                        />
-
                         {
-                        /*avaliacoes.map(avaliacao => (
-                        ))
-                        */
+                            avaliacoes.map(avaliacao => (
+                                <Avaliacao 
+                                    key={avaliacao.id}
+                                    id={avaliacao.id}
+                                    avatarUser={avaliacao.usuario.fotoPerfil}
+                                    nomeUser={avaliacao.usuario.nome}
+                                    updatedAt={formatDate(avaliacao.updatedAt)}
+                                    nomeProfessor={professor?.nome || ""}
+                                    disciplina={avaliacao.disciplina.nome}
+                                    conteudo={avaliacao.conteudo}
+                                    comentarios={avaliacao.comentarios || []}
+                                />
+                            ))
                         }
-
 
                     </div>
                 </div>
