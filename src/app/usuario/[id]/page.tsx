@@ -51,7 +51,6 @@ export default function PerfilPage() {
           setIsOwner(false);
         }
       } catch (err: any) {
-        setPerfilData(null);
         setIsOwner(false);
       }
     }
