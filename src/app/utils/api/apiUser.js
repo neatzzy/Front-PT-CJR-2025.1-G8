@@ -43,13 +43,3 @@ export async function deleteUsuario(id, token) {
 
   return await api.delete(endpoint);
 }
-
-export async function deleteWithPassword(id, senha, token) {
-  const endpoint = `/usuario/${id}`;
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  return await api.delete(endpoint, senha);
-}
