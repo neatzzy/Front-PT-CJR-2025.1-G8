@@ -74,6 +74,7 @@ const FormBox = () => {
         label="Criar Conta"
         type="submit"
         className="
+          cursor-pointer
           bg-[#A4FED3]
           text-[#222E50]
           border

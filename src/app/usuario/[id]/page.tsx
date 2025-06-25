@@ -15,11 +15,7 @@ import {
 
 export default function PerfilPage() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [excluirOpen, setExcluirOpen] = useState(false);
-  const [excluirLoading, setExcluirLoading] = useState(false);
-  const [excluirError, setExcluirError] = useState("");
   const [perfilData, setPerfilData] = useState<any>(null);
-  const [isOwner, setIsOwner] = useState(false);
   const router = useRouter();
   const params = useParams();
 
@@ -51,7 +47,6 @@ export default function PerfilPage() {
         }
       } catch (err: any) {
         setPerfilData(null);
-        setIsOwner(false);
       }
     }
     fetchPerfil();
@@ -109,8 +104,9 @@ export default function PerfilPage() {
               email={perfilData.email}
               avatarUrl={perfilData.fotoPerfil}
               onEditar={() => setModalOpen(true)}
-              onExcluir={() => setExcluirOpen(true)}
-              showButtons={isOwner}
+              onExcluir={() => {
+                /* ação de excluir */
+              }}
             />
             <Publicacoes />
           </div>
