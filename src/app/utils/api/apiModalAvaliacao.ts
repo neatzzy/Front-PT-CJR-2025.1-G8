@@ -6,6 +6,12 @@ interface AvaliacaoData {
     avaliacao: string
 }
 
+interface Disciplina {
+    id: number;
+    nome: string;
+    // Adicione outros campos conforme necessário
+}
+
 export async function createAvaliacao(avaliacaoData: AvaliacaoData){
     try{
         const response = await axios.post("http://localhost:5000/avaliacao", avaliacaoData);
@@ -25,12 +31,16 @@ export async function fetchProfessors(searchTerm: string = '') {
     }
     }
 
-export async function fetchDisciplina(searchTerm: string = '') {
+export async function fetchDisciplinasbyProfessor(
+    professorId: string,
+    searchTerm: string = '',
+): Promise<Disciplina[]> {
     try {
-        const response = await axios.get(`http://localhost:5000/disciplina?search=${searchTerm}`);
+        const response = await axios.get<Disciplina[]>(`http://localhost:5000/professor-disciplina/professor/${professorId}/disciplinas?search=${searchTerm}`);
         return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar disciplinas:", error);
+    }catch (error) {
+        console.error(`Erro ao buscar disciplinas para o professor ${professorId}:`, error);
         return [];
     }
+
 }

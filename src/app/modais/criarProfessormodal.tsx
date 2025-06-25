@@ -8,7 +8,7 @@ interface CriarProfessorModalProps {
     onClose: () => void;
 }
 
-export default function CriarProfessorModal({ open, onClose /*backend*/ }: CriarProfessorModalProps) {
+export default function CriarProfessorModal({ open, onClose}: CriarProfessorModalProps) {
   const [nome, setNome] = useState('');
   const [departamento, setDepartamento] = useState('');
   const [disciplina, setDisciplina] = useState('');
@@ -21,18 +21,19 @@ export default function CriarProfessorModal({ open, onClose /*backend*/ }: Criar
   };
 
   const handleSave = async () => {
-    if (!nome || !departamento || !disciplina) {
+    if (!nome || !departamento || !disciplina.trim()) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
-    const professorData = {
-      professorNome: nome,
-      professorDepartamento: departamento,
-      professorDisciplina: disciplina,
-      professorFoto: fotoFile,
-    }
+    const formData = new FormData();
+      formData.append('nome', nome);
+      formData.append('departamento', departamento);
+      formData.append('disciplinaName', disciplina);
+      if (fotoFile) {
+        formData.append('fotoPerfil', fotoFile);
+      }
     try {
-        const response = await createProfessor(professorData, /*autenticacaozinha*/)
+        const response = await createProfessor(formData, /*autenticacaozinha*/)
         console.log('Professor cadastrado com sucesso!', response);
         alert("Professor disponivel para avaliação!");
         onClose();
@@ -40,6 +41,7 @@ export default function CriarProfessorModal({ open, onClose /*backend*/ }: Criar
         setDepartamento("");
         setDisciplina("");
         setFotoPreviewUrl(null);
+        setFotoFile(null);
     }
     catch (error) {
         alert("Erro ao cadastrar Professor.")

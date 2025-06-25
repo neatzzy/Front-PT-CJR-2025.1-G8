@@ -1,16 +1,15 @@
 import axios from "axios";
-import { File } from "buffer";
 
 interface ProfessorData {
     professorNome: string;
     professorDepartamento: string;
     professorDisciplina: string;
-    professorFoto?: File;
+    professorFoto?: File | null;
 }
 
-export async function createProfessor(professorData: ProfessorData){
+export async function createProfessor(data: FormData){
     try{
-        const response = await axios.post("http://localhost:5000/professor", professorData);
+        const response = await axios.post("http://localhost:5000/professor", data);
         return response.data;
     } catch(error) {
         console.error("Erro ao enviar professor API", error);

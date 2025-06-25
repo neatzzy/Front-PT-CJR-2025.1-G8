@@ -3,11 +3,16 @@ import { useState } from "react";
 import AsyncSelect from "react-select/async";
 import { X } from "lucide-react";
 import CriarProfessorModal from "./criarProfessormodal";
-import { fetchProfessors, fetchDisciplina, createAvaliacao } from "../utils/api/apiModalAvaliacao";
+import { fetchProfessors, createAvaliacao, fetchDisciplinasbyProfessor } from "../utils/api/apiModalAvaliacao";
 
 interface CriarAvaliacaoModalProps {
     open: boolean;
     onClose: () => void;
+}
+
+interface SelectOption {
+    value: any;
+    label: string;
 }
 
 export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModalProps) {
@@ -37,18 +42,19 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
         return Options;
     };
 
-    const DisciplinaOptions = async (inputValue: string) => {
-        if (inputValue.length < 2 && !selectedDisciplina) { 
-            return []; 
-        }
-        const disciplina = await fetchDisciplina(inputValue); 
-        const Options = disciplina.map((disciplina: any) => ({
-            value: disciplina.id,
-            label: disciplina.nome,
-        }));
-        return Options;
-    };
-
+    const DisciplinaOptions = async (inputValue: string, callback: (options: SelectOption[]) => void): Promise<SelectOption[]> => {
+  if (!selectedProfessor) {
+    return [];
+  }
+  try {
+    const disciplinas = await fetchDisciplinasbyProfessor(selectedProfessor.value, inputValue);
+    const formattedOptions: SelectOption[] = disciplinas.map((disc: any) => ({ value: disc.id, label: disc.nome }));
+    return formattedOptions;
+  } catch (error) {
+    console.error("Erro ao carregar opções de disciplina:", error);
+    return [];
+  }
+};
     const handleSubmit = async () => {
         if (!selectedProfessor || !selectedDisciplina || !avaliacaoText) {
             alert("Por favor, preencha todos os campos.");
@@ -100,18 +106,21 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                     placeholder="Nome do professor"
                     isClearable 
                     isSearchable 
-                    onChange={(option) => setSelectedProfessor(option)}
+                    onChange={(option) => {setSelectedProfessor(option); setSelectedDisciplina(null);}}
+                    value={selectedProfessor}
                     />
 
                 <AsyncSelect
                     className="cursor-pointer"
                     loadOptions={DisciplinaOptions} 
-                    defaultOptions
+                    defaultOptions={false}
                     cacheOptions
-                    placeholder="Disciplina"
+                    placeholder={selectedProfessor ? "Selecione a Disciplina" : "Selecione um Professor Primeiro"}
                     isClearable
                     isSearchable
-                    onChange={(option) => setSelectedDisciplina(option)}
+                    onChange={setSelectedDisciplina}
+                    value={selectedDisciplina}
+                    isDisabled={!selectedProfessor}
                     />
 
                 <div className="bg-white rounded-lg p-2 border border-gray-400">
