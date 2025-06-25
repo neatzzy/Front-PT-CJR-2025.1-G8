@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { getAllAvaliacao } from "@/app/utils/api/apiAvaliacao";
+import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Publicacoes() {
@@ -16,6 +17,7 @@ export default function Publicacoes() {
         : "";
   const [publicacoes, setPublicacoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     async function fetchPublicacoes() {
@@ -24,7 +26,6 @@ export default function Publicacoes() {
           usuarioID: userId,
           include: "usuario,professor,disciplina,comentarios",
         });
-        // O backend retorna { data: [...] }
         setPublicacoes(res.data?.data || []);
       } catch {
         setPublicacoes([]);
@@ -33,6 +34,23 @@ export default function Publicacoes() {
       }
     }
     if (userId) fetchPublicacoes();
+  }, [userId]);
+
+  useEffect(() => {
+    async function checkOwner() {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userRes = await getCurrentUserAuthorized(token);
+          setIsOwner(userRes.data.id?.toString() === userId?.toString());
+        } else {
+          setIsOwner(false);
+        }
+      } catch {
+        setIsOwner(false);
+      }
+    }
+    if (userId) checkOwner();
   }, [userId]);
 
   if (loading) return <div className="px-8 py-6">Carregando...</div>;
@@ -93,12 +111,16 @@ export default function Publicacoes() {
                 {Array.isArray(pub.comentarios) ? pub.comentarios.length : 0}{" "}
                 comentários
               </span>
-              <button className="ml-auto hover:text-[#179478]">
-                <FaEdit />
-              </button>
-              <button className="hover:text-[#b94a4a]">
-                <FaTrash />
-              </button>
+              {isOwner && (
+                <>
+                  <button className="ml-auto hover:text-[#179478]">
+                    <FaEdit />
+                  </button>
+                  <button className="hover:text-[#b94a4a]">
+                    <FaTrash />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))

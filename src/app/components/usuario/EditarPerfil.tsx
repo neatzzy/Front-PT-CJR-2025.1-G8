@@ -1,7 +1,8 @@
 import Image from "next/image";
-import axios from "axios";
-import React, { useState } from "react";
-import { FaCamera } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { updateUsuario } from "@/app/utils/api/apiUser";
+import { useRouter } from "next/navigation";
+import ImageUpload from "../ImageUpload"; // Importa o componente de upload
 
 interface EditarPerfilModalProps {
   open: boolean;
@@ -22,16 +23,24 @@ export default function EditarPerfilModal({
   userId,
   initialData,
 }: EditarPerfilModalProps) {
-  const [nome, setNome] = useState(initialData?.nome || "");
-  const [email, setEmail] = useState(initialData?.email || "");
-  const [curso, setCurso] = useState(initialData?.curso || "");
-  const [departamento, setDepartamento] = useState(
-    initialData?.departamento || "",
-  );
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [curso, setCurso] = useState("");
+  const [departamento, setDepartamento] = useState("");
   const [senhaAtual, setSenhaAtual] = useState("");
-  const [novaSenha, setNovaSenha] = useState("");
-  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  // Preenche os campos com os dados atuais ao abrir o modal
+  useEffect(() => {
+    if (open && initialData) {
+      setNome(initialData.nome);
+      setEmail(initialData.email);
+      setCurso(initialData.curso);
+      setDepartamento(initialData.departamento);
+    }
+  }, [open, initialData]);
 
   if (!open) return null;
 
@@ -39,16 +48,39 @@ export default function EditarPerfilModal({
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.put(`/api/usuarios/${userId}`, {
-        nome,
-        email,
-        curso,
-        departamento,
-        senhaAtual,
-        novaSenha,
-        confirmarSenha,
-      });
+      const token = localStorage.getItem("token");
+
+      // Sempre envia os valores antigos caso o campo esteja vazio
+      const data: any = {
+        nome: nome || initialData?.nome,
+        email: email || initialData?.email,
+        curso: curso || initialData?.curso,
+        departamento: departamento || initialData?.departamento,
+        senha: senhaAtual,
+      };
+
+      if (!senhaAtual) {
+        alert("Digite sua senha para confirmar as alterações.");
+        setLoading(false);
+        return;
+      }
+
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append("nome", data.nome);
+        formData.append("email", data.email);
+        formData.append("curso", data.curso);
+        formData.append("departamento", data.departamento);
+        formData.append("senha", senhaAtual);
+        formData.append("avatar", avatarFile);
+        await updateUsuario(userId, formData, token);
+      } else {
+        await updateUsuario(userId, data, token);
+      }
       onClose();
+      alert(
+        "Perfil atualizado com sucesso! Atualize a página para ver as mudanças.",
+      );
     } catch (err) {
       alert("Erro ao atualizar perfil");
     } finally {
@@ -67,72 +99,96 @@ export default function EditarPerfilModal({
         >
           &times;
         </button>
+        {/* Substitui o bloco do avatar pelo componente de upload */}
         <div className="relative flex flex-col items-center mb-6">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#ff4fc7] bg-white flex items-center justify-center">
-            <Image
-              src={initialData?.avatarUrl || "/image/fotoPerfil.png"}
-              alt="Avatar"
-              width={128}
-              height={128}
-            />
-          </div>
-          <button className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 border border-gray-300 shadow">
-            <FaCamera size={28} className="text-black" />
-          </button>
+          <ImageUpload onImageChange={setAvatarFile} />
         </div>
         <form
           className="flex flex-col gap-4 w-full items-center"
           onSubmit={handleSubmit}
         >
-          <input
-            type="text"
-            placeholder="Nome"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Curso"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={curso}
-            onChange={(e) => setCurso(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Departamento"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={departamento}
-            onChange={(e) => setDepartamento(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Senha atual"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={senhaAtual}
-            onChange={(e) => setSenhaAtual(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Nova senha"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={novaSenha}
-            onChange={(e) => setNovaSenha(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Confirmar nova senha"
-            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-          />
+          <div className="flex w-full gap-4">
+            <div className="flex-1 flex flex-col">
+              <label
+                className="font-semibold text-gray-700 mb-1 ml-1"
+                htmlFor="nome"
+              >
+                Nome
+              </label>
+              <input
+                id="nome"
+                type="text"
+                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <label
+                className="font-semibold text-gray-700 mb-1 ml-1"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex w-full gap-4">
+            <div className="flex-1 flex flex-col">
+              <label
+                className="font-semibold text-gray-700 mb-1 ml-1"
+                htmlFor="curso"
+              >
+                Curso
+              </label>
+              <input
+                id="curso"
+                type="text"
+                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
+                value={curso}
+                onChange={(e) => setCurso(e.target.value)}
+              />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <label
+                className="font-semibold text-gray-700 mb-1 ml-1"
+                htmlFor="departamento"
+              >
+                Departamento
+              </label>
+              <input
+                id="departamento"
+                type="text"
+                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
+                value={departamento}
+                onChange={(e) => setDepartamento(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex w-full gap-4">
+            <div className="flex-1 flex flex-col">
+              <label
+                className="font-semibold text-gray-700 mb-1 ml-1"
+                htmlFor="senhaAtual"
+              >
+                Digite sua senha para confirmar as alterações
+              </label>
+              <input
+                id="senha"
+                type="password"
+                className="w-105 h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
+                value={senhaAtual}
+                onChange={(e) => setSenhaAtual(e.target.value)}
+              />
+            </div>
+            <div className="flex-1" />
+          </div>
           <button
             type="submit"
             disabled={loading}
