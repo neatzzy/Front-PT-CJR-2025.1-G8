@@ -1,24 +1,85 @@
 import React from "react";
 import { useState } from "react";
-import Select from "react-select";
+import AsyncSelect from "react-select/async";
 import { X } from "lucide-react";
 import CriarProfessorModal from "./criarProfessormodal";
+import { fetchProfessors, createAvaliacao, fetchDisciplinasbyProfessor } from "../utils/api/apiModalAvaliacao";
 
 interface CriarAvaliacaoModalProps {
     open: boolean;
     onClose: () => void;
+    authToken?: string | undefined;
 }
 
-export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModalProps) {
+interface SelectOption {
+    value: any;
+    label: string;
+}
+
+export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAvaliacaoModalProps) {
     if (!open) return null;
 
     const [CriarProfessorOpen, setCriarProfessorOpen] = useState<boolean>(false);
+    const [selectedProfessor, setSelectedProfessor] = useState<any>(null);
+    const [selectedDisciplina, setSelectedDisciplina] = useState<any>(null);
+    const [avaliacaoText, setAvaliacaoText] = useState<string>("");
+
     const handleOpenCriarProfessorModal = () => {
         setCriarProfessorOpen(true);
     };
     const handleCloseCriarProfessorModal = () => {
         setCriarProfessorOpen(false);
     }
+
+    const ProfessorOptions = async (inputValue: string) => {
+        if (inputValue.length < 2 && !selectedProfessor) { 
+            return [];
+        }
+        const professors = await fetchProfessors(inputValue, authToken); 
+        const Options = professors.map((prof: any) => ({
+            value: prof.id,
+            label: prof.nome,
+        }));
+        return Options;
+    };
+
+    const DisciplinaOptions = async (inputValue: string, callback: (options: SelectOption[]) => void): Promise<SelectOption[]> => {
+  if (!selectedProfessor) {
+    return [];
+  }
+  try {
+    const disciplinas = await fetchDisciplinasbyProfessor(selectedProfessor.value, inputValue, authToken);
+    const formattedOptions: SelectOption[] = disciplinas.map((disc: any) => ({ value: disc.id, label: disc.nome }));
+    return formattedOptions;
+  } catch (error) {
+    console.error("Erro ao carregar opções de disciplina:", error);
+    return [];
+  }
+};
+    const handleSubmit = async () => {
+        if (!selectedProfessor || !selectedDisciplina || !avaliacaoText) {
+            alert("Por favor, preencha todos os campos.");
+            return;
+        }
+        const avaliacaoData = {
+            professorId: selectedProfessor.value,
+            disciplinaId: selectedDisciplina.value,
+            avaliacao: avaliacaoText,
+        }
+        try {
+            const response = await createAvaliacao(avaliacaoData, authToken || undefined);
+            console.log('Avaliação enviada com sucesso!', response);
+            alert("Avaliação criada com sucesso!");
+            onClose();
+            setSelectedProfessor(null);
+            setSelectedDisciplina(null);
+            setAvaliacaoText("");
+        }
+        catch (error) {
+            alert("Erro ao criar avaliação.");
+        }
+    };
+
 
     return (
         <div className="fixed inset-0 z-50 flex justify-center items-center transition-colors bg-black/80">
@@ -38,20 +99,29 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                     <X />
                 </button>
 
-                <Select
+                <AsyncSelect
                     className="cursor-pointer"
-                    options={[]} //backend 
+                    loadOptions={ProfessorOptions}
+                    defaultOptions
+                    cacheOptions
                     placeholder="Nome do professor"
                     isClearable 
                     isSearchable 
+                    onChange={(option) => {setSelectedProfessor(option); setSelectedDisciplina(null);}}
+                    value={selectedProfessor}
                     />
 
-                <Select
+                <AsyncSelect
                     className="cursor-pointer"
-                    options={[]} //backend
-                    placeholder="Disciplina"
+                    loadOptions={DisciplinaOptions} 
+                    defaultOptions={false}
+                    cacheOptions
+                    placeholder={selectedProfessor ? "Selecione a Disciplina" : "Selecione um Professor Primeiro"}
                     isClearable
                     isSearchable
+                    onChange={setSelectedDisciplina}
+                    value={selectedDisciplina}
+                    isDisabled={!selectedProfessor}
                     />
 
                 <div className="bg-white rounded-lg p-2 border border-gray-400">
@@ -64,6 +134,8 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                     className="w-full h-57 p-4 rounded-lg border border-gray-200 text-gray-800
                             resize-y"
                     placeholder="Escreva sua avaliação aqui..."
+                    value={avaliacaoText}
+                    onChange={(e) => setAvaliacaoText(e.target.value)}
                 ></textarea>
                 </div>
 
@@ -74,7 +146,7 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
                         Adicionar Professor
                 </button>
                 <button
-                    // onClick={handleSubmit} // submeter o formulário
+                    onClick={handleSubmit}
                     className="
                     px-6 py-2 rounded-lg font-semibold
                     bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer">
