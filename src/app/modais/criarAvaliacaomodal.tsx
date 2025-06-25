@@ -8,6 +8,7 @@ import { fetchProfessors, createAvaliacao, fetchDisciplinasbyProfessor } from ".
 interface CriarAvaliacaoModalProps {
     open: boolean;
     onClose: () => void;
+    authToken?: string | undefined;
 }
 
 interface SelectOption {
@@ -15,7 +16,7 @@ interface SelectOption {
     label: string;
 }
 
-export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModalProps) {
+export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAvaliacaoModalProps) {
     if (!open) return null;
 
     const [CriarProfessorOpen, setCriarProfessorOpen] = useState<boolean>(false);
@@ -34,7 +35,7 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
         if (inputValue.length < 2 && !selectedProfessor) { 
             return [];
         }
-        const professors = await fetchProfessors(inputValue); 
+        const professors = await fetchProfessors(inputValue, authToken); 
         const Options = professors.map((prof: any) => ({
             value: prof.id,
             label: prof.nome,
@@ -47,7 +48,7 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
     return [];
   }
   try {
-    const disciplinas = await fetchDisciplinasbyProfessor(selectedProfessor.value, inputValue);
+    const disciplinas = await fetchDisciplinasbyProfessor(selectedProfessor.value, inputValue, authToken);
     const formattedOptions: SelectOption[] = disciplinas.map((disc: any) => ({ value: disc.id, label: disc.nome }));
     return formattedOptions;
   } catch (error) {
@@ -66,7 +67,7 @@ export default function CriarAvaliacaoModal({open, onClose,}: CriarAvaliacaoModa
             avaliacao: avaliacaoText,
         }
         try {
-            const response = await createAvaliacao(avaliacaoData, /*autenticacion*/)
+            const response = await createAvaliacao(avaliacaoData, authToken || undefined);
             console.log('Avaliação enviada com sucesso!', response);
             alert("Avaliação criada com sucesso!");
             onClose();

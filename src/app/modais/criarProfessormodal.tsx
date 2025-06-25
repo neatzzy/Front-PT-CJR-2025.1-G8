@@ -6,9 +6,10 @@ import { createProfessor } from "../utils/api/apiModalProfessor";
 interface CriarProfessorModalProps {
     open: boolean;
     onClose: () => void;
+    authToken?: string | null;
 }
 
-export default function CriarProfessorModal({ open, onClose}: CriarProfessorModalProps) {
+export default function CriarProfessorModal({ open, onClose, authToken}: CriarProfessorModalProps) {
   const [nome, setNome] = useState('');
   const [departamento, setDepartamento] = useState('');
   const [disciplina, setDisciplina] = useState('');
@@ -33,7 +34,7 @@ export default function CriarProfessorModal({ open, onClose}: CriarProfessorModa
         formData.append('fotoPerfil', fotoFile);
       }
     try {
-        const response = await createProfessor(formData, /*autenticacaozinha*/)
+        const response = await createProfessor(formData, authToken || undefined);
         console.log('Professor cadastrado com sucesso!', response);
         alert("Professor disponivel para avaliação!");
         onClose();
