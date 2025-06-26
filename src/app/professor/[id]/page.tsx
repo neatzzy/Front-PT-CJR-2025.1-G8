@@ -113,9 +113,9 @@ function ProfessorPage() {
                     <hr className="w-full border-black border-1" />
 
                     {/* Avaliacoes */}
-                    <div className="h-fit bg-white p-4 w-full flex flex-col justify-start items-center ">
+                    <div className="h-fit bg-white p-4 w-full flex flex-col g-5 justify-start items-center ">
                         <div className='w-full'>
-                            <h3 className='text-black font-bold'> Avaliações </h3>
+                            <h3 className='text-black font-bold mb-5'> Avaliações </h3>
                         </div>
 
                         {
