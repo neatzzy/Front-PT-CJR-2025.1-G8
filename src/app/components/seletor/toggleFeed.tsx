@@ -31,7 +31,7 @@ const ToggleFeed: React.FC<ToggleFeedProps> = ({ value, onToggle }) => {
 
       <span
         className={`
-          text-gray-600 absolute top-1/2 -translate-y-1/2 font-semibold pointer-events-none select-none text-sm transition-all duration-300 mx-2
+          text-gray-400 absolute top-1/2 -translate-y-1/2 pointer-events-none select-none text-sm transition-all duration-300 mx-2
           ${isChecked ? 'left-2' : 'right-2'}
         `}
       >

@@ -1,10 +1,13 @@
 import { api } from "./api";
 
-export async function getUsuarioByID(id) {
-  const endpoint = `/usuario/${id}`;
+export async function getUserById(id) {
+    const endpoint = '/usuario';
 
-  return await api.get(endpoint);
+    const router = endpoint + "/" + id;
+
+    return await api.get(router);
 }
+  
 
 export async function getCurrentUserAuthorized(token) {
   const Authorization = `Bearer ${token}`;
