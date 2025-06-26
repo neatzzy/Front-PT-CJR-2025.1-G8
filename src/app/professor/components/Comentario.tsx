@@ -27,6 +27,11 @@ const Comentario = ({
     const avatarSrc = user?.fotoPerfil ? `data:image/png;base64,${user?.fotoPerfil}`: "/image/fotoPerfil.png";
     const nomeUser = user?.nome || 'Usuário';
 
+    console.log("Conteudo: " + conteudo)
+    console.log("update: " + updatedAt)
+    console.log("user do comentario: " + user)
+    console.log("user id: " + userId)
+
     return (
     <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-x1 items-start justify-center gap-3'>
         {/* foto de perfil do user que fez a avaliacao */}

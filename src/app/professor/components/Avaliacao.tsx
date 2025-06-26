@@ -8,6 +8,8 @@ import { formatDate } from '@/app/utils/format';
 
 interface avaliacao{
     id : number;
+    usuarioAutenticado : number;
+    usuarioAvaliacao : number;
     avatarUser : string; 
     nomeUser : string;
     updatedAt : string;
@@ -19,6 +21,8 @@ interface avaliacao{
 
 const Avaliacao = ({
     id,
+    usuarioAutenticado,
+    usuarioAvaliacao,
     avatarUser,
     nomeUser,
     updatedAt,
@@ -44,6 +48,10 @@ const Avaliacao = ({
         // ação ao clicar em deletar
         alert('Deletar avaliação ' + id);
     };
+
+    console.log("usuario logado: " + usuarioAutenticado);
+
+    console.log("usuario avalicao: " + usuarioAvaliacao);
 
   return (
     <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-x1 items-start justify-center gap-3'>
@@ -79,7 +87,10 @@ const Avaliacao = ({
                     <p className='w-fit text-black text-base'>{comentarios.length} comentários</p>
                 </div>
 
-                <Protected singin={true}>
+            </div>
+
+            {
+                usuarioAutenticado === usuarioAvaliacao && (
                     <div className='flex flex-row gap-4 w-fit items-center'>
                         <FaRegEdit 
                             color="black" 
@@ -94,20 +105,25 @@ const Avaliacao = ({
                             onClick={handleTrashClick}
                         />
                     </div>
-                </Protected>
-            </div>
+                )
+            }
 
             {/* Renderiza comentários se aberto */}
             {comentariosAbertos && (
                 <div className='w-full w-min-fit h-fit p-2'>
-                    {comentarios.map(comentario => (
-                        <Comentario 
-                            key={comentario.id}
-                            conteudo={comentario.conteudo || ''}
-                            updatedAt={formatDate(comentario.updatedAt)}
-                            userId={comentario.usuarioID}
-                        />
-                    ))}
+                    {comentarios
+                        .filter(comentario => comentario &&
+                            comentario.usuarioID
+                        )
+                        .map(comentario => (
+                            <Comentario 
+                                key={comentario.id}
+                                conteudo={comentario.conteudo || ''}
+                                updatedAt={formatDate(comentario.updatedAt)}
+                                userId={comentario.usuarioID}
+                            />
+                        ))
+                    }
                 </div>
             )}
         </div>

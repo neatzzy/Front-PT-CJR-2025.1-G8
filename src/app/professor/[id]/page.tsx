@@ -9,6 +9,7 @@ import Avaliacao from '../components/Avaliacao';
 import { getProfessorById } from '../../utils/api/apiProfessor'
 import { getAllAvaliacao } from '@/app/utils/api/apiAvaliacao';
 import { formatDate } from '@/app/utils/format';
+import { getCurrentUserAuthorized } from '@/app/utils/api/apiUser';
 
 
 interface Professor {
@@ -22,6 +23,7 @@ interface Professor {
 function ProfessorPage() {
     const [professor, setProfessor] = useState<Professor | null>(null);
     const [avaliacoes, setAvaliacoes] = useState<any[]>([]);
+    const [usuarioAutorizado, setUsuarioAutorizado] = useState<any> (null);
 
     const params = useParams();
 
@@ -30,6 +32,7 @@ function ProfessorPage() {
         async function fetchPerfil() {
             const { id } = params;
             const includeQuery = "?include=disciplina,comentarios,usuario";
+            const userToken = localStorage.getItem('token');
             
             try{
 
@@ -38,6 +41,7 @@ function ProfessorPage() {
                     include:includeQuery,
                 };
 
+                const responseAvalicao = await getAllAvaliacao(queryParams);
                 const responseProfessor = await getProfessorById(id);
 
                 const professorData = {
@@ -48,15 +52,20 @@ function ProfessorPage() {
                     avatar : "",
                 };
                 
-                setProfessor(professorData);
-
-                const responseAvalicao = await getAllAvaliacao(queryParams);
-
+                
                 setAvaliacoes(responseAvalicao.data?.data);
+                setProfessor(professorData);
+                
+                if (userToken){
+                    const responseUser = await getCurrentUserAuthorized(userToken);
+                    setUsuarioAutorizado(responseUser.data);
+                }
 
+                
             }catch(err){
                 setProfessor(null)
                 setAvaliacoes([]);
+                setUsuarioAutorizado(null);
             }
             
         }
@@ -110,17 +119,24 @@ function ProfessorPage() {
                         </div>
 
                         {
-                            avaliacoes.map(avaliacao => (
+                            Array.isArray(avaliacoes) && avaliacoes
+                            .filter(avaliacao => avaliacao && 
+                                avaliacao.usuario && 
+                                avaliacao.disciplina 
+                            )
+                            .map(avaliacao => (
                                 <Avaliacao 
                                     key={avaliacao.id}
                                     id={avaliacao.id}
+                                    usuarioAutenticado={usuarioAutorizado?.id || null}
+                                    usuarioAvaliacao={avaliacao.usuario.id || null}
                                     avatarUser={avaliacao.usuario.fotoPerfil}
                                     nomeUser={avaliacao.usuario.nome}
                                     updatedAt={formatDate(avaliacao.updatedAt)}
                                     nomeProfessor={professor?.nome || ""}
                                     disciplina={avaliacao.disciplina.nome}
                                     conteudo={avaliacao.conteudo}
-                                    comentarios={avaliacao.comentarios || []}
+                                    comentarios={Array.isArray(avaliacao.comentarios) ? avaliacao.comentarios : []}
                                 />
                             ))
                         }
