@@ -27,6 +27,7 @@ export async function getAllAvaliacao({
   if (usuarioID) params.usuarioID = usuarioID;
 
   if (disciplinaID) params.disciplinaID = disciplinaID;
+  if (usuarioID) params.usuarioID = usuarioID;
   if (search) params.search = search;
   if (include) params.include = include;
 
