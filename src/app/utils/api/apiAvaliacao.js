@@ -36,7 +36,7 @@ export async function getAllAvaliacao({
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  return await axios.get(endpoint, { 
+  return await api.get(endpoint, { 
     params: params,
     headers: headers 
   });

@@ -6,7 +6,6 @@ import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
 import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 import ToggleFeed from './components/seletor/toggleFeed';
 import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
-import CriarProfessprModal from './modais/criarAvaliacaomodal';
 import Protected from './components/Protected';
 import CriarProfessorModal from './modais/criarProfessormodal';
 import { jwtDecode } from 'jwt-decode';
@@ -21,33 +20,28 @@ function Feed() {
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem("token"); 
-      setToken(storedToken);
-      if (storedToken) {
-        try {
-          const decodedToken: any = jwtDecode(storedToken);
-          const extractedUserId = decodedToken.id || decodedToken.sub;
-          setUserId(extractedUserId);
-        } catch (e) {
-          console.error("Erro ao decodificar token JWT:", e);
-          setUserId(null);
-        }
-      } else {
-        setUserId(null);
-      }
-    }
-  }, []);
-
   
   useEffect(() => {
+    async function featchUser(){
+      if (typeof window !== 'undefined') {
+        const storedToken = localStorage.getItem("token"); 
+        setToken(storedToken);
+        if (storedToken) {
+          try {
+            const decodedToken: any = jwtDecode(storedToken);
+            const extractedUserId = decodedToken.id || decodedToken.sub;
+            setUserId(extractedUserId);
+          } catch (e) {
+            console.error("Erro ao decodificar token JWT:", e);
+            setUserId(null);
+          }
+        } else {
+          setUserId(null);
+        }
+      }
+    }
     
     async function fetchDataProfessores(includeParams: string) {
-      if (!token) {console.warn("Token não disponivel, no aguardo.");
-        return;
-      }
       try {
         const responseAllTeacher = await getAllAvaliacao({
           include: includeParams,
@@ -72,9 +66,9 @@ function Feed() {
       }
     }
     const includeQuery = 'professor,disciplina,comentarios';
-    if (token) {
     fetchDataProfessores(includeQuery);
-    }
+    featchUser();
+   
   }, 
   [
     orderValue, 
@@ -206,9 +200,8 @@ function Feed() {
             ))}
           </div>
         </section>
-        <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} />
-
-        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
+       <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} authToken={token ?? undefined} userId={userId}/>
+        <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} authToken={token} />
         
       </main>
     </>

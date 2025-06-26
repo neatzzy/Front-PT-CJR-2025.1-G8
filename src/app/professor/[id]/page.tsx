@@ -63,6 +63,7 @@ function ProfessorPage() {
 
                 
             }catch(err){
+                console.log(err);
                 setProfessor(null)
                 setAvaliacoes([]);
                 setUsuarioAutorizado(null);
@@ -73,8 +74,6 @@ function ProfessorPage() {
         fetchPerfil();    
     
     },[]);
-
-    const avaliacao = {};
 
     function handlerBackPage() {
         window.history.back();
@@ -103,9 +102,9 @@ function ProfessorPage() {
                 <div className="flex flex-col items-start w-1/2 h-fit">
 
                     <PerfilProfessor
-                        nome={professor?.nome || 'Jacinto'}
-                        departamento={professor?.departamento || 'Cicaralho'}
-                        disciplinas={professor?.disciplinas || ['segurança','estrutura de dados', 'Banco de dados', 'sistemas de informação']}
+                        nome={professor?.nome || ''}
+                        departamento={professor?.departamento || ''}
+                        disciplinas={professor?.disciplinas || []}
                         avatar={professor?.avatar || ''}
                     />
                     {/* Professor */}
