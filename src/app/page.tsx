@@ -18,23 +18,36 @@ function Feed() {
   const [orderValue, setOrderValue] = useState<'asc' | 'desc'>('asc');
   const [modalTeacherOpen, setModalTeacherOpen] = useState<boolean>(false);
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem("token"); 
+      setToken(storedToken);
+    }
+  }, []);
 
   
   useEffect(() => {
     
-    async function fetchProfessores(includeParams: string) {
+    async function fetchDataProfessores(includeParams: string) {
+      if (!token) {console.warn("Token não disponivel, no aguardo.");
+        return;
+      }
       try {
         const responseAllTeacher = await getAllAvaliacao({
           include: includeParams,
           order: orderValue,
           search: searchValue, 
-          sort: sortValue
+          sort: sortValue,
+          token: token
         });
 
         const responseNewTeacher = await getAllAvaliacao({
           include: includeParams,
           order: 'desc',
-          sort: 'createdAt'
+          sort: 'createdAt',
+          token: token
         });
         
         setAvaliacoesNovosProfessores(responseNewTeacher.data.data || []);
@@ -45,13 +58,15 @@ function Feed() {
       }
     }
     const includeQuery = 'professor,disciplina,comentarios';
-
-    fetchProfessores(includeQuery);
+    if (token) {
+    fetchDataProfessores(includeQuery);
+    }
   }, 
   [
     orderValue, 
     sortValue, 
     searchValue,
+    token,
   ]);
 
   const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,8 +190,8 @@ function Feed() {
             ))}
           </div>
         </section>
-        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
-        <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} />
+        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} authToken={token ?? undefined}/>
+        <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} authToken={token} />
 
       </main>
     </>

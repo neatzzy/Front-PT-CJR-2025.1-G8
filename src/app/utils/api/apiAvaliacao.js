@@ -14,6 +14,7 @@ export async function getAllAvaliacao({
   disciplinaID,
   search,
   include,
+  token,
 } = {}) {
   const endpoint = "/avaliacao";
   const params = {};
@@ -27,5 +28,12 @@ export async function getAllAvaliacao({
   if (search) params.search = search;
   if (include) params.include = include;
 
-  return await api.get(endpoint, { params });
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return await axios.get(endpoint, { 
+    params: params,
+    headers: headers 
+  });
 }

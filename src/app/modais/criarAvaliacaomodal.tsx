@@ -4,6 +4,7 @@ import AsyncSelect from "react-select/async";
 import { X } from "lucide-react";
 import CriarProfessorModal from "./criarProfessormodal";
 import { fetchProfessors, createAvaliacao, fetchDisciplinasbyProfessor } from "../utils/api/apiModalAvaliacao";
+import { layoutBuscadinamica } from "./utils/layoutBuscadinamica";
 
 interface CriarAvaliacaoModalProps {
     open: boolean;
@@ -32,7 +33,7 @@ export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAva
     }
 
     const ProfessorOptions = async (inputValue: string) => {
-        if (inputValue.length < 2 && !selectedProfessor) { 
+        if (inputValue.length <2 && !selectedProfessor) { 
             return [];
         }
         const professors = await fetchProfessors(inputValue, authToken); 
@@ -100,7 +101,7 @@ export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAva
                 </button>
 
                 <AsyncSelect
-                    className="cursor-pointer"
+                    classNames={layoutBuscadinamica}
                     loadOptions={ProfessorOptions}
                     defaultOptions
                     cacheOptions
@@ -112,7 +113,7 @@ export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAva
                     />
 
                 <AsyncSelect
-                    className="cursor-pointer"
+                    classNames={layoutBuscadinamica}
                     loadOptions={DisciplinaOptions} 
                     defaultOptions={false}
                     cacheOptions
