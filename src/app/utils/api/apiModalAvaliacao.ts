@@ -9,7 +9,6 @@ interface AvaliacaoData {
 interface Disciplina {
     id: number;
     nome: string;
-    // Adicione outros campos conforme necessário
 }
 
 export async function createAvaliacao(avaliacaoData: AvaliacaoData, token?: string){
