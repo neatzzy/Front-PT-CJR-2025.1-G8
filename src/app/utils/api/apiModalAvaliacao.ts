@@ -3,7 +3,7 @@ import axios from "axios";
 interface AvaliacaoData {
     professorId: number;
     disciplinaId: number;
-    avaliacao: string
+    conteudo: string
 }
 
 interface Disciplina {
@@ -47,7 +47,7 @@ export async function fetchDisciplinasbyProfessor(
     token?: string
 ): Promise<Disciplina[]> {
     try {
-        const response = await axios.get<Disciplina[]>(`http://localhost:5000/professor-disciplina/professor/${professorId}/disciplinas?search=${searchTerm}`, {
+        const response = await axios.get<Disciplina[]>(`http://localhost:5000/professor-disciplina/${professorId}/disciplinas?search=${searchTerm}`, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }

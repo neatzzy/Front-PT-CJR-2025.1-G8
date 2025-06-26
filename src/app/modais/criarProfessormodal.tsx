@@ -31,7 +31,7 @@ export default function CriarProfessorModal({ open, onClose, authToken}: CriarPr
       formData.append('departamento', departamento);
       formData.append('disciplinaName', disciplina);
       if (fotoFile) {
-        formData.append('fotoPerfil', fotoFile);
+        formData.append('fotoProfessor', fotoFile);
       }
     try {
         const response = await createProfessor(formData, authToken || undefined);

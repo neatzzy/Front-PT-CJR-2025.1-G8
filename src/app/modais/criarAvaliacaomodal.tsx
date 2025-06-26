@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import { X } from "lucide-react";
 import CriarProfessorModal from "./criarProfessormodal";
@@ -10,6 +10,7 @@ interface CriarAvaliacaoModalProps {
     open: boolean;
     onClose: () => void;
     authToken?: string | undefined;
+    userId?: number | null;
 }
 
 interface SelectOption {
@@ -17,13 +18,14 @@ interface SelectOption {
     label: string;
 }
 
-export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAvaliacaoModalProps) {
+export default function CriarAvaliacaoModal({open, onClose, authToken, userId}: CriarAvaliacaoModalProps) {
     if (!open) return null;
 
     const [CriarProfessorOpen, setCriarProfessorOpen] = useState<boolean>(false);
     const [selectedProfessor, setSelectedProfessor] = useState<any>(null);
     const [selectedDisciplina, setSelectedDisciplina] = useState<any>(null);
     const [avaliacaoText, setAvaliacaoText] = useState<string>("");
+
 
     const handleOpenCriarProfessorModal = () => {
         setCriarProfessorOpen(true);
@@ -58,14 +60,15 @@ export default function CriarAvaliacaoModal({open, onClose, authToken}: CriarAva
   }
 };
     const handleSubmit = async () => {
-        if (!selectedProfessor || !selectedDisciplina || !avaliacaoText) {
+        if (!selectedProfessor || !selectedDisciplina || !avaliacaoText || userId === null) {
             alert("Por favor, preencha todos os campos.");
             return;
         }
         const avaliacaoData = {
             professorId: selectedProfessor.value,
             disciplinaId: selectedDisciplina.value,
-            avaliacao: avaliacaoText,
+            conteudo: avaliacaoText,
+            userId: userId
         }
         try {
             const response = await createAvaliacao(avaliacaoData, authToken || undefined);

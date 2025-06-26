@@ -9,6 +9,7 @@ import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
 import { useRouter } from "next/navigation";
 import Protected from './components/Protected';
 import CriarProfessorModal from './modais/criarProfessormodal';
+import { jwtDecode } from 'jwt-decode';
 
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
@@ -19,11 +20,24 @@ function Feed() {
   const [modalTeacherOpen, setModalTeacherOpen] = useState<boolean>(false);
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem("token"); 
       setToken(storedToken);
+      if (storedToken) {
+        try {
+          const decodedToken: any = jwtDecode(storedToken);
+          const extractedUserId = decodedToken.id || decodedToken.sub;
+          setUserId(extractedUserId);
+        } catch (e) {
+          console.error("Erro ao decodificar token JWT:", e);
+          setUserId(null);
+        }
+      } else {
+        setUserId(null);
+      }
     }
   }, []);
 
@@ -190,7 +204,7 @@ function Feed() {
             ))}
           </div>
         </section>
-        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} authToken={token ?? undefined}/>
+        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} authToken={token ?? undefined} userId={userId}/>
         <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} authToken={token} />
 
       </main>
