@@ -9,6 +9,7 @@ import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
 import CriarProfessprModal from './modais/criarAvaliacaomodal';
 import Protected from './components/Protected';
 import CriarProfessorModal from './modais/criarProfessormodal';
+import { jwtDecode } from 'jwt-decode';
 
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
@@ -18,23 +19,49 @@ function Feed() {
   const [orderValue, setOrderValue] = useState<'asc' | 'desc'>('asc');
   const [modalTeacherOpen, setModalTeacherOpen] = useState<boolean>(false);
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem("token"); 
+      setToken(storedToken);
+      if (storedToken) {
+        try {
+          const decodedToken: any = jwtDecode(storedToken);
+          const extractedUserId = decodedToken.id || decodedToken.sub;
+          setUserId(extractedUserId);
+        } catch (e) {
+          console.error("Erro ao decodificar token JWT:", e);
+          setUserId(null);
+        }
+      } else {
+        setUserId(null);
+      }
+    }
+  }, []);
 
   
   useEffect(() => {
     
-    async function fetchProfessores(includeParams: string) {
+    async function fetchDataProfessores(includeParams: string) {
+      if (!token) {console.warn("Token não disponivel, no aguardo.");
+        return;
+      }
       try {
         const responseAllTeacher = await getAllAvaliacao({
           include: includeParams,
           order: orderValue,
           search: searchValue, 
-          sort: sortValue
+          sort: sortValue,
+          token: token
         });
 
         const responseNewTeacher = await getAllAvaliacao({
           include: includeParams,
           order: 'desc',
-          sort: 'createdAt'
+          sort: 'createdAt',
+          token: token
         });
         
         setAvaliacoesNovosProfessores(responseNewTeacher.data.data || []);
@@ -45,13 +72,15 @@ function Feed() {
       }
     }
     const includeQuery = 'professor,disciplina,comentarios';
-
-    fetchProfessores(includeQuery);
+    if (token) {
+    fetchDataProfessores(includeQuery);
+    }
   }, 
   [
     orderValue, 
     sortValue, 
     searchValue,
+    token,
   ]);
 
   const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
