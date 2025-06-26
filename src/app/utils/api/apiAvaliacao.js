@@ -12,6 +12,7 @@ export async function getAllAvaliacao({
   order,
   professorID,
   disciplinaID,
+  usuarioID,
   search,
   include,
   token,
@@ -25,6 +26,7 @@ export async function getAllAvaliacao({
   if (order) params.order = order;
   if (professorID) params.professorID = professorID;
   if (disciplinaID) params.disciplinaID = disciplinaID;
+  if (usuarioID) params.usuarioID = usuarioID;
   if (search) params.search = search;
   if (include) params.include = include;
 

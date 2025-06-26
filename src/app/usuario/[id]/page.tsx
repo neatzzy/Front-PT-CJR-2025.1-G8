@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
-import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
-import { FaBell, FaSignOutAlt, FaArrowLeft } from "react-icons/fa";
-import Perfil from "./components/Perfil";
-import Publicacoes from "./components/Publicacoes";
-import EditarPerfilModal from "./components/EditarPerfil";
+import Perfil from "../../components/usuario/Perfil";
+import Publicacoes from "../../components/usuario/Publicacoes";
+import EditarPerfilModal from "../../components/usuario/EditarPerfil";
+import ExcluirPerfilModal from "../../components/usuario/ExcluirPerfil";
 import FeedUserHeader from "@/app/components/header/FeedUserHeader";
+import { FaArrowLeft } from "react-icons/fa";
+import {
+  getCurrentUserAuthorized,
+  getUsuarioByID,
+} from "@/app/utils/api/apiUser";
 
 export default function PerfilPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,20 +22,53 @@ export default function PerfilPage() {
   useEffect(() => {
     async function fetchPerfil() {
       try {
-        const { id } = params;
-        const res = await axios.get(`http://localhost:5000/usuario/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const id =
+          typeof params.id === "string"
+            ? params.id
+            : Array.isArray(params.id)
+              ? params.id[0]
+              : "";
+        if (!id) {
+          setPerfilData(null);
+          setIsOwner(false);
+          return;
+        }
+        // Usa a API centralizada para buscar o perfil
+        const res = await getUsuarioByID(id);
         setPerfilData(res.data);
-      } catch (err) {
-        // Trate o erro conforme necessário
+
+        // Verifica se o usuário logado é o dono do perfil usando API centralizada
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userRes = await getCurrentUserAuthorized(token);
+          setIsOwner(userRes.data.id === res.data.id);
+        } else {
+          setIsOwner(false);
+        }
+      } catch (err: any) {
         setPerfilData(null);
       }
     }
     fetchPerfil();
-  }, [params]);
+  }, [params.id]);
+
+  async function handleExcluirPerfil(senha: string) {
+    setExcluirLoading(true);
+    setExcluirError("");
+    try {
+      // Implemente aqui a chamada de exclusão usando sua API centralizada, se necessário
+      setExcluirLoading(false);
+      setExcluirOpen(false);
+      router.push("/");
+    } catch (err: any) {
+      setExcluirLoading(false);
+      setExcluirError(
+        err && err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "Erro ao excluir perfil. Tente novamente.",
+      );
+    }
+  }
 
   if (!perfilData) {
     return (
@@ -66,7 +102,7 @@ export default function PerfilPage() {
               curso={perfilData.curso}
               departamento={perfilData.departamento}
               email={perfilData.email}
-              avatarUrl={perfilData.avatarUrl}
+              avatarUrl={perfilData.fotoPerfil}
               onEditar={() => setModalOpen(true)}
               onExcluir={() => {
                 /* ação de excluir */
@@ -80,7 +116,23 @@ export default function PerfilPage() {
         <aside className="w-1/5 bg-[#ededed]" />
       </section>
       {/* Modal de edição de perfil */}
-      <EditarPerfilModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <EditarPerfilModal
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          router.refresh();
+        }}
+        userId={perfilData.id}
+      />
+      {/* Modal de exclusão de perfil */}
+      <ExcluirPerfilModal
+        open={excluirOpen}
+        onClose={() => {
+          setExcluirOpen(false);
+          setExcluirError("");
+        }}
+        userId={perfilData.id} // <-- Passe sempre o id aqui!
+      />
     </main>
   );
 }
