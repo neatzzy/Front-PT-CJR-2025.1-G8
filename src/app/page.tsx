@@ -8,6 +8,7 @@ import ToggleFeed from './components/seletor/toggleFeed';
 import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
 import CriarProfessprModal from './modais/criarAvaliacaomodal';
 import Protected from './components/Protected';
+import CriarProfessorModal from './modais/criarProfessormodal';
 
 function Feed() {
   const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
@@ -176,7 +177,7 @@ function Feed() {
             ))}
           </div>
         </section>
-        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
+        <CriarProfessorModal open={modalTeacherOpen} onClose={() => setModalTeacherOpen(false)} />
 
         <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} />
         
