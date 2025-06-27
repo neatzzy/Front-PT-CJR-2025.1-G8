@@ -17,6 +17,11 @@ const CardProfessorFeed: React.FC<CardProps> = ({
   updatedAt,
   professorID,
 }) => {
+  const avatarSrc =
+    img 
+      ? `data:image/png;base64,${img}`
+      : "/image/fotoPerfil.png";
+
   const router = useRouter();
 
   const handleProfessorClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -31,7 +36,7 @@ const CardProfessorFeed: React.FC<CardProps> = ({
       onClick={handleProfessorClick}
     >
       <img
-        src={img || "/user-placeholder.png"}
+        src={avatarSrc}
         alt={nome}
         className='w-45 h-45 br-10 rounded-3xl border-2'
       />

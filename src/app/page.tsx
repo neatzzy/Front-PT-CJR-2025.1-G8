@@ -2,17 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import FeedUserHeader from './components/header/FeedUserHeader';
 import CardProfessorFeed from './components/card/CardProfessorFeed';
-import { getAllAvaliacao } from '../app/utils/api/apiAvaliacao';
 import SeletorOrdenacaoFeed from './components/seletor/SeletorOrdenacaoFeed';
 import ToggleFeed from './components/seletor/toggleFeed';
-import CriarAvaliacaoModal from './modais/criarAvaliacaomodal';
+import CriarAvaliacaoModal from './modais/criarAvaliacaomodal'; 
 import Protected from './components/Protected';
 import CriarProfessorModal from './modais/criarProfessormodal';
 import { jwtDecode } from 'jwt-decode';
+import { getAllProfessorDisciplina } from '../app/utils/api/apiProfessorDisciplina'
 
 function Feed() {
-  const [avaliacoesNovosProfessores, setAvaliacoesNovosProfessores] = useState<any[]>([]);
-  const [avaliacoesTodosProfessores, setAvaliacoesTodosProfessores] = useState<any[]>([]);
+  const [novosProfessores, setNovosProfessores] = useState<any[]>([]);
+  const [todosProfessores, setTodosProfessores] = useState<any[]>([]);
   const [sortValue, setSortValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [orderValue, setOrderValue] = useState<'asc' | 'desc'>('asc');
@@ -41,40 +41,39 @@ function Feed() {
       }
     }
     
-    async function fetchDataProfessores(includeParams: string) {
+    async function fetchDataProfessores(includeParams : string) {
       try {
-        const responseAllTeacher = await getAllAvaliacao({
+        const responseAllTeacher = await getAllProfessorDisciplina({
           include: includeParams,
           order: orderValue,
           search: searchValue, 
           sort: sortValue,
-          token: token
         });
 
-        const responseNewTeacher = await getAllAvaliacao({
+        const responseNewTeacher = await getAllProfessorDisciplina({
           include: includeParams,
           order: 'desc',
           sort: 'createdAt',
-          token: token
         });
         
-        setAvaliacoesNovosProfessores(responseNewTeacher.data.data || []);
-        setAvaliacoesTodosProfessores(responseAllTeacher.data.data || []);
+        setNovosProfessores(responseNewTeacher.data.data || []);
+        setTodosProfessores(responseAllTeacher.data.data || []);
       } catch (error) {
-        setAvaliacoesNovosProfessores([]);
-        setAvaliacoesTodosProfessores([]);
+        setNovosProfessores([]);
+        setTodosProfessores([]);
       }
     }
-    const includeQuery = 'professor,disciplina,comentarios';
-    fetchDataProfessores(includeQuery);
+
+    const includeQuery = 'professor,disciplina';
+
     featchUser();
+    fetchDataProfessores(includeQuery);
    
   }, 
   [
     orderValue, 
     sortValue, 
     searchValue,
-    token,
   ]);
 
   const handlerSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +99,6 @@ function Feed() {
           month: '2-digit',
           year: 'numeric',
           hour12: false,
-          timeZone: 'UTC'
         }
       );
   };
@@ -143,14 +141,14 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {avaliacoesNovosProfessores.map((avaliacao) => (
+            {novosProfessores.map((relacao) => (
               <CardProfessorFeed
-                key={avaliacao.id}
-                professorID = {avaliacao?.professorID}
-                nome={avaliacao.professor?.nome}
-                disciplina={avaliacao.disciplina?.nome}
-                img="/image/girafales.jpeg"
-                updatedAt={avaliacao.updatedAt ? formatDate(avaliacao.updatedAt) : ''}
+                key={relacao?.professorID}
+                professorID = {relacao?.professorID}
+                nome={relacao?.professor?.nome}
+                disciplina={relacao?.disciplina?.nome}
+                img={relacao?.professor.fotoPerfil}
+                updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}
               />
             ))}
           </div>
@@ -188,14 +186,14 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {avaliacoesTodosProfessores.map((avaliacao) => (
+            {todosProfessores.map((relacao) => (
               <CardProfessorFeed
-                key={avaliacao.id}
-                professorID = {avaliacao?.professorID}
-                nome={avaliacao.professor?.nome}
-                disciplina={avaliacao.disciplina?.nome}
-                img="/image/girafales.jpeg"
-                updatedAt={avaliacao.updatedAt ? formatDate(avaliacao.updatedAt) : ''}
+                key={relacao?.professorID}
+                professorID = {relacao?.professorID}
+                nome={relacao?.professor?.nome}
+                disciplina={relacao?.disciplina?.nome}
+                img={relacao?.professor.fotoPerfil}
+                updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}                
               />
             ))}
           </div>
