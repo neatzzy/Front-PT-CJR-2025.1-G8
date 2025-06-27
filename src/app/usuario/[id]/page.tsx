@@ -10,7 +10,7 @@ import FeedUserHeader from "@/app/components/header/FeedUserHeader";
 import { FaArrowLeft } from "react-icons/fa";
 import {
   getCurrentUserAuthorized,
-  getUsuarioByID,
+  getUserById,
 } from "@/app/utils/api/apiUser";
 
 export default function PerfilPage() {
@@ -38,7 +38,7 @@ export default function PerfilPage() {
           return;
         }
         // Usa a API centralizada para buscar o perfil
-        const res = await getUsuarioByID(id);
+        const res = await getUserById(id);
         setPerfilData(res.data);
 
         // Verifica se o usuário logado é o dono do perfil usando API centralizada
