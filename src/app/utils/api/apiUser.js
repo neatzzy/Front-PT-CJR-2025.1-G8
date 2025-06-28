@@ -46,3 +46,15 @@ export async function deleteUsuario(id, token) {
 
   return await api.delete(endpoint);
 }
+
+export async function postUser(formData) {
+  const router = '/usuario'
+
+  const config =  {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  return await api.post(router, formData, config);
+}
