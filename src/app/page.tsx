@@ -48,14 +48,18 @@ function Feed() {
           order: orderValue,
           search: searchValue, 
           sort: sortValue,
+          pageSize : 7,
         });
 
         const responseNewTeacher = await getAllProfessorDisciplina({
           include: includeParams,
           order: 'desc',
           sort: 'createdAt',
+          page : 1,
+          pageSize : 7,
         });
         
+        //setNovosProfessores([]);
         setNovosProfessores(responseNewTeacher.data.data || []);
         setTodosProfessores(responseAllTeacher.data.data || []);
       } catch (error) {
@@ -141,16 +145,22 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {novosProfessores.map((relacao) => (
-              <CardProfessorFeed
-                key={relacao?.professorID}
-                professorID = {relacao?.professorID}
-                nome={relacao?.professor?.nome}
-                disciplina={relacao?.disciplina?.nome}
-                img={relacao?.professor.fotoPerfil}
-                updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}
-              />
-            ))}
+            {novosProfessores.length > 0 ? (
+              novosProfessores.map((relacao) => (
+                <CardProfessorFeed
+                  key={relacao?.professorID}
+                  professorID={relacao?.professorID}
+                  nome={relacao?.professor?.nome}
+                  disciplina={relacao?.disciplina?.nome}
+                  img={relacao?.professor.fotoPerfil}
+                  updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}
+                />
+              ))
+            ) : (
+              <div className='w-full h-60 flex items-center justify-center'>
+                <p className='font-bold text-black text-100'>Não há professores</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -186,16 +196,24 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {todosProfessores.map((relacao) => (
-              <CardProfessorFeed
-                key={relacao?.professorID}
-                professorID = {relacao?.professorID}
-                nome={relacao?.professor?.nome}
-                disciplina={relacao?.disciplina?.nome}
-                img={relacao?.professor.fotoPerfil}
-                updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}                
-              />
-            ))}
+            {
+              todosProfessores.length > 0 ?
+                (todosProfessores.map((relacao) => (
+                  <CardProfessorFeed
+                    key={relacao?.professorID}
+                    professorID = {relacao?.professorID}
+                    nome={relacao?.professor?.nome}
+                    disciplina={relacao?.disciplina?.nome}
+                    img={relacao?.professor.fotoPerfil}
+                    updatedAt={relacao?.professor.updatedAt ? formatDate(relacao?.professor.updatedAt) : ''}                
+                  />
+                )))
+                : (
+                  <div className='w-full h-60 flex items-center justify-center'>
+                    <p className='font-bold text-black text-100'>Não há professores</p>
+                  </div>
+                )
+            }
           </div>
         </section>
        <CriarAvaliacaoModal open={modalAssessmentOpen} onClose={() => setModalAssessmentOpen(false)} authToken={token ?? undefined} userId={userId}/>
