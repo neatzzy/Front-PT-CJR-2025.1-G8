@@ -47,7 +47,8 @@ export interface Disciplina {
   createdAt: string
 }
 
-const PAGE_SIZE = 2;
+const pageSize = 2;
+const minTimeLoad = 1000;
 
 function Feed() {
   const [sortValue, setSortValue] = useState<string>("");
@@ -62,8 +63,12 @@ function Feed() {
   const [pageNovos, setPageNovos] = useState(1);
   const [pageTodos, setPageTodos] = useState(1);
 
+  // Estado para controlar loading mínimo
+  const [showLoadingNovos, setShowLoadingNovos] = useState(false);
+  const [showLoadingTodos, setShowLoadingTodos] = useState(false);
+
   // Busca paginada de novos professores
-  const { data: novosProfessoresData = { meta: { total: 0, page: 1, pageSize: PAGE_SIZE, totalPages: 1 }, data: [] }, isLoading: loadingNovos } = useQuery<Root>({
+  const { data: novosProfessoresData = { meta: { total: 0, page: 1, pageSize: pageSize, totalPages: 1 }, data: [] }, isLoading: loadingNovos } = useQuery<Root>({
     queryKey: ['novosProfessores', pageNovos],
     queryFn: async () => {
       const res = await getAllProfessorDisciplina({
@@ -71,16 +76,18 @@ function Feed() {
         order: 'desc',
         sort: 'createdAt',
         page: pageNovos,
-        pageSize: PAGE_SIZE,
+        pageSize: pageSize,
       });
-      // Garante objeto plain
+
+      await new Promise(resolve => setTimeout(resolve, minTimeLoad));
+
       return res.data as Root;
     },
     staleTime: 1000 * 60,
   });
 
   // Busca paginada de todos professores
-  const { data: todosProfessoresData = { meta: { total: 0, page: 1, pageSize: PAGE_SIZE, totalPages: 1 }, data: [] }, isLoading: loadingTodos } = useQuery<Root>({
+  const { data: todosProfessoresData = { meta: { total: 0, page: 1, pageSize: pageSize, totalPages: 1 }, data: [] }, isLoading: loadingTodos } = useQuery<Root>({
     queryKey: ['todosProfessores', pageTodos, sortValue, orderValue, searchValue],
     queryFn: async () => {
       const res = await getAllProfessorDisciplina({
@@ -88,13 +95,17 @@ function Feed() {
         order: orderValue,
         sort: sortValue,
         page: pageTodos,
-        pageSize: PAGE_SIZE,
+        pageSize: pageSize,
         search: searchValue,
       });
+
+      await new Promise(resolve => setTimeout(resolve, minTimeLoad));
+
       return res.data as Root;
     },
     staleTime: 1000 * 60,
   });
+
 
   useEffect(() => {
     async function featchUser() {
@@ -176,8 +187,8 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {loadingNovos ? (
-              <div className='w-full h-60 flex items-center justify-center'>
+            {(loadingNovos) ? (
+              <div className='w-full h-60 flex flex-col items-center justify-center gap-3'>
                 <p className='font-bold text-black text-100'>Carregando</p>
               </div>
             ) : (
@@ -241,7 +252,7 @@ function Feed() {
           </div>
 
           <div className="flex flex-row gap-8 justify-center py-5 h-fit">
-            {loadingTodos ? (
+            {(loadingTodos) ? (
               <div className='w-full h-60 flex items-center justify-center'>
                 <p className='font-bold text-black text-100'>Carregando</p>
               </div>
