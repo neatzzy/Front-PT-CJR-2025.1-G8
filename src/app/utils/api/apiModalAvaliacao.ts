@@ -58,3 +58,16 @@ export async function fetchDisciplinasbyProfessor(
     }
 
 }
+
+export async function deleteAvaliacao(pubId:string ,token?: string) {
+    try{
+        const response = await axios.delete(`http://localhost:5000/avaliacao/${pubId}`, {
+            headers: {
+                ...(token && {Authorization: `Bearer ${token}`})
+            }
+        });
+        return response.data;
+    }catch(error) {
+        console.error('Erro ao enviar remoção API')
+    }
+}

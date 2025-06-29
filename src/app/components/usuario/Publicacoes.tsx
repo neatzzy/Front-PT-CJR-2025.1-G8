@@ -83,7 +83,7 @@ export default function Publicacoes() {
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
-      <h2 className="text-xl font-bold mb-4">Publicações</h2>
+      <h2 className="text-xl font-bold mb-4 text-emerald-900">Publicações</h2>
       {publicacoes.length > 0 ? (
         publicacoes.map((pub, idx) => (
           <div

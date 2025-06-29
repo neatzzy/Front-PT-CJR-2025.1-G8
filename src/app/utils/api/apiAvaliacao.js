@@ -6,6 +6,7 @@ import { api } from "./api";
  * @returns {Promise<any>}
  */
 export async function getAllAvaliacao({
+  avaliacaoId,
   page,
   pageSize,
   sort,
@@ -20,6 +21,7 @@ export async function getAllAvaliacao({
   const endpoint = "/avaliacao";
   const params = {};
 
+  if (avaliacaoId) params.avaliacaoId = avaliacaoId;
   if (page) params.page = page;
   if (pageSize) params.pageSize = pageSize;
   if (sort) params.sort = sort;
