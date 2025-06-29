@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { getAllAvaliacao } from "@/app/utils/api/apiAvaliacao";
 import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
 
 export default function Publicacoes() {
   const params = useParams();
@@ -18,6 +19,7 @@ export default function Publicacoes() {
   const [publicacoes, setPublicacoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [DelOpen, setDelOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchPublicacoes() {
@@ -116,9 +118,13 @@ export default function Publicacoes() {
                   <button className="ml-auto hover:text-[#179478]">
                     <FaEdit />
                   </button>
-                  <button className="hover:text-[#b94a4a]">
+
+                  <button 
+                  className="hover:text-[#b94a4a]"
+                  onClick={() => setDelOpen(true)}>
                     <FaTrash />
                   </button>
+                  <DeletarAvaliacao open={DelOpen} onClose={() => setDelOpen(false)}/>
                 </>
               )}
             </div>
