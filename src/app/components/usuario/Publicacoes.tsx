@@ -23,6 +23,7 @@ export default function Publicacoes() {
   const [DelOpen, setDelOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
+  const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
 
 
   useEffect(() => {
@@ -80,6 +81,11 @@ export default function Publicacoes() {
   }, [profileuserId]);
 
   if (loading) return <div className="px-8 py-6">Carregando...</div>;
+
+  const handleDelete = (avaliacaoId: number) => {
+    setSelectedAvaliacaoId(avaliacaoId);
+    setDelOpen(true);
+    };
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
@@ -145,10 +151,9 @@ export default function Publicacoes() {
 
                   <button 
                   className="hover:text-[#b94a4a]"
-                  onClick={() => setDelOpen(true)}>
+                  onClick={() => handleDelete(pub.id)}>
                     <FaTrash />
                   </button>
-                  <DeletarAvaliacao open={DelOpen} onClose={() => setDelOpen(false)} authToken={token ?? undefined} pubId={pub.id}/>
                 </>
               )}
             </div>
@@ -157,6 +162,9 @@ export default function Publicacoes() {
       ) : (
         <p className="text-gray-500">Nenhuma publicação encontrada.</p>
       )}
+      <DeletarAvaliacao
+        open={DelOpen} onClose={() => setDelOpen(false)} authToken={token ?? undefined} avaliacaoId={selectedAvaliacaoId}
+      />
     </div>
   );
 }

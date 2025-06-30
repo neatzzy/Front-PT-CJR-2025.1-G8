@@ -59,9 +59,9 @@ export async function fetchDisciplinasbyProfessor(
 
 }
 
-export async function deleteAvaliacao(pubId:string ,token?: string) {
+export async function deleteAvaliacao(avaliacaoId:string ,token?: string) {
     try{
-        const response = await axios.delete(`http://localhost:5000/avaliacao/${pubId}`, {
+        const response = await axios.delete(`http://localhost:5000/avaliacao/${avaliacaoId}`, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }
