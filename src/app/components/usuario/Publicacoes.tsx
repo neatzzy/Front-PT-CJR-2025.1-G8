@@ -6,10 +6,12 @@ import { useParams } from "next/navigation";
 import { getAllAvaliacao } from "@/app/utils/api/apiAvaliacao";
 import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
+import { jwtDecode } from "jwt-decode";
 
 export default function Publicacoes() {
   const params = useParams();
-  const userId =
+  const profileuserId =
     typeof params.id === "string"
       ? params.id
       : Array.isArray(params.id)
@@ -18,12 +20,36 @@ export default function Publicacoes() {
   const [publicacoes, setPublicacoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [DelOpen, setDelOpen] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
+
+
+  useEffect(() => {
+  if (typeof window !== "undefined") {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+
+    if (storedToken) {
+      try {
+        const decodedToken: any = jwtDecode(storedToken);
+        const extractedUserId = decodedToken.id || decodedToken.sub;
+        setLoggedInUserId(extractedUserId);
+      } catch (e) {
+        console.error("Erro ao decodificar token JWT:", e);
+        setLoggedInUserId(null);
+      }
+    } else {
+      setLoggedInUserId(null);
+    }
+  }
+}, []);
 
   useEffect(() => {
     async function fetchPublicacoes() {
       try {
         const res = await getAllAvaliacao({
-          usuarioID: userId,
+          usuarioID: profileuserId,
           include: "usuario,professor,disciplina,comentarios",
         });
         setPublicacoes(res.data?.data || []);
@@ -33,8 +59,8 @@ export default function Publicacoes() {
         setLoading(false);
       }
     }
-    if (userId) fetchPublicacoes();
-  }, [userId]);
+    if (profileuserId) fetchPublicacoes();
+  }, [profileuserId]);
 
   useEffect(() => {
     async function checkOwner() {
@@ -42,7 +68,7 @@ export default function Publicacoes() {
         const token = localStorage.getItem("token");
         if (token) {
           const userRes = await getCurrentUserAuthorized(token);
-          setIsOwner(userRes.data.id?.toString() === userId?.toString());
+          setIsOwner(userRes.data.id?.toString() === profileuserId?.toString());
         } else {
           setIsOwner(false);
         }
@@ -50,14 +76,14 @@ export default function Publicacoes() {
         setIsOwner(false);
       }
     }
-    if (userId) checkOwner();
-  }, [userId]);
+    if (profileuserId) checkOwner();
+  }, [profileuserId]);
 
   if (loading) return <div className="px-8 py-6">Carregando...</div>;
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
-      <h2 className="text-xl font-bold mb-4">Publicações</h2>
+      <h2 className="text-xl font-bold mb-4 text-emerald-900">Publicações</h2>
       {publicacoes.length > 0 ? (
         publicacoes.map((pub, idx) => (
           <div
@@ -116,9 +142,13 @@ export default function Publicacoes() {
                   <button className="ml-auto hover:text-[#179478]">
                     <FaEdit />
                   </button>
-                  <button className="hover:text-[#b94a4a]">
+
+                  <button 
+                  className="hover:text-[#b94a4a]"
+                  onClick={() => setDelOpen(true)}>
                     <FaTrash />
                   </button>
+                  <DeletarAvaliacao open={DelOpen} onClose={() => setDelOpen(false)} authToken={token ?? undefined} pubId={pub.id}/>
                 </>
               )}
             </div>
