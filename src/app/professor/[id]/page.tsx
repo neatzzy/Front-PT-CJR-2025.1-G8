@@ -49,7 +49,7 @@ function ProfessorPage() {
                     nome : responseProfessor.data.nome,
                     departamento : responseProfessor.data.departamento,
                     disciplinas : responseProfessor.data.disciplinas.map((item: { disciplina: { nome: string } }) => item.disciplina.nome), 
-                    avatar : "",
+                    avatar : responseProfessor.data.fotoPerfil,
                 };
                 
                 

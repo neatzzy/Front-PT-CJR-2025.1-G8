@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 interface CardProps {
   nome?: string;
   disciplina?: string;
-  img?: string;
+  img?: any;
   updatedAt: string;
   key?: number;
   professorID?: number;
@@ -17,6 +17,8 @@ const CardProfessorFeed: React.FC<CardProps> = ({
   updatedAt,
   professorID,
 }) => {
+
+  
   const avatarSrc =
     img 
       ? `data:image/png;base64,${img}`

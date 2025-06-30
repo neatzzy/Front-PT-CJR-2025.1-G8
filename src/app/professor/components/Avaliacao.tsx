@@ -129,6 +129,8 @@ const Avaliacao = ({
                                         conteudo={comentario.conteudo || ''}
                                         updatedAt={formatDate(comentario.updatedAt)}
                                         userId={comentario.usuarioID}
+                                        userNome= {comentario.usuario.nome}
+                                        userAvatar= {comentario.usuario.fotoPerfil}
                                     />
 
                                     {
