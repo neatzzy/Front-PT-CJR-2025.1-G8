@@ -112,32 +112,39 @@ function ProfessorPage() {
                     <hr className="w-full border-black border-1" />
 
                     {/* Avaliacoes */}
-                    <div className="h-fit bg-white p-4 w-full flex flex-col g-5 justify-start items-center ">
+                    <div className="h-fit bg-white p-4 w-full flex flex-col gap-3 justify-start items-center ">
                         <div className='w-full'>
                             <h3 className='text-black font-bold mb-5'> Avaliações </h3>
                         </div>
 
-                        {
-                            Array.isArray(avaliacoes) && avaliacoes
-                            .filter(avaliacao => avaliacao && 
-                                avaliacao.usuario && 
-                                avaliacao.disciplina 
+                        {   avaliacoes.length > 0 ?
+                            (
+                                Array.isArray(avaliacoes) && avaliacoes
+                                .filter(avaliacao => avaliacao && 
+                                    avaliacao.usuario && 
+                                    avaliacao.disciplina 
+                                )
+                                .map(avaliacao => (
+                                    <Avaliacao 
+                                        key={avaliacao.id}
+                                        id={avaliacao.id}
+                                        usuarioAutenticado={usuarioAutorizado?.id || null}
+                                        usuarioAvaliacao={avaliacao.usuario.id || null}
+                                        avatarUser={avaliacao.usuario.fotoPerfil}
+                                        nomeUser={avaliacao.usuario.nome}
+                                        updatedAt={formatDate(avaliacao.updatedAt)}
+                                        nomeProfessor={professor?.nome || ""}
+                                        disciplina={avaliacao.disciplina.nome}
+                                        conteudo={avaliacao.conteudo}
+                                        comentarios={Array.isArray(avaliacao.comentarios) ? avaliacao.comentarios : []}
+                                    />
+                                ))
+                            ) 
+                            : (
+                                <div className='w-full h-fit m-2'>
+                                    <h3 className='text-gray-600 text-center font-bold mb-5'> Não há publicações </h3>
+                                </div>
                             )
-                            .map(avaliacao => (
-                                <Avaliacao 
-                                    key={avaliacao.id}
-                                    id={avaliacao.id}
-                                    usuarioAutenticado={usuarioAutorizado?.id || null}
-                                    usuarioAvaliacao={avaliacao.usuario.id || null}
-                                    avatarUser={avaliacao.usuario.fotoPerfil}
-                                    nomeUser={avaliacao.usuario.nome}
-                                    updatedAt={formatDate(avaliacao.updatedAt)}
-                                    nomeProfessor={professor?.nome || ""}
-                                    disciplina={avaliacao.disciplina.nome}
-                                    conteudo={avaliacao.conteudo}
-                                    comentarios={Array.isArray(avaliacao.comentarios) ? avaliacao.comentarios : []}
-                                />
-                            ))
                         }
 
                     </div>
