@@ -7,27 +7,25 @@ interface ComentarioProps {
     conteudo : string;
     updatedAt : string;
     userId : number;
+    userNome : string;
+    userAvatar : string;
 }
 
 const Comentario = ({
     conteudo, 
     updatedAt,
     userId,
+    userNome, 
+    userAvatar
 }: ComentarioProps) => {
-    const [user, setUser] = useState<any>(null);
     const router = useRouter();
-    
-    useEffect(() => {
-        const fetchUser = async () => {
-            const userData = await getUserById(userId);
-            setUser(userData.data);
-        };
-        fetchUser();
-    }, [userId]);
 
     // Fallbacks in case user data is not loaded yet
-    const avatarSrc = user?.fotoPerfil ? `data:image/png;base64,${user?.fotoPerfil}`: "/image/fotoPerfil.png";
-    const nomeUser = user?.nome || 'Usuário';
+    const avatarSrc = userAvatar ? 
+        `data:image/png;base64,${userAvatar}`
+        : "/image/fotoPerfil.png";
+        
+    const nomeUser = userNome || '';
 
     const handlerPerfilUserPage = () => {
         router.push(`/usuario/${userId}`)

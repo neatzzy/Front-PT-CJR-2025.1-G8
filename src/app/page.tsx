@@ -47,8 +47,8 @@ export interface Disciplina {
   createdAt: string
 }
 
-const pageSize = 2;
-const minTimeLoad = 1000;
+const pageSize = 7;
+const minTimeLoad = 750;
 
 function Feed() {
   const [sortValue, setSortValue] = useState<string>("");
