@@ -6,24 +6,29 @@ interface DeletarAvaliacaoProps {
     open: boolean;
     onClose: () => void;
     authToken?: string | undefined;
-    pubId?: string | null;
+    avaliacaoId: number | null;
 } 
 
-export default function DeletarAvaliacao({open, onClose, authToken, pubId}: DeletarAvaliacaoProps) {
+export default function DeletarAvaliacao({open, onClose, authToken, avaliacaoId}: DeletarAvaliacaoProps) {
     if (!open) return null;
 
     const handleRemove = async () => {
-        if (!pubId) {
-            alert('ID da avaliação inválida.');
+        if (avaliacaoId == null) {
+            console.error("ID da avaliação para exclusão é nulo.");
+            alert("Não foi possível excluir a avaliação: ID não fornecido.");
+            onClose();
             return;
-        }
-        try {
-            const response = await deleteAvaliacao(pubId, authToken);
+        } 
+        
+        try{
+            const response = await deleteAvaliacao(String(avaliacaoId), authToken ?? undefined)
             console.log('Avaliação removida com sucesso!', response);
             alert("Avaliação Deletada com sucesso!");
             onClose();
-        } catch (error) {
-            alert('Erro ao Deletar Professor');
+        }catch(error) {
+            console.error(`Erro ao excluir avaliação ${avaliacaoId}:`, error);
+            alert('Ocorreu um erro ao excluir a avaliação. Tente novamente.');
+            onClose();
         }
     };
 
