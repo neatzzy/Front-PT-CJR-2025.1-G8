@@ -4,6 +4,7 @@ import { getUserById } from '@/app/utils/api/apiUser';
 import { useRouter } from 'next/navigation'; // CERTO para App Router
 
 interface ComentarioProps {
+    key: number;
     conteudo : string;
     updatedAt : string;
     userId : number;
@@ -12,6 +13,7 @@ interface ComentarioProps {
 }
 
 const Comentario = ({
+    key,
     conteudo, 
     updatedAt,
     userId,
