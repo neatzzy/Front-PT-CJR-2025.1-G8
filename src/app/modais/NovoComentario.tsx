@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { postComentario } from '../utils/api/apiComentario'
 
 interface NovoComentarioModalProps {
     isOpen: boolean;
@@ -26,14 +27,17 @@ const NovoComentarioModal = ({
             return;
         }
         const token = localStorage.getItem('token');
-        const comentarioDTO = {
-            id : avaliacaoId, 
-            usuarioID : userId,
+        const createComentarioDto = {
+            avaliacaoId : Number(avaliacaoId), 
+            userId : Number(userId),
             conteudo : commentText,
         }
 
         try{
-            //await postComentario(avaliacaoId.toString(), comentarioDTO, token || undefined);
+            await postComentario(
+                createComentarioDto, 
+                token || undefined
+            );
 
             onClose();
 

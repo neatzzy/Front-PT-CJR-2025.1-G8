@@ -6,6 +6,19 @@ import { api } from "./api";
  * @returns {Promise<any>}
  */
 
-export async function postComentario(params) {
-    return await 0;
+export async function postComentario(createComentarioDto, token) {
+    const endpoint = '/comentarios';
+
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return await api.post(
+        endpoint,
+        createComentarioDto, // corpo da requisição
+        {
+            headers: headers,
+        }
+    );
 }
