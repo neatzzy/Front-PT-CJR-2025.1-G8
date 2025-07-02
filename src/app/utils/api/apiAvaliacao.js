@@ -43,3 +43,59 @@ export async function getAllAvaliacao({
     headers: headers 
   });
 }
+
+
+/**
+ * 
+ * @param {Object} params - Parâmetros de busca (ver ).
+ * @returns {Promise<any>}
+ */
+export async function deleteAvaliacao(avaliacaoId, token){
+
+  avaliacaoId = Number(avaliacaoId);
+  const endpoint = "/avaliacao";
+  const params = {};
+
+  if(avaliacaoId) params.id = avaliacaoId;
+
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  return await api.delete(endpoint, 
+    { 
+      params: params,
+      headers: headers 
+    }
+  );
+}
+
+
+/**
+ * 
+ * @param {Object} params - Parâmetros de busca (ver ).
+ * @returns {Promise<any>}
+ */
+export async function patchAvaliacao(avaliacaoId, avaliacaoDTO, token){
+
+  avaliacaoId = Number(avaliacaoId);
+  const endpoint = `/avaliacao/${avaliacaoId}`;
+  const params = {};
+
+  if(avaliacaoId) params.id = avaliacaoId;
+
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  return await api.patch(
+    endpoint,
+    avaliacaoDTO, // corpo da requisição
+    {
+      params: params,
+      headers: headers
+    }
+  );
+}

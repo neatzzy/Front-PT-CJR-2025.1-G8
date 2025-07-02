@@ -10,7 +10,7 @@ import { getProfessorById } from '../../utils/api/apiProfessor'
 import { getAllAvaliacao } from '@/app/utils/api/apiAvaliacao';
 import { formatDate } from '@/app/utils/format';
 import { getCurrentUserAuthorized } from '@/app/utils/api/apiUser';
-
+import { useRouter } from 'next/navigation';
 
 interface Professor {
     id : number;
@@ -24,6 +24,8 @@ function ProfessorPage() {
     const [professor, setProfessor] = useState<Professor | null>(null);
     const [avaliacoes, setAvaliacoes] = useState<any[]>([]);
     const [usuarioAutorizado, setUsuarioAutorizado] = useState<any> (null);
+    const [makeReload, setMakeReload] = useState<boolean> (false);
+    const router = useRouter();
 
     const params = useParams();
 
@@ -73,7 +75,7 @@ function ProfessorPage() {
 
         fetchPerfil();    
     
-    },[]);
+    },[makeReload]);
 
     function handlerBackPage() {
         window.history.back();
@@ -125,7 +127,7 @@ function ProfessorPage() {
                                     avaliacao.disciplina 
                                 )
                                 .map(avaliacao => (
-                                    <Avaliacao 
+                                      <Avaliacao 
                                         key={avaliacao.id}
                                         id={avaliacao.id}
                                         usuarioAutenticado={usuarioAutorizado?.id || null}
@@ -137,6 +139,7 @@ function ProfessorPage() {
                                         disciplina={avaliacao.disciplina.nome}
                                         conteudo={avaliacao.conteudo}
                                         comentarios={Array.isArray(avaliacao.comentarios) ? avaliacao.comentarios : []}
+                                        reload={() => setMakeReload((prev) => !prev)}
                                     />
                                 ))
                             ) 

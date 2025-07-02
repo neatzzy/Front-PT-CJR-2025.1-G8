@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Comentario from './Comentario';
 import { formatDate } from '@/app/utils/format';
 import { useRouter } from 'next/navigation'; // CERTO para App Router
-
+import EditarAvaliacao from '@/app/modais/EditarAvaliacao';
+import { deleteAvaliacao } from '@/app/utils/api/apiModalAvaliacao';
 
 interface avaliacao{
     id : number;
@@ -18,6 +19,7 @@ interface avaliacao{
     disciplina : string; 
     conteudo : string;
     comentarios : any[];
+    reload : () => void;
 }
 
 const Avaliacao = ({
@@ -30,10 +32,12 @@ const Avaliacao = ({
     nomeProfessor,
     disciplina, 
     conteudo, 
-    comentarios
+    comentarios, 
+    reload, 
 } : avaliacao) => {
     const avatarSrc = avatarUser ? `data:image/png;base64,${avatarUser}`: "/image/fotoPerfil.png";
     const [comentariosAbertos, setComentariosAbertos] = useState(false);
+    const [openEditAvalicaoModal, setOpenEditAvalicaoModal] = useState<boolean> (false);
     const router = useRouter();
 
     // Handlers para os ícones
@@ -42,13 +46,24 @@ const Avaliacao = ({
     };
 
     const handleEditClick = () => {
-        // ação ao clicar em editar
-        alert('Editar avaliação ' + id);
+        setOpenEditAvalicaoModal(true);
+        
     };
 
-    const handleTrashClick = () => {
-        // ação ao clicar em deletar
-        alert('Deletar avaliação ' + id);
+    const handleTrashClick = async () => {
+        const token = localStorage.getItem('token');
+
+        try{
+            await deleteAvaliacao(id.toString(), token || undefined);
+
+            setOpenEditAvalicaoModal(false);
+
+            reload();
+
+        }catch (error){
+            alert(`Error ao deletar a avaliação ${id}}: ` + error)
+        }
+        
     };
 
     const handlerPerfilUserPage = () => {
@@ -80,8 +95,8 @@ const Avaliacao = ({
             </div>
 
             {/* conteudo da avalicao */}
-            <div className='w-full h-fit'>
-                <p className='text-black text-base'>{conteudo}</p>
+            <div className='w-full h-fit max-w-full'>
+                <p className='text-black text-base h-fit max-w-full break-words'>{conteudo}</p>
             </div>
 
             {/* comentarios da avalicao */}
@@ -114,6 +129,15 @@ const Avaliacao = ({
                 )}
 
             </div>
+
+            < EditarAvaliacao 
+                isOpen = {openEditAvalicaoModal}
+                onClose={() => setOpenEditAvalicaoModal(false)}
+                userId={usuarioAvaliacao}
+                avaliacaoId={id}
+                conteudoAvaliacao={conteudo}
+                reload = {reload}
+            /> 
 
             {/* Renderiza comentários se aberto */}
             {comentariosAbertos && (
