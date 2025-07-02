@@ -56,7 +56,7 @@ const Comentario = ({
 
                 {/* conteudo da avalicao */}
                 <div className='w-full h-fit'>
-                    <p className='text-black text-base'>{conteudo}</p>
+                    <p className='text-black text-base h-fit max-w-full break-words'>{conteudo}</p>
                 </div>
             </div>
             
