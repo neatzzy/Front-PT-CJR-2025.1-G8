@@ -77,7 +77,7 @@ const EditarAvaliacao = ({
                lg:w-1/2 xl:w-1/2  max-h-[90vh] overflow-y-auto flex flex-col gap-4"          
             >
                 <h1 className="text-2xl text-center font-bold text-white mb-4">
-                    Nova Avaliação
+                    Editar Avaliação
                 </h1>
 
                 <button
