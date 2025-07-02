@@ -8,6 +8,7 @@ import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
 import { jwtDecode } from "jwt-decode";
+import EditarAvaliacao from "./AvaliacaoOptions/EditarAvaliacao";
 
 export default function Publicacoes() {
   const params = useParams();
@@ -24,6 +25,7 @@ export default function Publicacoes() {
   const [token, setToken] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
   const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
+  const [EditOpen, setEditOpen] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -87,6 +89,11 @@ export default function Publicacoes() {
     setDelOpen(true);
     };
 
+  const handleEdit = (avaliacaoId: number) => {
+    setSelectedAvaliacaoId(avaliacaoId);
+    setEditOpen(true);
+    };
+
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
       <h2 className="text-xl font-bold mb-4 text-emerald-900">Publicações</h2>
@@ -114,10 +121,10 @@ export default function Publicacoes() {
                   {pub.usuario?.nome || "Usuário"}
                 </span>
                 <span className="text-[#179478] text-sm ml-2">
-                  {pub.createdAt
-                    ? new Date(pub.createdAt).toLocaleDateString("pt-BR") +
+                  {pub.updatedAt
+                    ? new Date(pub.updatedAt).toLocaleDateString("pt-BR") +
                       ", às " +
-                      new Date(pub.createdAt).toLocaleTimeString("pt-BR", {
+                      new Date(pub.updatedAt).toLocaleTimeString("pt-BR", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })
@@ -145,7 +152,9 @@ export default function Publicacoes() {
               </span>
               {isOwner && (
                 <>
-                  <button className="ml-auto hover:text-[#179478]">
+                  <button 
+                  className="ml-auto hover:text-[#179478]"
+                  onClick={() => handleEdit(pub.id)}>
                     <FaEdit />
                   </button>
 
@@ -162,9 +171,9 @@ export default function Publicacoes() {
       ) : (
         <p className="text-gray-500">Nenhuma publicação encontrada.</p>
       )}
-      <DeletarAvaliacao
-        open={DelOpen} onClose={() => setDelOpen(false)} authToken={token ?? undefined} avaliacaoId={selectedAvaliacaoId}
-      />
+      <DeletarAvaliacao open={DelOpen} onClose={() => setDelOpen(false)} authToken={token ?? undefined} avaliacaoId={selectedAvaliacaoId} />
+      <EditarAvaliacao open={EditOpen} onClose={() => setEditOpen(false)} authToken={token ?? undefined} avaliacaoId={selectedAvaliacaoId}/>
+
     </div>
   );
 }
