@@ -10,8 +10,10 @@ import { deleteAvaliacao } from '@/app/utils/api/apiModalAvaliacao';
 import Button from '@mui/material/Button';
 import { CiCirclePlus } from "react-icons/ci";
 import NovoComentarioModal from '@/app/modais/NovoComentario';
+import Protected from '@/app/components/Protected';
 
 interface avaliacao{
+    key : number;
     id : number;
     usuarioAutenticado : number;
     usuarioAvaliacao : number;
@@ -26,6 +28,7 @@ interface avaliacao{
 }
 
 const Avaliacao = ({
+    key,
     id,
     usuarioAutenticado,
     usuarioAvaliacao,
@@ -159,12 +162,12 @@ const Avaliacao = ({
                             .map(comentario => (
                                 <>
                                     <Comentario 
-                                        key={comentario.id}
-                                        conteudo={comentario.conteudo || ''}
-                                        updatedAt={formatDate(comentario.updatedAt)}
-                                        userId={comentario.usuarioID}
-                                        userNome= {comentario.usuario.nome}
-                                        userAvatar= {comentario.usuario.fotoPerfil}
+                                        key={comentario?.id}
+                                        conteudo={comentario?.conteudo || ''}
+                                        updatedAt={formatDate(comentario?.updatedAt)}
+                                        userId={comentario?.usuarioID}
+                                        userNome= {comentario?.usuario.nome}
+                                        userAvatar= {comentario?.usuario.fotoPerfil}
                                     />
 
                                     {
@@ -174,11 +177,16 @@ const Avaliacao = ({
                                 </>
                             ))
                         }
-                        <CiCirclePlus 
-                            className='m-2 center'
-                            onClick={handlerNewComment}
-                            size = {44}
-                        />
+
+                        <Protected 
+                            singin = {true}
+                        >
+                            <CiCirclePlus 
+                                className='m-2 center'
+                                onClick={handlerNewComment}
+                                size = {44}
+                            />
+                        </Protected>
                     </div>
 
                     <NovoComentarioModal 

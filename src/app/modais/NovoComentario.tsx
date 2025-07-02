@@ -71,7 +71,7 @@ const NovoComentarioModal = ({
                 ></textarea>
                 </div>
 
-                <div className="flex flex-row w-full h-fit justify-between gap-3 items-center">
+                <div className="flex flex-row w-full h-fit justify-end gap-3 items-center">
                     <div className="flex flex-row w-fit justify-between gap-3 h-fit">
                         <button 
                             onClick={onClose} 
