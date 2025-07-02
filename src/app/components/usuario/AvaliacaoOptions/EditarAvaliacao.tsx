@@ -21,7 +21,6 @@ export default function EditarAvaliacao({open, onClose, authToken, avaliacaoId}:
             onClose();
             return;
         }
-
         if (!avaliacaoText || avaliacaoText.trim() === "") {
             console.error("Preencha o campo para fazer uma edição.");
             alert("Preencha o campo para fazer uma edição.");
