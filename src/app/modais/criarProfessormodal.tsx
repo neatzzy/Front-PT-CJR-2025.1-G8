@@ -1,18 +1,16 @@
 import React, { useState, useRef } from "react";
 import UploadImageProfessor from "./uploadImageProfessor";
 import { X } from "lucide-react";
-import { createProfessor } from "../utils/api/apiModalProfessor";
 
 interface CriarProfessorModalProps {
     open: boolean;
     onClose: () => void;
-    authToken?: string | null;
 }
 
-export default function CriarProfessorModal({ open, onClose, authToken}: CriarProfessorModalProps) {
+export default function CriarProfessorModal({ open, onClose /*backend*/ }: CriarProfessorModalProps) {
   const [nome, setNome] = useState('');
   const [departamento, setDepartamento] = useState('');
-  const [disciplina, setDisciplina] = useState('');
+  const [disciplinas, setDisciplinas] = useState('');
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoPreviewUrl, setFotoPreviewUrl] = useState<string | null>(null); 
 
@@ -21,32 +19,15 @@ export default function CriarProfessorModal({ open, onClose, authToken}: CriarPr
     setFotoPreviewUrl(previewUrl);
   };
 
-  const handleSave = async () => {
-    if (!nome || !departamento || !disciplina.trim()) {
-      alert("Por favor, preencha todos os campos.");
-      return;
-    }
-    const formData = new FormData();
-      formData.append('nome', nome);
-      formData.append('departamento', departamento);
-      formData.append('disciplinaName', disciplina);
-      if (fotoFile) {
-        formData.append('fotoProfessor', fotoFile);
-      }
-    try {
-        const response = await createProfessor(formData, authToken || undefined);
-        console.log('Professor cadastrado com sucesso!', response);
-        alert("Professor disponivel para avaliação!");
-        onClose();
-        setNome("")
-        setDepartamento("");
-        setDisciplina("");
-        setFotoPreviewUrl(null);
-        setFotoFile(null);
-    }
-    catch (error) {
-        alert("Erro ao cadastrar Professor.")
-    }
+  const handleSave = () => {
+    const professorData = { nome, departamento, disciplinas, fotoFile };
+    console.log("Dados do professor a serem salvos:", professorData);
+    onClose();
+    setNome('');
+    setDepartamento('');
+    setDisciplinas('');
+    setFotoFile(null);
+    setFotoPreviewUrl(null);
   };
 
   if (!open) return null;
@@ -87,8 +68,8 @@ export default function CriarProfessorModal({ open, onClose, authToken}: CriarPr
         <input
           type="text"
           placeholder="Disciplina(s)"
-          value={disciplina}
-          onChange={(e) => setDisciplina(e.target.value)}
+          value={disciplinas}
+          onChange={(e) => setDisciplinas(e.target.value)}
           className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400
           focus:outline-none focus:ring-2 focus:ring-blue-400 mb-6"/>
 
