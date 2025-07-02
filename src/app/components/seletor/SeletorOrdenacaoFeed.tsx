@@ -60,7 +60,6 @@ const SeletorOrdenacaoFeed: React.FC<SelectProps> = ({
   return (
     <div className="w-48">
       <Select
-        instanceId="ordenacao-feed"
         options={selectOptions}
         value={selectedOption}
         onChange={handleChange}

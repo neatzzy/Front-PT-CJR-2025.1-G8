@@ -5,7 +5,7 @@ import cameraImage from "../../../public/svg/cameraImage.svg";
 import EditIcon from "../../../public/svg/edit.svg";
 import UploadingAnimation from "../../../public/gif/uploading.gif";
 import { StaticImageData } from 'next/image';
-import Alert from '@mui/material/Alert';
+
 interface ImageUploadProps {
   onImageChange?: (file: File | null) => void;
 }
@@ -13,7 +13,6 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
   const [avatarURL, setAvatarURL] = useState<string | StaticImageData>(cameraImage);
   const fileUploadRef = useRef<HTMLInputElement | null>(null);
-  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const handleImageUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -22,18 +21,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
 
   const uploadImageDisplay = async () => {
     try {
-      setAvatarURL(UploadingAnimation); // mostra animação de upload
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setAvatarURL(UploadingAnimation); // mostra animação de upload (opcional)
 
       const uploadedFile = fileUploadRef.current?.files?.[0];
       if (!uploadedFile) return;
-
-      // Verifica o tipo de arquivo
-      const validTypes = ['image/png', 'image/jpeg'];
-
-      if (!validTypes.includes(uploadedFile.type)) {
-        throw new Error('Por favor, selecione uma imagem PNG ou JPEG.');
-      }
 
       // Gera uma URL temporária para exibir a imagem localmente
       const localImageURL = URL.createObjectURL(uploadedFile);
@@ -45,12 +36,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
       }
 
     } catch (error) {
-      setAvatarURL(cameraImage); // volta para imagem padrão
-      
-      if (onImageChange) onImageChange(null);
-      
-      setAlert({ type: 'error', message: error instanceof Error ? error.message : "Erro ao carregar imagem." });
-      setTimeout(() => setAlert(null), 2000);
+      console.error("Erro ao carregar imagem:", error);
     }
   };
 
@@ -108,25 +94,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
 
       <input
         type="file"
-        accept="image/png, image/jpeg"
         id="file"
         ref={fileUploadRef}
         onChange={uploadImageDisplay}
         hidden
       />
-
-      <div className='h-fit w-full pt-4 pb-4'>
-        {alert && (
-          <Alert 
-            variant="filled" 
-            severity={alert.type} 
-            className='w-full'
-            >
-            {alert.message}
-          </Alert>
-        )}
-      </div>
-
     </div>
   );
 };

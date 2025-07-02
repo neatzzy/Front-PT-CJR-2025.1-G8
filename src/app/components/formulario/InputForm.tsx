@@ -1,15 +1,13 @@
 import React, { forwardRef } from 'react'
 
-type InputFormProps = {
-  label: string;
-  placeholder: string;
-  type?: string;
-  error?: boolean;
-  helperText?: string;
-};
+interface InputFormProps {
+  label: string
+  placeholder?: string
+  type?: string
+}
 
 const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
-  ({ label = '', placeholder = '', type = 'text', error = false, helperText = ''}, ref) => {
+  ({ label = '', placeholder = '', type = 'text' }, ref) => {
     return (
       <div className="flex flex-col gap-[5px] w-1/2">
         <p className="text-black text-[1.55rem]">
@@ -19,11 +17,8 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
           ref={ref}
           type={type}
           placeholder={placeholder}
-          className={`bg-white w-full h-[35px] p-[5px] rounded-[5px] text-black border ${error ? 'border-red-500' : 'border-gray-300'}`}
+          className="bg-white w-full h-[35px] p-[5px] rounded-[5px] text-black"
         />
-        {error && helperText && (
-          <span className="text-red-500 text-sm mt-1">{helperText}</span>
-        )}
       </div>
     )
   }
