@@ -6,6 +6,10 @@ interface AvaliacaoData {
     conteudo: string
 }
 
+interface UpdateAvaliacaoData {
+    conteudo: string
+}
+
 interface Disciplina {
     id: number;
     nome: string;
@@ -69,5 +73,18 @@ export async function deleteAvaliacao(avaliacaoId:string ,token?: string) {
         return response.data;
     }catch(error) {
         console.error('Erro ao enviar remoção API')
+    }
+} 
+
+export async function editAvaliacao(avaliacaoId: string, updateAvaliacaoData: UpdateAvaliacaoData, token?: string) {
+    try{
+        const response = await axios.patch(`http://localhost:5000/avaliacao/${avaliacaoId}`, updateAvaliacaoData, {
+            headers: {
+                ...(token && {Authorization: `Bearer ${token}`})
+            }
+        });
+        return response.data;
+    }catch(error) {
+        console.error('Erro ao enviar edição API')
     }
 }
