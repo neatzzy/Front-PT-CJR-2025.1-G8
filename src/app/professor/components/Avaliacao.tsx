@@ -7,6 +7,9 @@ import { formatDate } from '@/app/utils/format';
 import { useRouter } from 'next/navigation'; // CERTO para App Router
 import EditarAvaliacao from '@/app/modais/EditarAvaliacao';
 import { deleteAvaliacao } from '@/app/utils/api/apiModalAvaliacao';
+import Button from '@mui/material/Button';
+import { CiCirclePlus } from "react-icons/ci";
+import NovoComentarioModal from '@/app/modais/NovoComentario';
 
 interface avaliacao{
     id : number;
@@ -38,11 +41,17 @@ const Avaliacao = ({
     const avatarSrc = avatarUser ? `data:image/png;base64,${avatarUser}`: "/image/fotoPerfil.png";
     const [comentariosAbertos, setComentariosAbertos] = useState(false);
     const [openEditAvalicaoModal, setOpenEditAvalicaoModal] = useState<boolean> (false);
+    const [openNewCommentModal, setOpenNewCommentModal] = useState<boolean> (false);
     const router = useRouter();
 
     // Handlers para os ícones
     const handleCommentClick = () => {
         setComentariosAbertos((prev) => !prev);
+    };
+
+    const handlerNewComment = () => {
+        setOpenNewCommentModal(true);
+        
     };
 
     const handleEditClick = () => {
@@ -69,6 +78,7 @@ const Avaliacao = ({
     const handlerPerfilUserPage = () => {
         router.push(`/usuario/${usuarioAvaliacao}`)
     }
+
 
   return (
     <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-2xl border items-start justify-center gap-3'>
@@ -143,7 +153,7 @@ const Avaliacao = ({
             {comentariosAbertos && (
                 <>
                     <hr className="w-full border-gray-700 border-0.5" />
-                    <div className='w-full w-min-fit h-fit p-2'>
+                    <div className='flex flex-col w-full w-min-fit h-fit p-2 justify-center items-center'>
                         {comentarios
                             .filter(comentario => comentario && comentario.usuarioID)
                             .map(comentario => (
@@ -164,7 +174,20 @@ const Avaliacao = ({
                                 </>
                             ))
                         }
+                        <CiCirclePlus 
+                            className='m-2 center'
+                            onClick={handlerNewComment}
+                            size = {44}
+                        />
                     </div>
+
+                    <NovoComentarioModal 
+                        isOpen = {openNewCommentModal}
+                        onClose={() => setOpenNewCommentModal(false)}
+                        userId={usuarioAutenticado}
+                        avaliacaoId={id}
+                        reload = {reload}
+                    />
                 </>
             )}
         </div>

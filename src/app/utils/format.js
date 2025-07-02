@@ -8,7 +8,6 @@ export function formatDate(date){
           month: '2-digit',
           year: 'numeric',
           hour12: false,
-          timeZone: 'UTC'
         }
       );
   };
