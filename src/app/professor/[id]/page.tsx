@@ -39,9 +39,6 @@ function ProfessorPage() {
     const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
 
     const [EditOpen, setEditOpen] = useState<boolean>(false);
-    // Removidas as variáveis de estado para conteúdoAvaliacaoEditando e idAvaliacaoEditando,
-    // pois não serão passadas para o modal de edição neste cenário.
-
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -66,7 +63,7 @@ function ProfessorPage() {
     useEffect(() => {
         async function fetchPerfil() {
             if (!professorIdFromParams || !token) {
-                setUsuarioAutorizado(null); // Define como null se não houver token
+                setUsuarioAutorizado(null); 
                 return;
             }
 
@@ -122,13 +119,11 @@ function ProfessorPage() {
         setDelOpen(true);
     };
 
-    const handleEditClickProfessorPage = (avaliacaoId: number) => { // Removido 'conteudoAtual'
-        setSelectedAvaliacaoId(avaliacaoId); // Usa selectedAvaliacaoId, como no Publicacoes.tsx
+    const handleEditClickProfessorPage = (avaliacaoId: number) => { 
+        setSelectedAvaliacaoId(avaliacaoId);
         setEditOpen(true);
     };
 
-    // Removido handleOperacaoSucesso, pois não será mais o callback direto dos modais.
-    // Os modais agora apenas fecharão e não dispararão um recarregamento automático no pai.
 
     return (
         <>
@@ -199,22 +194,19 @@ function ProfessorPage() {
                 <aside className="w-1/5 bg-[#ededed]" />
             </main>
 
-            {/* MODAIS: onDeletelSuccess e onEditSuccess foram removidos, assim como conteudoAvaliacao */}
             <DeletarAvaliacao
                 open={DelOpen}
                 onClose={() => setDelOpen(false)}
                 authToken={token ?? undefined}
                 avaliacaoId={selectedAvaliacaoId}
-                // onDeleteSuccess removido, conforme Publicacoes.tsx
+
             />
 
             <EditarAvaliacao
                 open={EditOpen}
                 onClose={() => setEditOpen(false)}
                 authToken={token ?? undefined}
-                avaliacaoId={selectedAvaliacaoId} // Usa selectedAvaliacaoId, como no Publicacoes.tsx
-                // conteudoAvaliacao removido, conforme Publicacoes.tsx
-                // onEditSuccess removido
+                avaliacaoId={selectedAvaliacaoId} 
             />
         </>
     );

@@ -57,7 +57,7 @@ const Avaliacao = ({
     };
 
     const handleEditClick = () => {
-        onEditRequest(id, conteudo); // AVALIACAO.TSX CONTINUA PEDINDO O CONTEÚDO
+        onEditRequest(id, conteudo); 
     };
 
     const handleTrashClick = () => {
