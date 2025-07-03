@@ -21,3 +21,20 @@ export async function createProfessor(data: FormData, token?: string){
         throw error;
     }
 };
+
+export async function editDisciplina(professorId: string , disciplinaName: string, token?: string){
+    console.log("apiProfessor.ts - addDisciplineToProfessor - Token:", token);
+    try{
+        const response = await axios.patch(`http://localhost:5000/professor/${professorId}`, {disciplinaName:disciplinaName}, {
+            headers: {
+                'Content-Type': 'applicantion/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            }
+        });
+        console.log("apiProfessor.ts - addDisciplineToProfessor - Token:", token);
+        return response.data;
+    } catch(error) {
+        console.error("Erro ao enviar disciplina API", error);
+        throw error;
+    }
+};

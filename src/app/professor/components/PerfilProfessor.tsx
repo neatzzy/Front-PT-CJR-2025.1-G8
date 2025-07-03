@@ -33,7 +33,6 @@ const PerfilProfessor = ({
             </div>
         </div>
 
-      {/* Infos */}
         <div className='bg-white h-fit flex flex-col w-full p-10 pt-18'>
             <h2 className="text-2xl font-bold text-gray-800 text-center">{nome}</h2>
              
@@ -55,7 +54,7 @@ const PerfilProfessor = ({
             </div>
             <button
           onClick={onAddDisciplineClick} 
-          className="w-30 h-6 mp-10 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-30 h-6 mp-10 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
         >
           + Disciplinas
         </button>

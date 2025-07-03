@@ -13,6 +13,7 @@ import { getCurrentUserAuthorized } from '@/app/utils/api/apiUser';
 import DeletarAvaliacao from '@/app/components/usuario/AvaliacaoOptions/DeletarAvaliacao';
 import EditarAvaliacao from '@/app/components/usuario/AvaliacaoOptions/EditarAvaliacao';
 import { jwtDecode } from 'jwt-decode';
+import AdicionarDisciplinas from '../DisciplinaOptions/AdicionarDIsciplinas';
 
 interface Professor {
     id: number;
@@ -39,7 +40,7 @@ function ProfessorPage() {
     const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
 
     const [EditOpen, setEditOpen] = useState<boolean>(false);
-    const [isAddDisciplineModalOpen, setIsAddDisciplineModalOpen] = useState<boolean>(false);
+    const [isAddDisciplinaOpen, setIsAddDisciplinaOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -124,7 +125,9 @@ function ProfessorPage() {
         setSelectedAvaliacaoId(avaliacaoId);
         setEditOpen(true);
     };
-
+    const handleAddDisciplineClick = () => { 
+      setIsAddDisciplinaOpen(true);
+    };
 
     return (
         <>
@@ -148,6 +151,7 @@ function ProfessorPage() {
                         departamento={professor?.departamento || ''}
                         disciplinas={professor?.disciplinas || []}
                         avatar={professor?.avatar || ''}
+                        onAddDisciplineClick={() => setIsAddDisciplinaOpen(true)}
                     />
                     <hr className="w-full border-black border-1" />
 
@@ -209,6 +213,9 @@ function ProfessorPage() {
                 authToken={token ?? undefined}
                 avaliacaoId={selectedAvaliacaoId} 
             />
+
+            <AdicionarDisciplinas open={isAddDisciplinaOpen} onClose={() => setIsAddDisciplinaOpen(false)} authToken={token ?? undefined} professorId={professor?.id || null} 
+            professorFoto={professor?.avatar || ''}/>
         </>
     );
 }
