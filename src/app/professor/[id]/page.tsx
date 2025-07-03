@@ -39,6 +39,7 @@ function ProfessorPage() {
     const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
 
     const [EditOpen, setEditOpen] = useState<boolean>(false);
+    const [isAddDisciplineModalOpen, setIsAddDisciplineModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
