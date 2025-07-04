@@ -82,24 +82,33 @@ export default function EditarPerfilModal({
         return;
       }
 
+      let response;
       if (avatarFile) {
         const formData = new FormData();
-        formData.append("nome", data.nome);
-        formData.append("email", data.email);
-        formData.append("curso", data.curso);
-        formData.append("departamento", data.departamento);
+        if (nome) formData.append("nome", data.nome);
+        if (email) formData.append("email", data.email);
+        if (curso) formData.append("curso", data.curso);
+        if (departamento) formData.append("departamento", data.departamento);
         formData.append("senha", senhaAtual);
         if (novaSenha) formData.append("novaSenha", novaSenha);
         if (confirmarSenha) formData.append("confirmarSenha", confirmarSenha);
-        formData.append("avatar", avatarFile);
-        await updateUsuario(userId, formData, token);
+        formData.append("fotoPerfil", avatarFile);
+        response = await updateUsuario(userId, formData, token);
       } else {
-        await updateUsuario(userId, data, token);
+        response = await updateUsuario(userId, data, token);
       }
-      onClose();
+
+      // Verifique se a resposta indica erro
+      if (response?.data?.status === "erro") {
+        alert(response.data.message || "Erro ao atualizar perfil");
+        setLoading(false);
+        return;
+      }
+
       alert(
         "Perfil atualizado com sucesso! Atualize a página para ver as mudanças.",
       );
+      onClose();
     } catch (err) {
       alert("Erro ao atualizar perfil");
     } finally {
