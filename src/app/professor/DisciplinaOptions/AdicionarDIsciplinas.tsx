@@ -14,7 +14,7 @@ interface AdicionarDisciplinasProps {
 
 export default function AdicionarDisciplinas({open, onClose, authToken, professorId, professorFoto}: AdicionarDisciplinasProps) {
     if (!open) return null;
-    const [disciplinaName, setDisciplinaName] = useState('');
+    const [disciplinaName, setDisciplinaName] = useState<string>('');
     const fotoP = professorFoto ? `data:image/png;base64,${professorFoto}` : "/image/fotoPerfil.png";
 
     const handleDisciplina = async() => {
@@ -24,6 +24,7 @@ export default function AdicionarDisciplinas({open, onClose, authToken, professo
             onClose();
             return;
         }
+        
         try {
             const response = await editDisciplina(String(professorId), disciplinaName, authToken);
             console.log('Disciplina adicionada com sucesso!', response);
@@ -61,7 +62,7 @@ export default function AdicionarDisciplinas({open, onClose, authToken, professo
         <p className="text-gray-800 text-center mb-4">Adicione uma Disciplina para esse professor:</p>
         <input
           type="text"
-          placeholder="Nome da Disciplina (Ex: Engenharia de Software)"
+          placeholder="Nome da Disciplina"
           value={disciplinaName}
           onChange={(e) => setDisciplinaName(e.target.value)}
           className="w-full p-2 border border-cyan-800 bg-white text-black rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"

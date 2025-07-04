@@ -82,9 +82,10 @@ function ProfessorPage() {
                     id: responseProfessor.data.id,
                     nome: responseProfessor.data.nome,
                     departamento: responseProfessor.data.departamento,
-                    disciplinas: responseProfessor.data.professoresDisciplinas ? responseProfessor.data.professoresDisciplinas.map((item: { disciplina: { nome: string } }) => item.disciplina.nome) : [],
+                    disciplinas: responseProfessor.data.disciplinas ? responseProfessor.data.disciplinas.map((item: { disciplina: { nome: string } }) => item.disciplina.nome) : [],
                     avatar: responseProfessor.data.fotoPerfil,
                 };
+                console.log('ProfessorPage: professorData.disciplinas (após mapeamento):', professorData.disciplinas);
                 setProfessor(professorData);
 
                 const responseAvalicao = await getAllAvaliacao(avaliacaoQueryParams);
