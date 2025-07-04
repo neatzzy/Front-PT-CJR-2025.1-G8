@@ -8,10 +8,7 @@ import EditarPerfilModal from "../../components/usuario/EditarPerfil";
 import ExcluirPerfilModal from "../../components/usuario/ExcluirPerfil";
 import FeedUserHeader from "@/app/components/header/FeedUserHeader";
 import { FaArrowLeft } from "react-icons/fa";
-import {
-  getCurrentUserAuthorized,
-  getUserById,
-} from "@/app/utils/api/apiUser";
+import { getCurrentUserAuthorized, getUserById } from "@/app/utils/api/apiUser";
 
 export default function PerfilPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -107,7 +104,7 @@ export default function PerfilPage() {
               curso={perfilData.curso}
               departamento={perfilData.departamento}
               email={perfilData.email}
-              avatarUrl={perfilData.fotoPerfil}
+              avatar={perfilData.fotoPerfil}
               onEditar={() => setModalOpen(true)}
               onExcluir={() => setExcluirOpen(true)}
               showButtons={isOwner}

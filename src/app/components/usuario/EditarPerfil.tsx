@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { updateUsuario } from "@/app/utils/api/apiUser";
 import { useRouter } from "next/navigation";
-import ImageUpload from "../ImageUpload"; // Importa o componente de upload
+import ImageUpload from "../ImageUpload";
 
 interface EditarPerfilModalProps {
   open: boolean;
@@ -13,7 +13,7 @@ interface EditarPerfilModalProps {
     email: string;
     curso: string;
     departamento: string;
-    avatarUrl?: string;
+    avatar?: string;
   };
 }
 
@@ -28,19 +28,36 @@ export default function EditarPerfilModal({
   const [curso, setCurso] = useState("");
   const [departamento, setDepartamento] = useState("");
   const [senhaAtual, setSenhaAtual] = useState("");
+  const [novaSenha, setNovaSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | undefined>(
+    undefined,
+  );
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
-  // Preenche os campos com os dados atuais ao abrir o modal
   useEffect(() => {
     if (open && initialData) {
-      setNome(initialData.nome);
-      setEmail(initialData.email);
-      setCurso(initialData.curso);
-      setDepartamento(initialData.departamento);
+      setNome(initialData.nome || "");
+      setEmail(initialData.email || "");
+      setCurso(initialData.curso || "");
+      setDepartamento(initialData.departamento || "");
+      setAvatarPreview(initialData.avatar);
     }
   }, [open, initialData]);
+
+  const handleImageChange = (file: File | null) => {
+    setAvatarFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatarPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setAvatarPreview(initialData?.avatar);
+    }
+  };
 
   if (!open) return null;
 
@@ -49,14 +66,14 @@ export default function EditarPerfilModal({
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-
-      // Sempre envia os valores antigos caso o campo esteja vazio
       const data: any = {
         nome: nome || initialData?.nome,
         email: email || initialData?.email,
         curso: curso || initialData?.curso,
         departamento: departamento || initialData?.departamento,
         senha: senhaAtual,
+        novaSenha,
+        confirmarSenha,
       };
 
       if (!senhaAtual) {
@@ -72,6 +89,8 @@ export default function EditarPerfilModal({
         formData.append("curso", data.curso);
         formData.append("departamento", data.departamento);
         formData.append("senha", senhaAtual);
+        if (novaSenha) formData.append("novaSenha", novaSenha);
+        if (confirmarSenha) formData.append("confirmarSenha", confirmarSenha);
         formData.append("avatar", avatarFile);
         await updateUsuario(userId, formData, token);
       } else {
@@ -90,8 +109,8 @@ export default function EditarPerfilModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-[#171717] opacity-40 pointer-events-none" />
-      <div className="relative bg-[#ededed] w-[500px] rounded-3xl flex flex-col items-center px-10 py-8 z-10">
+      <div className="absolute inset-0 bg-black opacity-50" />
+      <div className="relative bg-[#ededed] w-[480px] rounded-2xl flex flex-col items-center px-8 py-10 z-10 shadow-lg">
         <button
           className="absolute top-6 right-8 text-4xl text-gray-700 hover:text-black"
           onClick={onClose}
@@ -99,96 +118,82 @@ export default function EditarPerfilModal({
         >
           &times;
         </button>
-        {/* Substitui o bloco do avatar pelo componente de upload */}
-        <div className="relative flex flex-col items-center mb-6">
-          <ImageUpload onImageChange={setAvatarFile} />
+        {/* Foto de perfil centralizada com upload */}
+        <div className="relative flex flex-col items-center mb-8">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#ff4fc7] bg-white flex items-center justify-center">
+            <Image
+              src={avatarPreview || "/image/fotoPerfil.png"}
+              alt="Avatar"
+              width={128}
+              height={128}
+              className="object-cover w-full h-full"
+            />
+            {/* Botão de upload de imagem sobreposto */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+              <ImageUpload onImageChange={handleImageChange} />
+            </div>
+          </div>
         </div>
         <form
           className="flex flex-col gap-4 w-full items-center"
           onSubmit={handleSubmit}
         >
-          <div className="flex w-full gap-4">
-            <div className="flex-1 flex flex-col">
-              <label
-                className="font-semibold text-gray-700 mb-1 ml-1"
-                htmlFor="nome"
-              >
-                Nome
-              </label>
-              <input
-                id="nome"
-                type="text"
-                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <label
-                className="font-semibold text-gray-700 mb-1 ml-1"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex w-full gap-4">
-            <div className="flex-1 flex flex-col">
-              <label
-                className="font-semibold text-gray-700 mb-1 ml-1"
-                htmlFor="curso"
-              >
-                Curso
-              </label>
-              <input
-                id="curso"
-                type="text"
-                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
-                value={curso}
-                onChange={(e) => setCurso(e.target.value)}
-              />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <label
-                className="font-semibold text-gray-700 mb-1 ml-1"
-                htmlFor="departamento"
-              >
-                Departamento
-              </label>
-              <input
-                id="departamento"
-                type="text"
-                className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
-                value={departamento}
-                onChange={(e) => setDepartamento(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex w-full gap-4">
-            <div className="flex-1 flex flex-col">
-              <label
-                className="font-semibold text-gray-700 mb-1 ml-1"
-                htmlFor="senhaAtual"
-              >
-                Digite sua senha para confirmar as alterações
-              </label>
-              <input
-                id="senha"
-                type="password"
-                className="w-105 h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border border-gray-300"
-                value={senhaAtual}
-                onChange={(e) => setSenhaAtual(e.target.value)}
-              />
-            </div>
-            <div className="flex-1" />
-          </div>
+          <input
+            id="nome"
+            type="text"
+            placeholder="Nome"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            id="curso"
+            type="text"
+            placeholder="Curso"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={curso}
+            onChange={(e) => setCurso(e.target.value)}
+          />
+          <input
+            id="departamento"
+            type="text"
+            placeholder="Departamento"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={departamento}
+            onChange={(e) => setDepartamento(e.target.value)}
+          />
+          <input
+            id="senhaAtual"
+            type="password"
+            placeholder="Senha atual"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={senhaAtual}
+            onChange={(e) => setSenhaAtual(e.target.value)}
+          />
+          <input
+            id="novaSenha"
+            type="password"
+            placeholder="Nova senha"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={novaSenha}
+            onChange={(e) => setNovaSenha(e.target.value)}
+          />
+          <input
+            id="confirmarSenha"
+            type="password"
+            placeholder="Confirmar nova senha"
+            className="w-full h-12 rounded-2xl px-4 bg-white text-gray-800 placeholder-gray-400 outline-none border-none"
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+          />
           <button
             type="submit"
             disabled={loading}

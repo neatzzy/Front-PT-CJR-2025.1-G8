@@ -7,7 +7,7 @@ interface PerfilProps {
   curso: string;
   departamento: string;
   email: string;
-  avatarUrl: string;
+  avatar: string;
   onEditar: () => void;
   onExcluir: () => void;
   showButtons?: boolean;
@@ -18,12 +18,14 @@ export default function Perfil({
   curso,
   departamento,
   email,
-  avatarUrl,
+  avatar,
   onEditar,
   onExcluir,
   showButtons,
 }: PerfilProps) {
-  const avatarSrc = avatarUrl ? avatarUrl : "/image/fotoPerfil.png";
+  const avatarSrc = avatar
+    ? `data:image/png;base64,${avatar}`
+    : "/image/fotoPerfil.png";
 
   return (
     <div className="w-[600px] bg-white rounded-b-xl shadow-md border border-gray-300">
