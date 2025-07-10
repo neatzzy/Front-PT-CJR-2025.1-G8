@@ -56,7 +56,7 @@ function FeedUserHeader() {
         <div className="flex items-center gap-8">
           <FaBell size={28} className="text-black" />
 
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a] cursor-pointer">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a] cursor-pointer hover:border-white transition-colors">
             <Image
               src={avatarSrc}
               alt="Avatar"
@@ -68,7 +68,7 @@ function FeedUserHeader() {
 
           <FaSignOutAlt
             size={28}
-            className="text-black cursor-pointer hover:text-gray-300 transition-colors"
+            className="text-black cursor-pointer hover:text-white transition-colors"
             onClick={handlerLogout}
           />
         </div>

@@ -69,7 +69,7 @@ const Avaliacao = ({
     };
 
     return (
-        <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-2xl border items-start justify-center gap-3'>
+        <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-2xl border items-start justify-center gap-3 hover:shadow-2xl transition-shadow'>
             <div className="w-8 h-8 rounded-full overflow-hidden">
                 <Image src={avatarSrc}
                     alt="Avatar"

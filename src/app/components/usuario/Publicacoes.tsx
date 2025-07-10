@@ -109,7 +109,7 @@ export default function Publicacoes() {
         sortedPublicacoes.map((pub, idx) => (
           <div
             key={pub.id ?? idx}
-            className="mb-4 p-4 bg-[#4fffc7] rounded-2xl shadow flex flex-col"
+            className="mb-4 p-7 bg-[#4fffc7] rounded-2xl shadow flex flex-col hover:shadow-2xl transition-shadow border"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#22a27a]">
