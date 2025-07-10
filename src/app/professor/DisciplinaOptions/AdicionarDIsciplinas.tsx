@@ -10,9 +10,10 @@ interface AdicionarDisciplinasProps {
     authToken?: string | undefined;
     professorId: number | null;
     professorFoto: string; 
+    reload: () => void;
 }   
 
-export default function AdicionarDisciplinas({open, onClose, authToken, professorId, professorFoto}: AdicionarDisciplinasProps) {
+export default function AdicionarDisciplinas({open, onClose, authToken, professorId, professorFoto, reload}: AdicionarDisciplinasProps) {
     if (!open) return null;
     const [disciplinaName, setDisciplinaName] = useState<string>('');
     const fotoP = professorFoto ? `data:image/png;base64,${professorFoto}` : "/image/fotoPerfil.png";
@@ -30,6 +31,7 @@ export default function AdicionarDisciplinas({open, onClose, authToken, professo
             console.log('Disciplina adicionada com sucesso!', response);
             alert("Disciplina adicionada com sucesso!");
             onClose();
+            reload();
         }catch(error){
             console.error(`Erro ao adicionar disciplina ${professorId}:`, error);
             alert('Ocorreu um erro ao adicionar disciplina. Tente novamente.');
