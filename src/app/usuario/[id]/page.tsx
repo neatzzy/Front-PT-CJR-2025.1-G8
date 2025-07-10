@@ -99,7 +99,7 @@ export default function PerfilPage() {
         </aside>
 
         {/* Conteúdo principal centralizado */}
-        <div className="flex-1 flex flex-col items-center pt-10">
+        <div className="flex-1 flex flex-col items-center pt-5">
           <div>
             <div className="flex flex-col items-center">
             <Perfil
@@ -113,7 +113,7 @@ export default function PerfilPage() {
               showButtons={isOwner}
             />
             </div>
-            <div className="mt-10 max-w-150 overflow-hidden">
+            <div className="mt-4 max-w-150 overflow-hidden">
             <Publicacoes />
             </div>
           </div>

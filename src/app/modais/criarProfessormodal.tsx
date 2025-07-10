@@ -95,7 +95,7 @@ export default function CriarProfessorModal({ open, onClose, authToken}: CriarPr
         <button
           onClick={handleSave}
           className="w-full px-6 py-3 rounded-lg font-bold text-lg bg-green-600 text-white hover:bg-green-700
-          focus:outline-none focus:ring-2 focus:ring-green-500">
+          focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer">
           Salvar
         </button>
 

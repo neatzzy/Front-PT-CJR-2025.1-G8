@@ -146,7 +146,7 @@ export default function CriarAvaliacaoModal({open, onClose, authToken, userId}: 
                 <div className="flex justify-between gap-3 mt-4">
                 <button 
                     onClick={handleOpenCriarProfessorModal} 
-                    className="px-6 py-2 rounded-lg font-semibold bg-gray-300 text-gray-800 cursor-pointer">
+                    className="px-6 py-2 rounded-lg font-semibold bg-gray-300 text-gray-800 cursor-pointer hover:bg-blue-400">
                         Adicionar Professor
                 </button>
                 <button

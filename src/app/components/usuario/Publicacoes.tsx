@@ -191,12 +191,36 @@ export default function Publicacoes() {
         onClose={() => setDelOpen(false)}
         authToken={token ?? undefined}
         avaliacaoId={selectedAvaliacaoId}
+        reload={() => {
+          if (profileuserId) {
+            setLoading(true);
+            getAllAvaliacao({
+              usuarioID: profileuserId,
+              include: "usuario,professor,disciplina,comentarios",
+            })
+              .then((res) => setPublicacoes(res.data?.data || []))
+              .catch(() => setPublicacoes([]))
+              .finally(() => setLoading(false));
+          }
+        }}
       />
       <EditarAvaliacao
         open={EditOpen}
         onClose={() => setEditOpen(false)}
         authToken={token ?? undefined}
         avaliacaoId={selectedAvaliacaoId}
+        reload={() => {
+          if (profileuserId) {
+            setLoading(true);
+            getAllAvaliacao({
+              usuarioID: profileuserId,
+              include: "usuario,professor,disciplina,comentarios",
+            })
+              .then((res) => setPublicacoes(res.data?.data || []))
+              .catch(() => setPublicacoes([]))
+              .finally(() => setLoading(false));
+          }
+        }}
       />
     </div>
   );
