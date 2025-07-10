@@ -7,9 +7,10 @@ interface DeletarAvaliacaoProps {
     onClose: () => void;
     authToken?: string | undefined;
     avaliacaoId: number | null;
+    reload: () => void;
 } 
 
-export default function DeletarAvaliacao({open, onClose, authToken, avaliacaoId}: DeletarAvaliacaoProps) {
+export default function DeletarAvaliacao({open, onClose, authToken, avaliacaoId, reload}: DeletarAvaliacaoProps) {
     if (!open) return null;
 
     const handleRemove = async () => {
@@ -25,6 +26,7 @@ export default function DeletarAvaliacao({open, onClose, authToken, avaliacaoId}
             console.log('Avaliação removida com sucesso!', response);
             alert("Avaliação Deletada com sucesso!");
             onClose();
+            reload();
         }catch(error) {
             console.error(`Erro ao excluir avaliação ${avaliacaoId}:`, error);
             alert('Ocorreu um erro ao excluir a avaliação. Tente novamente.');

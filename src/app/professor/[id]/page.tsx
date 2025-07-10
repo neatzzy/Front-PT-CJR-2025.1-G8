@@ -182,7 +182,7 @@ function ProfessorPage() {
                                             disciplina={avaliacao.disciplina.nome}
                                             conteudo={avaliacao.conteudo}
                                             comentarios={Array.isArray(avaliacao.comentarios) ? avaliacao.comentarios : []}
-                                            reload={handleReload}
+                                            reload={() => setMakeReload((prev) => !prev)}
                                             onDeleteRequest={handleTrashClickProfessorPage}
                                             onEditRequest={handleEditClickProfessorPage}
                                         />
@@ -206,7 +206,7 @@ function ProfessorPage() {
                 onClose={() => setDelOpen(false)}
                 authToken={token ?? undefined}
                 avaliacaoId={selectedAvaliacaoId}
-
+                reload={() => setMakeReload((prev) => !prev)}
             />
 
             <EditarAvaliacao
@@ -214,14 +214,17 @@ function ProfessorPage() {
                 onClose={() => setEditOpen(false)}
                 authToken={token ?? undefined}
                 avaliacaoId={selectedAvaliacaoId} 
+                reload={() => setMakeReload((prev) => !prev)}
             />
 
             <AdicionarDisciplinas 
-            open={isAddDisciplinaOpen} 
-            onClose={() => setIsAddDisciplinaOpen(false)} 
-            authToken={token ?? undefined} 
-            professorId={professor?.id || null} 
-            professorFoto={professor?.avatar || ''}/>
+                open={isAddDisciplinaOpen} 
+                onClose={() => setIsAddDisciplinaOpen(false)} 
+                authToken={token ?? undefined} 
+                professorId={professor?.id || null} 
+                professorFoto={professor?.avatar || ''}
+                reload={() => setMakeReload((prev) => !prev)}
+            />
         </>
     );
 }
