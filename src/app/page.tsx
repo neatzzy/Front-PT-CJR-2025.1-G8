@@ -197,7 +197,7 @@ function Feed() {
               novosProfessoresData.data.length > 0 ? (
                 novosProfessoresData.data.map((relacao: Daum) => (
                   <CardProfessorFeed
-                    key={relacao.professorID}
+                    key={relacao.professorID + relacao.disciplinaID}
                     professorID={relacao.professorID}
                     nome={relacao.professor.nome}
                     disciplina={relacao.disciplina.nome}
@@ -262,7 +262,7 @@ function Feed() {
               todosProfessoresData.data.length > 0 ? (
                 todosProfessoresData.data.map((relacao: Daum) => (
                   <CardProfessorFeed
-                    key={relacao.professorID}
+                    key={relacao.professorID + relacao.disciplinaID}
                     professorID={relacao.professorID}
                     nome={relacao.professor.nome}
                     disciplina={relacao.disciplina.nome}
