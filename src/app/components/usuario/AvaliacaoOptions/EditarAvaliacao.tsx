@@ -7,9 +7,10 @@ interface EditarAvaliacaoProps {
     onClose: () => void;
     authToken?: string | undefined;
     avaliacaoId: number | null;
+    reload: () => void;
 }  
 
-export default function EditarAvaliacao({open, onClose, authToken, avaliacaoId}: EditarAvaliacaoProps) {
+export default function EditarAvaliacao({open, onClose, authToken, avaliacaoId, reload}: EditarAvaliacaoProps) {
     if (!open) return null;
 
     const [avaliacaoText, setAvaliacaoText] = useState<string>("");
@@ -36,6 +37,7 @@ export default function EditarAvaliacao({open, onClose, authToken, avaliacaoId}:
             console.log('Avaliação editada com sucesso!', response);
             alert("Avaliação Editada com sucesso!");
             onClose();
+            reload();
         } catch (error) {
             console.error(`Erro ao editar avaliação ${avaliacaoId}:`, error);
             alert('Ocorreu um erro ao editar a avaliação. Tente novamente.');

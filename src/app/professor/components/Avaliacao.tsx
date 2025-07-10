@@ -75,6 +75,7 @@ const Avaliacao = ({
                     alt="Avatar"
                     width={32}
                     height={32}
+                    className='cursor-pointer'
                     onClick={handlerPerfilUserPage}
                 />
             </div>

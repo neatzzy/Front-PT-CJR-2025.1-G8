@@ -169,7 +169,7 @@ function Feed() {
         {/* Novos Professores */}
         <section className="w-fit min-w-full h-auto h-min-fit bg-white-100 ">
           <div className="flex flex-row justify-between items-center h-fit py-5 px-5 bg-white border-2 rounded-full">
-            <h2 className="text-2xl center text-black">Novos Professores</h2>
+            <h2 className="text-2xl center text-black">Novos Professores / Disciplinas</h2>
             <Protected singin={true}>
               <div className='flex flex-row w-fit gap-x-10 h-fit'>
                 <button
@@ -197,7 +197,7 @@ function Feed() {
               novosProfessoresData.data.length > 0 ? (
                 novosProfessoresData.data.map((relacao: Daum) => (
                   <CardProfessorFeed
-                    key={relacao.professorID}
+                    key={relacao.professorID + relacao.disciplinaID}
                     professorID={relacao.professorID}
                     nome={relacao.professor.nome}
                     disciplina={relacao.disciplina.nome}
@@ -262,7 +262,7 @@ function Feed() {
               todosProfessoresData.data.length > 0 ? (
                 todosProfessoresData.data.map((relacao: Daum) => (
                   <CardProfessorFeed
-                    key={relacao.professorID}
+                    key={relacao.professorID + relacao.disciplinaID}
                     professorID={relacao.professorID}
                     nome={relacao.professor.nome}
                     disciplina={relacao.disciplina.nome}
