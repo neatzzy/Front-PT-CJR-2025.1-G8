@@ -39,7 +39,7 @@ function FeedUserHeader() {
       : "/image/fotoPerfil.png";
 
   return (
-    <header className="bg-[#a4fed3] w-full py-2 px-4 flex flex-row flex-wrap justify-between items-center h-[10%]">
+    <header className="bg-[#4af0a0] w-full py-2 px-4 flex flex-row flex-wrap justify-between items-center h-[10%]">
       <div className="flex items-center mr-5 h-full w-auto">
         <Image src="/image/UnbLogo.png" alt="LogoUnB" width={60} height={60} />
       </div>
@@ -68,7 +68,7 @@ function FeedUserHeader() {
 
           <FaSignOutAlt
             size={28}
-            className="text-black cursor-pointer"
+            className="text-black cursor-pointer hover:text-gray-300 transition-colors"
             onClick={handlerLogout}
           />
         </div>
