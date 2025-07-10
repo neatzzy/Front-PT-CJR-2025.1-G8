@@ -5,6 +5,7 @@ import Protected from "../Protected";
 import { FaBell, FaSignOutAlt } from "react-icons/fa";
 import { getCurrentUserAuthorized } from "../../utils/api/apiUser";
 
+
 function FeedUserHeader() {
   const [user, setUser] = useState<Record<string, any> | null>(null);
 

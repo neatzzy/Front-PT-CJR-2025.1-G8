@@ -161,7 +161,9 @@ function Feed() {
 
   return (
     <>
+      <header className='sticky top-0'>
       <FeedUserHeader />
+      </header>
       <main className="bg-[#ededed] h-fit min-h-screen w-full flex flex-col items-center p-10">
 
         {/* Novos Professores */}
