@@ -56,19 +56,19 @@ function FeedUserHeader() {
         <div className="flex items-center gap-8">
           <FaBell size={28} className="text-black" />
 
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a]">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#22a27a] cursor-pointer">
             <Image
               src={avatarSrc}
               alt="Avatar"
               width={48}
               height={48}
-              onClick={handlerPerfilUser}
+              onClick={handlerPerfilUser} 
             />
           </div>
 
           <FaSignOutAlt
             size={28}
-            className="text-black"
+            className="text-black cursor-pointer"
             onClick={handlerLogout}
           />
         </div>

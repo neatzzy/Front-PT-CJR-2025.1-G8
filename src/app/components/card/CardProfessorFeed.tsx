@@ -34,7 +34,7 @@ const CardProfessorFeed: React.FC<CardProps> = ({
 
   return (
     <div
-      className="flex flex-col items-center justify-between gap-y-1 bg-white rounded-3xl shadow-1g p-3 w-fit min-h-fit h-60"
+      className="flex flex-col items-center justify-between gap-y-1 bg-white rounded-3xl shadow-1g p-3 w-fit min-h-fit h-60 cursor-pointer"
       onClick={handleProfessorClick}
     >
       <img

@@ -166,13 +166,13 @@ export default function Publicacoes() {
               {isOwner && (
                 <>
                   <button
-                    className="ml-auto hover:text-[#179478]"
+                    className="ml-auto hover:text-[#179478] cursor-pointer"
                     onClick={() => handleEdit(pub.id)}
                   >
                     <FaEdit />
                   </button>
                   <button
-                    className="hover:text-[#b94a4a]"
+                    className="hover:text-[#b94a4a] cursor-pointer"
                     onClick={() => handleDelete(pub.id)}
                   >
                     <FaTrash />

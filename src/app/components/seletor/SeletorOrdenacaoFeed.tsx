@@ -58,7 +58,7 @@ const SeletorOrdenacaoFeed: React.FC<SelectProps> = ({
   };
 
   return (
-    <div className="w-48">
+    <div className="w-48 cursor-pointer">
       <Select
         instanceId="ordenacao-feed"
         options={selectOptions}

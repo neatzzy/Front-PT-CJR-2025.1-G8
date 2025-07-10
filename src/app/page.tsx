@@ -171,13 +171,13 @@ function Feed() {
             <Protected singin={true}>
               <div className='flex flex-row w-fit gap-x-10 h-fit'>
                 <button
-                  className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
+                  className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] h-full min-w-[35px] w-fit hover:bg-[#00ed4f] transition-colors"
                   onClick={() => setModalTeacherOpen(true)}
                 >
                   Adicionar Professor
                 </button>
                 <button
-                  className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] transition-colors duration-300 h-full min-w-[35px] w-fit"
+                  className="bg-[#00ABED] text-white px-5 py-2 border-2 border-white rounded-full cursor-pointer text-[1.2rem] h-full min-w-[35px] w-fit hover:bg-[#00ed4f] transition-colors"
                   onClick={() => setModalAssessmentOpen(true)}
                 >
                   Adicionar Avaliação

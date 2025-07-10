@@ -139,6 +139,7 @@ function ProfessorPage() {
                 <aside className="w-1/5 bg-[#ededed] flex flex-col items-end p-10">
                     <button className="bg-white rounded-full p-3 shadow-md border border-black">
                         <FaArrowLeft
+                            className="cursor-pointer text-gray hover:text-black transition-colors"
                             size={32}
                             onClick={handlerBackPage}
                         />
@@ -215,7 +216,11 @@ function ProfessorPage() {
                 avaliacaoId={selectedAvaliacaoId} 
             />
 
-            <AdicionarDisciplinas open={isAddDisciplinaOpen} onClose={() => setIsAddDisciplinaOpen(false)} authToken={token ?? undefined} professorId={professor?.id || null} 
+            <AdicionarDisciplinas 
+            open={isAddDisciplinaOpen} 
+            onClose={() => setIsAddDisciplinaOpen(false)} 
+            authToken={token ?? undefined} 
+            professorId={professor?.id || null} 
             professorFoto={professor?.avatar || ''}/>
         </>
     );

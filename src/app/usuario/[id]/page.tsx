@@ -92,7 +92,9 @@ export default function PerfilPage() {
             className="bg-white rounded-full p-3 shadow-md border border-black"
             onClick={() => router.back()}
           >
-            <FaArrowLeft size={32} />
+            <FaArrowLeft 
+            className="cursor-pointer text-gray hover:text-black transition-colors"
+            size={32} />
           </button>
         </aside>
 

@@ -148,7 +148,7 @@ const Avaliacao = ({
                                 singin={true}
                             >
                                 <CiCirclePlus
-                                    className='m-2 center'
+                                    className='m-2 center cursor-pointer hover:text-black transition-colors'
                                     onClick={handlerNewComment}
                                     size={44}
                                 />
