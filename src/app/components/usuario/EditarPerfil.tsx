@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { updateUsuario } from "@/app/utils/api/apiUser";
 import { useRouter } from "next/navigation";
 import ImageUpload from "../ImageUpload";
+import { FaCamera } from "react-icons/fa";
 
 interface EditarPerfilModalProps {
   open: boolean;
@@ -129,18 +130,42 @@ export default function EditarPerfilModal({
         </button>
         {/* Foto de perfil centralizada com upload */}
         <div className="relative flex flex-col items-center mb-8">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#ff4fc7] bg-white flex items-center justify-center">
+          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-[#4af0a0] bg-white flex items-center justify-center">
             <Image
-              src={avatarPreview || "/image/fotoPerfil.png"}
+              src={
+                avatarPreview
+                  ? avatarPreview
+                  : initialData?.avatar
+                    ? initialData.avatar.startsWith("data:image")
+                      ? initialData.avatar
+                      : `data:image/png;base64,${initialData.avatar}`
+                    : "/image/fotoPerfil.png"
+              }
               alt="Avatar"
               width={128}
               height={128}
               className="object-cover w-full h-full"
             />
-            {/* Botão de upload de imagem sobreposto */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-              <ImageUpload onImageChange={handleImageChange} />
-            </div>
+          </div>
+          {/* Botão de upload centralizado embaixo da foto, com ícone correto */}
+          <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2">
+            <label
+              htmlFor="avatar-upload"
+              className="bg-white border-2 border-[#ffffff] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer shadow hover:bg-[#dadada] transition"
+              style={{ boxShadow: "0 2px 8px #0001" }}
+            >
+              <FaCamera className="text-2xl text-[#a5a2a2]" />
+              <input
+                id="avatar-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  handleImageChange(file);
+                }}
+              />
+            </label>
           </div>
         </div>
         <form
