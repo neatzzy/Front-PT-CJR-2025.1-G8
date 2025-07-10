@@ -30,7 +30,7 @@ export default function Perfil({
   return (
     <div className="w-[600px] bg-white rounded-b-xl shadow-md border border-gray-300">
       {/* Banner */}
-      <div className="relative bg-[#4fffc7] h-36 rounded-t-xl flex items-center">
+      <div className="relative bg-[#3eee9a] h-36 rounded-t-xl flex items-center">
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-16">
           <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden shadow-lg bg-white">
             <Image src={avatarSrc} alt="Avatar" width={128} height={128} />
