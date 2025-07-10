@@ -147,7 +147,7 @@ export default function Publicacoes() {
                 </span>
               </div>
             </div>
-            <p className="text-gray-800 mb-2">{pub.conteudo}</p>
+            <p className="text-gray-800 mb-2 overflow-hidden">{pub.conteudo}</p>
             <div className="flex items-center gap-4 text-gray-700 mt-1">
               <span className="flex items-center gap-1 text-base">
                 <svg

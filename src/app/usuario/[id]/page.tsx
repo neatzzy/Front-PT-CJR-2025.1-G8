@@ -74,14 +74,14 @@ export default function PerfilPage() {
 
   if (!perfilData) {
     return (
-      <main className="min-h-screen w-full bg-[#e5fdf1] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[#e5fdf1] flex items-center justify-center">
         <span>Carregando...</span>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen w-full bg-[#ededed] flex flex-col">
+    <div className="min-h-screen w-full bg-[#ededed] flex flex-col">
       {/* Header */}
       <FeedUserHeader />
       {/* Conteúdo central */}
@@ -101,6 +101,7 @@ export default function PerfilPage() {
         {/* Conteúdo principal centralizado */}
         <div className="flex-1 flex flex-col items-center pt-10">
           <div>
+            <div className="flex flex-col items-center">
             <Perfil
               nome={perfilData.nome}
               curso={perfilData.curso}
@@ -111,7 +112,10 @@ export default function PerfilPage() {
               onExcluir={() => setExcluirOpen(true)}
               showButtons={isOwner}
             />
+            </div>
+            <div className="mt-10 max-w-150 overflow-hidden">
             <Publicacoes />
+            </div>
           </div>
         </div>
 
@@ -136,6 +140,6 @@ export default function PerfilPage() {
         }}
         userId={perfilData.id} // <-- Passe sempre o id aqui!
       />
-    </main>
+    </div>
   );
 }
