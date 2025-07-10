@@ -133,6 +133,7 @@ const Avaliacao = ({
                                     <React.Fragment key={comentario?.id}>
                                         <Comentario
                                             key={comentario?.id}
+                                            comentarioId={comentario?.id}
                                             conteudo={comentario?.conteudo || ''}
                                             updatedAt={formatDate(comentario?.updatedAt)}
                                             userId={comentario?.usuarioID}
