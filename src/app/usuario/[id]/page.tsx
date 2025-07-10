@@ -81,7 +81,7 @@ export default function PerfilPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-center bg-[#ededed] flex flex-col ">
+    <main className="min-h-screen w-full bg-[#ededed] flex flex-col">
       {/* Header */}
       <FeedUserHeader />
       {/* Conteúdo central */}
@@ -93,26 +93,26 @@ export default function PerfilPage() {
             onClick={() => router.back()}
           >
             <FaArrowLeft 
-            className="cursor-pointer text-gray hover:text-black transition-colors"
+             className="cursor-pointer hover:text-black transition-colors"
             size={32} />
           </button>
         </aside>
 
         {/* Conteúdo principal centralizado */}
         <div className="flex-1 flex flex-col items-center pt-10">
-          <div className="w-4/5 px-50">
-              <Perfil
-                nome={perfilData.nome}
-                curso={perfilData.curso}
-                departamento={perfilData.departamento}
-                email={perfilData.email}
-                avatar={perfilData.fotoPerfil}
-                onEditar={() => setModalOpen(true)}
-                onExcluir={() => setExcluirOpen(true)}
-                showButtons={isOwner}
-              />
+          <div>
+            <Perfil
+              nome={perfilData.nome}
+              curso={perfilData.curso}
+              departamento={perfilData.departamento}
+              email={perfilData.email}
+              avatar={perfilData.fotoPerfil}
+              onEditar={() => setModalOpen(true)}
+              onExcluir={() => setExcluirOpen(true)}
+              showButtons={isOwner}
+            />
+            <Publicacoes />
           </div>
-              <Publicacoes />
         </div>
 
         {/* Sidebar direita */}
@@ -136,6 +136,6 @@ export default function PerfilPage() {
         }}
         userId={perfilData.id} // <-- Passe sempre o id aqui!
       />
-    </div>
+    </main>
   );
 }

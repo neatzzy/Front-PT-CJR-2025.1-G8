@@ -158,8 +158,8 @@ function ProfessorPage() {
                     <hr className="w-full border-black border-1" />
 
                     <div className="h-fit bg-white p-4 w-full flex flex-col gap-3 justify-start items-center ">
-                        <div className='w-full'>
-                            <h3 className='text-black font-bold mb-5'> Avaliações </h3>
+                        <div className='w-full font-bold text-2xl text-black mb-3'>
+                         Avaliações  
                         </div>
 
                         {avaliacoes.length > 0 ?
