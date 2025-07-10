@@ -7,6 +7,10 @@ interface ProfessorData {
     professorFoto?: File | null;
 }
 
+interface PhotoUpdatePayload {
+    fotoPerfil: string; 
+}
+
 export async function createProfessor(data: FormData, token?: string){
     try{
         const response = await axios.post("http://localhost:5000/professor", data,{
@@ -36,3 +40,38 @@ export async function editDisciplina(professorId: string , disciplinaName: strin
         throw error;
     }
 };
+
+export async function deleteProfessor(professorId: number, token?: string) {
+    try {
+        const response = await axios.delete(`http://localhost:5000/professor/${professorId}`, {
+            headers: {
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao excluir professor API", error);
+        throw error;
+    }
+}
+
+export async function updateProfessorPhoto(professorId: number, photoBase64: string, token?: string): Promise<any> { 
+  try {
+    const dataToSend: PhotoUpdatePayload = {
+      fotoPerfil: photoBase64, 
+    };
+    const response = await axios.patch(
+      `http://localhost:5000/professor/${professorId}`,
+      dataToSend,
+      {
+        headers: {
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao atualizar foto do professor API:", error);
+    throw error;
+  }
+}

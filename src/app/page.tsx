@@ -58,6 +58,7 @@ function Feed() {
   const [modalAssessmentOpen, setModalAssessmentOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [UserRole, setUserRole] = useState<string | null>(null);
 
   // Paginação
   const [pageNovos, setPageNovos] = useState(1);
@@ -116,12 +117,16 @@ function Feed() {
           try {
             const decodedToken: any = jwtDecode(storedToken);
             const extractedUserId = decodedToken.id || decodedToken.sub;
+            const extractedUserRole = decodedToken.role || decodedToken.userRole;
             setUserId(extractedUserId);
+            setUserRole(extractedUserRole);
           } catch (e) {
             setUserId(null);
+            setUserRole(null);
           }
         } else {
           setUserId(null);
+          setUserRole(null);
         }
       }
     }
