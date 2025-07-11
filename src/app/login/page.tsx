@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; 
 import Image from "next/image";
 import Link from "next/link";
-
+import { api } from "../utils/api/api";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ export default function Home() {
     e.preventDefault(); 
 
     setError("");
-    fetch("http://localhost:5000/login", {
+    fetch(process.env.NEXT_PUBLIC_API_URL + "/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

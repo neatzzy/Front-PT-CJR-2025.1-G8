@@ -1,6 +1,8 @@
 import React from 'react'
 import Image from "next/image";
 import { FaBuilding, FaBookOpen } from "react-icons/fa";
+import { useRef, useState } from 'react';
+import { updateProfessorPhoto } from '@/app/utils/api/apiModalProfessor'; 
 
 
 interface PerfilProfessorProps {
@@ -9,6 +11,11 @@ interface PerfilProfessorProps {
   disciplinas : any[];
   avatar: string;
   onAddDisciplineClick: () => void;
+  professorId: number;
+  isAdmin: boolean;
+  onDeleteProfessorClick: (id: number) => void;
+  onEditarFoto?: (id: number) => void;
+  token?: string | null; 
 }
 
 
@@ -18,10 +25,45 @@ const PerfilProfessor = ({
   disciplinas,
   avatar,
   onAddDisciplineClick,
+  professorId,
+  isAdmin,
+  onDeleteProfessorClick,
+  onEditarFoto,
+  token,
 }: PerfilProfessorProps) => {
 
-    const avatarSrc = avatar ? `data:image/png;base64,${avatar}` : "/image/fotoPerfil.png";
+  const avatarSrc = avatar ? `data:image/png;base64,${avatar}` : "/image/fotoPerfil.png";
+  const fileInputRef = useRef<HTMLInputElement>(null); 
 
+
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; 
+    if (!file) {
+      return; 
+    }
+    try {
+      const base64String = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file); 
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+      const pureBase64 = base64String.split(',')[1];
+      await updateProfessorPhoto(professorId, pureBase64, token ?? undefined);
+      alert('Foto atualizada com sucesso!');
+
+    } catch (err: any) {
+      console.error('Erro ao atualizar foto:', err); 
+      alert('Erro ao atualizar foto. Tente novamente.');
+    }
+  }
+
+  const handleEditPhotoButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); 
+    }
+  };
+    
   return (
     <div className='w-full h-fit flex flex-col '> 
       {/* Banner */}
@@ -58,6 +100,34 @@ const PerfilProfessor = ({
         >
           + Disciplinas
         </button>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          className="hidden"
+          style={{ display: 'none' }}
+        />
+
+        {isAdmin && (
+          <button
+            onClick={handleEditPhotoButtonClick} 
+            className="w-full py-2 px-4 mt-2 bg-green-200 hover:bg-green-300 text-green-700 font-semibold rounded focus:outline-none focus:shadow-outline cursor-pointer text-center
+                       border border-green-700" 
+            type="button"
+          >
+            Editar Foto Professor
+          </button>
+        )}
+        {isAdmin && (
+          <button
+            onClick={() => onDeleteProfessorClick(professorId)}
+            className="py-2 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg focus:outline-none focus:shadow-outline cursor-pointer text-center text-sm border border-red-700"
+            type="button"
+          >
+            Excluir Discente
+          </button>
+        )}
         </div>
 
     </div>
