@@ -11,6 +11,8 @@ import Button from '@mui/material/Button';
 import { CiCirclePlus } from "react-icons/ci";
 import NovoComentarioModal from '@/app/modais/NovoComentario';
 import Protected from '@/app/components/Protected';
+import DeletarAvaliacao from '@/app/components/usuario/AvaliacaoOptions/DeletarAvaliacao';
+import { deleteComentarioById } from '@/app/utils/api/apiComentario';
 
 interface AvaliacaoProps {
     id: number;
@@ -48,6 +50,12 @@ const Avaliacao = ({
     const [openNewCommentModal, setOpenNewCommentModal] = useState<boolean>(false);
     const router = useRouter();
 
+    const [DelOpen, setDelOpen] = useState<boolean>(false);
+    const [token, setToken] = useState<string | null>(null);
+    const [selectedComentarioId, setSelectedComentarioId] = useState<number | null>(null);
+    const [confirmDeleteComentario, setConfirmDeleteComentario] = useState(false);
+
+
     const handleCommentClick = () => {
         setComentariosAbertos((prev) => !prev);
     };
@@ -67,6 +75,26 @@ const Avaliacao = ({
     const handlerPerfilUserPage = () => {
         router.push(`/usuario/${usuarioAvaliacao}`);
     };
+
+    const handleTrashClickComentario = (comentarioId: number) => {
+        setSelectedComentarioId(comentarioId);
+        setConfirmDeleteComentario(true);
+    };
+
+    const executarDeleteComentario = async () => {
+        if (!selectedComentarioId) return;
+
+        try {
+            await deleteComentarioById(selectedComentarioId, token ?? undefined);
+            setConfirmDeleteComentario(false);
+            setSelectedComentarioId(null);
+            reload();
+        } catch (error) {
+            console.error("Erro ao deletar comentário:", error);
+        }
+    };
+
+
 
     return (
         <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-2xl border items-start justify-center gap-3 hover:shadow-2xl transition-shadow'>
@@ -134,11 +162,14 @@ const Avaliacao = ({
                                         <Comentario
                                             key={comentario?.id}
                                             comentarioId={comentario?.id}
+                                            usuarioAutenticado={usuarioAutenticado}
+                                            usuarioComentario={comentario.usuario.id || null}
                                             conteudo={comentario?.conteudo || ''}
                                             updatedAt={formatDate(comentario?.updatedAt)}
                                             userId={comentario?.usuarioID}
                                             userNome={comentario?.usuario.nome}
                                             userAvatar={comentario?.usuario.fotoPerfil}
+                                            onDeleteRequest={handleTrashClickComentario}
                                         />
                                         {index < arr.length - 1 && (
                                             <hr className="w-full border-gray-600 border-0.25" />
@@ -155,7 +186,10 @@ const Avaliacao = ({
                                     size={44}
                                 />
                             </Protected>
+                            
                         </div>
+                        
+
 
                         <NovoComentarioModal
                             isOpen={openNewCommentModal}
@@ -167,7 +201,32 @@ const Avaliacao = ({
                     </>
                 )}
             </div>
+            {confirmDeleteComentario && (
+                <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+                    <div className='bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-4'>
+                        <p className='text-black text-lg'>Tem certeza que deseja deletar este comentário?</p>
+                        <div className='flex gap-4'>
+                            <button
+                                onClick={() => {
+                                    setConfirmDeleteComentario(false);
+                                    setSelectedComentarioId(null);
+                                }}
+                                className='bg-gray-300 px-4 py-2 rounded hover:bg-gray-400'
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={executarDeleteComentario}
+                                className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'
+                            >
+                                Deletar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+        
     );
 };
 

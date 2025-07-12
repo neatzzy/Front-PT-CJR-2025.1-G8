@@ -11,13 +11,15 @@ export default function Home() {
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const router = useRouter(); 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); 
 
     setError("");
-    fetch("http://localhost:5000/login", {
+    fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

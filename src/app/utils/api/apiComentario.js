@@ -22,3 +22,15 @@ export async function postComentario(createComentarioDto, token) {
         }
     );
 }
+export async function deleteComentarioById(comentarioId, token) {
+    const endpoint = `/comentarios/${comentarioId}`;
+
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return await api.delete(endpoint, {
+        headers: headers
+    });
+}

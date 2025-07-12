@@ -1,8 +1,9 @@
 import React , {useEffect, useState} from 'react'
 import Image from 'next/image';
+import { FaRegComment, FaRegEdit } from 'react-icons/fa';
+import { IoIosTrash } from "react-icons/io";
 import { getUserById } from '@/app/utils/api/apiUser';
 import { useRouter } from 'next/navigation'; // CERTO para App Router
-import { IoIosTrash } from 'react-icons/io';
 
 interface ComentarioProps {
     comentarioId: number;
@@ -27,6 +28,7 @@ const Comentario = ({
     userNome, 
     userAvatar,
     onDeleteRequest,
+
 }: ComentarioProps) => {
     const router = useRouter();
 
@@ -37,13 +39,13 @@ const Comentario = ({
         
     const nomeUser = userNome || '';
 
-    const handleTrashClick = () => {
-        onDeleteRequest(comentarioId);
-    };
-
     const handlerPerfilUserPage = () => {
         router.push(`/usuario/${userId}`)
     }
+
+    const handleTrashClick = () => {
+        onDeleteRequest(comentarioId);
+    };
 
     return (
     <>
@@ -74,15 +76,15 @@ const Comentario = ({
                 </div>
             </div>
             {usuarioAutenticado === usuarioComentario && (
-                <div className='flex flex-row gap-4 w-fit items-center'>
-                                                    <IoIosTrash
-                                                        color="black"
-                                                        size={32}
-                                                        style={{ cursor: "pointer" }}
-                                                        onClick={handleTrashClick}
-                                                    />
-                                                </div>
-                                            )}
+                                    <div className='flex flex-row gap-4 w-fit items-center'>
+                                        <IoIosTrash
+                                            color="black"
+                                            size={32}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={handleTrashClick}
+                                        />
+                                    </div>
+                                )}
         </div>
     </>
   )
