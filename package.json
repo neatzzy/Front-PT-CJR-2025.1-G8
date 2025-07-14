@@ -12,12 +12,15 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.1.2",
+    "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
+    "common": "^0.2.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.513.0",
-    "next": "^15.3.5",
+    "multer": "^2.0.1",
+    "next": "^15.3.3",
     "next-auth": "^4.24.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -29,14 +32,19 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/jwt-decode": "^2.2.1",
     "@types/node": "^20",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5",
+    "webpack": "5.91.0"
+  },
+  "resolutions": {
+    "webpack": "5.91.0"
   }
 }
