@@ -44,7 +44,7 @@ const Comentario = ({
     const handlerPerfilUserPage = () => {
         router.push(`/usuario/${userId}`)
     }
-
+    console.log("Auth:", usuarioAutenticado, "Comentário:", usuarioComentario, userAvatar);
     return (
     <>
         <div className='flex flex-row flex-nowrap w-full h-fit bg-[#3eee9a] p-3.5 rounded-x1 items-start justify-center gap-3'>
@@ -83,7 +83,9 @@ const Comentario = ({
                                                     />
                                                 </div>
                                             )}
+            
         </div>
+        
     </>
   )
 }
