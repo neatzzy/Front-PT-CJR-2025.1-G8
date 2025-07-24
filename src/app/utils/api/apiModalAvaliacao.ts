@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "./api";
 
 interface AvaliacaoData {
     professorId: number;
@@ -17,7 +17,7 @@ interface Disciplina {
 
 export async function createAvaliacao(avaliacaoData: AvaliacaoData, token?: string){
     try{
-        const response = await axios.post("http://localhost:5000/avaliacao", avaliacaoData, 
+        const response = await api.post("/avaliacao", avaliacaoData, 
             {
                 headers: {
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export async function createAvaliacao(avaliacaoData: AvaliacaoData, token?: stri
 }
 export async function fetchProfessors(searchTerm: string = '', token?: string) {
     try {
-        const response = await axios.get(`http://localhost:5000/professor?search=${searchTerm}`, {
+        const response = await api.get(`/professor?search=${searchTerm}`, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }
@@ -50,7 +50,7 @@ export async function fetchDisciplinasbyProfessor(
     token?: string
 ): Promise<Disciplina[]> {
     try {
-        const response = await axios.get<Disciplina[]>(`http://localhost:5000/professor-disciplina/${professorId}/disciplinas?search=${searchTerm}`, {
+        const response = await api.get<Disciplina[]>(`/professor-disciplina/${professorId}/disciplinas?search=${searchTerm}`, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }
@@ -65,7 +65,7 @@ export async function fetchDisciplinasbyProfessor(
 
 export async function deleteAvaliacao(avaliacaoId:string ,token?: string) {
     try{
-        const response = await axios.delete(`http://localhost:5000/avaliacao/${avaliacaoId}`, {
+        const response = await api.delete(`/avaliacao/${avaliacaoId}`, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }
@@ -78,7 +78,7 @@ export async function deleteAvaliacao(avaliacaoId:string ,token?: string) {
 
 export async function editAvaliacao(avaliacaoId: string, updateAvaliacaoData: UpdateAvaliacaoData, token?: string) {
     try{
-        const response = await axios.patch(`http://localhost:5000/avaliacao/${avaliacaoId}`, updateAvaliacaoData, {
+        const response = await api.patch(`/avaliacao/${avaliacaoId}`, updateAvaliacaoData, {
             headers: {
                 ...(token && {Authorization: `Bearer ${token}`})
             }

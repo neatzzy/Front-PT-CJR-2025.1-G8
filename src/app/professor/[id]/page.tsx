@@ -14,6 +14,7 @@ import DeletarAvaliacao from '@/app/components/usuario/AvaliacaoOptions/DeletarA
 import EditarAvaliacao from '@/app/components/usuario/AvaliacaoOptions/EditarAvaliacao';
 import { jwtDecode } from 'jwt-decode';
 import AdicionarDisciplinas from '../DisciplinaOptions/AdicionarDIsciplinas';
+import { deleteProfessor } from '@/app/utils/api/apiModalProfessor';
 
 interface Professor {
     id: number;
@@ -35,6 +36,7 @@ function ProfessorPage() {
 
     const [token, setToken] = useState<string | null>(null);
     const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
+    const [UserRole, setUserRole] = useState<string | null>(null);
 
     const [DelOpen, setDelOpen] = useState<boolean>(false);
     const [selectedAvaliacaoId, setSelectedAvaliacaoId] = useState<number | null>(null);
@@ -51,13 +53,17 @@ function ProfessorPage() {
                 try {
                     const decodedToken: any = jwtDecode(storedToken);
                     const extractedUserId = decodedToken.id || decodedToken.sub;
+                    const extractedUserRole = decodedToken.role || decodedToken.userRole;
                     setLoggedInUserId(extractedUserId);
+                    setUserRole(extractedUserRole);
                 } catch (e) {
                     console.error("Erro ao decodificar token JWT:", e);
                     setLoggedInUserId(null);
+                    setUserRole(null);
                 }
             } else {
                 setLoggedInUserId(null);
+                setUserRole(null);
             }
         }
     }, []);
@@ -130,6 +136,21 @@ function ProfessorPage() {
       setIsAddDisciplinaOpen(true);
     };
 
+    const handleDeleteProfessor = async (professorId: number, token: string | null) => {
+        if (UserRole !== 'ADMIN') {
+            alert('Acesso negado: Você não tem permissão para excluir professores.');
+            return;
+        }
+        try {
+            await deleteProfessor(professorId, token ?? undefined); 
+            alert('Professor excluído com sucesso!');
+            router.push('/'); 
+        } catch (err) {
+            console.error('Erro ao excluir professor:', err);
+            alert('Ocorreu um erro ao excluir o professor. Tente novamente.');
+        }
+        };
+
     return (
         <>
             <FeedUserHeader />
@@ -153,7 +174,12 @@ function ProfessorPage() {
                         departamento={professor?.departamento || ''}
                         disciplinas={professor?.disciplinas || []}
                         avatar={professor?.avatar || ''}
+                        professorId={professor?.id || 0}
+                        isAdmin={UserRole === "ADMIN"}
                         onAddDisciplineClick={() => setIsAddDisciplinaOpen(true)}
+                        onDeleteProfessorClick={() => {handleDeleteProfessor(professor?.id || 0, token)}}
+                        onEditarFoto={() => console.log('Editar foto do professor')}
+                        token={token}
                     />
                     <hr className="w-full border-black border-1" />
 
