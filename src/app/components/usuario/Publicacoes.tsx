@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import { getAllAvaliacao } from "@/app/utils/api/apiAvaliacao";
 import { getCurrentUserAuthorized } from "@/app/utils/api/apiUser";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaRegComment, FaRegEdit } from 'react-icons/fa';
+import { IoIosTrash } from "react-icons/io";
 import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
 import EditarAvaliacao from "./AvaliacaoOptions/EditarAvaliacao";
 import ToggleFeed from "../seletor/toggleFeed";
@@ -98,10 +100,14 @@ export default function Publicacoes() {
     return orderValue === "asc" ? dateA - dateB : dateB - dateA;
   });
 
+  function handleCommentClick(): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-emerald-900">Publicações</h2>
+      <div className="flex flex-row items-center justify-between mb-4">
+        <h2 className="w-full font-bold text-2xl text-black">Publicações</h2>
         <ToggleFeed value={orderValue} onToggle={handleOrderChange} />
       </div>
 
@@ -109,73 +115,85 @@ export default function Publicacoes() {
         sortedPublicacoes.map((pub, idx) => (
           <div
             key={pub.id ?? idx}
-            className="mb-4 p-7 bg-[#4fffc7] rounded-2xl shadow flex flex-col hover:shadow-2xl transition-shadow border"
+            className="mb-4 p-7 bg-[#3eee9a] rounded-2xl shadow flex flex-col hover:shadow-2xl transition-shadow border text-1g"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#22a27a]">
-                <Image
-                  src={
-                    pub.usuario?.fotoPerfil
-                      ? pub.usuario.fotoPerfil.startsWith("data:image")
-                        ? pub.usuario.fotoPerfil
-                        : `data:image/png;base64,${pub.usuario.fotoPerfil}`
-                      : "/image/fotoPerfil.png"
-                  }
-                  alt={
-                    pub.usuario?.nome
-                      ? `Avatar de ${pub.usuario.nome}`
-                      : "Avatar"
-                  }
-                  width={40}
-                  height={40}
-                />
-              </div>
-              <div>
-                <span className="font-bold">
-                  {pub.usuario?.nome || "Usuário"}
-                </span>
-                <span className="text-[#179478] text-sm ml-2">
-                  {pub.updatedAt &&
-                    `${new Date(pub.updatedAt).toLocaleDateString("pt-BR")}, às ${new Date(
-                      pub.updatedAt,
-                    ).toLocaleTimeString("pt-BR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}`}
-                  {pub.professor?.nome ? ` · ${pub.professor.nome}` : ""}
-                  {pub.disciplina?.nome ? ` · ${pub.disciplina.nome}` : ""}
-                </span>
+            <div className="flex flex-col justify-center gap-8 mb-2 text-1g">
+
+              <div className="flex flex-row h-fit items-center justify-start w-fit gap-2">         
+                {/** foto de perfil */}
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#22a27a]">
+                  <Image
+                    src={
+                      pub.usuario?.fotoPerfil
+                        ? pub.usuario.fotoPerfil.startsWith("data:image")
+                          ? pub.usuario.fotoPerfil
+                          : `data:image/png;base64,${pub.usuario.fotoPerfil}`
+                        : "/image/fotoPerfil.png"
+                    }
+                    alt={
+                      pub.usuario?.nome
+                        ? `Avatar de ${pub.usuario.nome}`
+                        : "Avatar"
+                    }
+                    width={40}
+                    height={40}
+                  />
+                </div>
+
+                {/** Infos da publicacao */}
+                <div>
+                  <span className="text-black font-semibold">
+                    {pub.usuario?.nome || "Usuário"}
+                  </span>
+                  <span className="text-gray-700 text-sm ml-2">
+                    {pub.updatedAt &&
+                      `${new Date(pub.updatedAt).toLocaleDateString("pt-BR")}, às ${new Date(
+                        pub.updatedAt,
+                      ).toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}`}
+                    {pub.professor?.nome ? ` · ${pub.professor.nome}` : ""}
+                    {pub.disciplina?.nome ? ` · ${pub.disciplina.nome}` : ""}
+                  </span>
+                </div>
               </div>
             </div>
-            <p className="text-gray-800 mb-2 overflow-hidden">{pub.conteudo}</p>
+
+            <p className="text-black text-base h-fit max-w-full break-words overflow-hidden">{pub.conteudo}</p>
+
+            {/** botões inferiores */}
             <div className="flex items-center gap-4 text-gray-700 mt-1">
-              <span className="flex items-center gap-1 text-base">
-                <svg
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="inline"
-                >
-                  <circle cx="10" cy="10" r="8" />
-                </svg>
-                {Array.isArray(pub.comentarios) ? pub.comentarios.length : 0}{" "}
-                comentários
-              </span>
+              <div className='flex flex-row gap-4 w-fit items-center'>
+                  <FaRegComment
+                      color="black"
+                      size={28}
+                      style={{ cursor: "pointer" }}
+                      onClick={handleCommentClick}
+                  />
+                  <p className='w-fit text-black text-base'>{pub.comentarios.length || 0} comentários</p>
+              </div>
               {isOwner && (
                 <>
                   <button
                     className="ml-auto hover:text-[#179478] cursor-pointer"
                     onClick={() => handleEdit(pub.id)}
                   >
-                    <FaEdit />
+                    <FaRegEdit 
+                      color="black"
+                      size={28}
+                      style={{ cursor: "pointer" }}
+                    />
                   </button>
                   <button
                     className="hover:text-[#b94a4a] cursor-pointer"
                     onClick={() => handleDelete(pub.id)}
                   >
-                    <FaTrash />
+                    <IoIosTrash 
+                      color="black"
+                      size={32}
+                      style={{ cursor: "pointer" }}
+                    />
                   </button>
                 </>
               )}
