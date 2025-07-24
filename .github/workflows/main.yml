@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Frontend to Render
 
 on:
   push:
@@ -18,15 +18,22 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build project
         run: npm run build
 
-      - name: Start project
-        run: npm start
-
       - name: Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          curl -X POST "https://api.render.com/deploy/srv-d1o2t9emcj7s73dm1j70?key=${{ secrets.RENDER_API_KEY }}"
+          curl -X POST "https://api.render.com/deploy/srv-d1o2t9emcj7s73dm1j70?key=${RENDER_API_KEY}"
