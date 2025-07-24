@@ -28,7 +28,7 @@ export default function Perfil({
     : "/image/fotoPerfil.png";
 
   return (
-    <div className="w-[600px] bg-white rounded-b-xl shadow-md border border-gray-300">
+    <div className="w-[600px] bg-transparent rounded-xl shadow-md border border-gray-300">
       {/* Banner */}
       <div className="relative bg-[#3eee9a] h-36 rounded-t-xl flex items-center">
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-16">

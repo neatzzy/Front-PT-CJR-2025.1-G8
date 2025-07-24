@@ -84,6 +84,7 @@ export default function PerfilPage() {
     <div className="min-h-screen w-full bg-[#ededed] flex flex-col">
       {/* Header */}
       <FeedUserHeader />
+
       {/* Conteúdo central */}
       <section className="flex flex-1 w-full">
         {/* Sidebar esquerda */}
@@ -99,22 +100,23 @@ export default function PerfilPage() {
         </aside>
 
         {/* Conteúdo principal centralizado */}
-        <div className="flex-1 flex flex-col items-center pt-5">
-          <div>
+        <div className="flex-1 flex flex-col bg-blue items-center pt-5">
+          <div className="bg-blue">
             <div className="flex flex-col items-center">
-            <Perfil
-              nome={perfilData.nome}
-              curso={perfilData.curso}
-              departamento={perfilData.departamento}
-              email={perfilData.email}
-              avatar={perfilData.fotoPerfil}
-              onEditar={() => setModalOpen(true)}
-              onExcluir={() => setExcluirOpen(true)}
-              showButtons={isOwner}
-            />
+              <Perfil
+                nome={perfilData.nome}
+                curso={perfilData.curso}
+                departamento={perfilData.departamento}
+                email={perfilData.email}
+                avatar={perfilData.fotoPerfil}
+                onEditar={() => setModalOpen(true)}
+                onExcluir={() => setExcluirOpen(true)}
+                showButtons={isOwner}
+              />
             </div>
+
             <div className="mt-4 max-w-150 overflow-hidden">
-            <Publicacoes />
+              <Publicacoes />
             </div>
           </div>
         </div>
