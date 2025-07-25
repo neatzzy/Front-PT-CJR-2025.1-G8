@@ -17,6 +17,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import NovoComentarioModal from "@/app/modais/NovoComentario";
 import { formatDate } from "@/app/utils/format";
 import Comentario from "@/app/professor/components/Comentario";
+import ComentariosDaPublicacao from "./components/ComentariosDaPublicacao";
 
 export default function Publicacoes() {
   const params = useParams();
@@ -38,7 +39,7 @@ export default function Publicacoes() {
   const [token, setToken] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
   const [orderValue, setOrderValue] = useState<"asc" | "desc">("desc");
-  const [commentOpen, setComentariosAbertos] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
   const [openNewCommentModal, setOpenNewCommentModal] = useState<boolean>(false);
   const [makeReload, setMakeReload] = useState<boolean>(false);
 
@@ -109,7 +110,7 @@ export default function Publicacoes() {
   });
 
   const handleCommentClick = () => {
-    setComentariosAbertos((prev) => !prev);
+    setCommentOpen((prev) => !prev);
   };
 
   const handlerNewComment = () => {
@@ -181,7 +182,7 @@ export default function Publicacoes() {
                       color="black"
                       size={28}
                       style={{ cursor: "pointer" }}
-                      onClick={handleCommentClick}
+                      onClick={handleCommentClick} // Remover ou ajustar se necessário
                   />
                   <p className='w-fit text-black text-base'>{pub.comentarios.length || 0} comentários</p>
               </div>
@@ -211,55 +212,17 @@ export default function Publicacoes() {
               )}
             </div>
 
-            {commentOpen && (
-                    <>
-                        <hr className="w-full border-gray-700 border-0.5" />
-                        <div className='flex flex-col w-full w-min-fit h-fit p-2 justify-center items-center'>
-                            {pub.comentarios 
-                                .filter((comentario: any)  => comentario && comentario.usuarioID)
-                                .map(
-                                  (
-                                    comentario: any,
-                                    index: number,
-                                    arr: any[]
-                                  ) => (
-                                    <React.Fragment key={comentario?.id}>
-                                        <Comentario
-                                            key={comentario?.id}
-                                            comentarioId={comentario?.id}
-                                            conteudo={comentario?.conteudo || ''}
-                                            updatedAt={formatDate(comentario?.updatedAt)}
-                                            userId={comentario?.usuarioID}
-                                            userNome={comentario?.usuario.nome}
-                                            userAvatar={comentario?.usuario.fotoPerfil}
-                                        />
-                                        {index < arr.length - 1 && (
-                                            <hr className="w-full border-gray-600 border-0.25" />
-                                        )}
-                                    </React.Fragment>
-                                  )
-                                )}
-
-                            <Protected
-                                singin={true}
-                            >
-                                <CiCirclePlus
-                                    className='m-2 center cursor-pointer hover:text-black transition-colors'
-                                    onClick={handlerNewComment}
-                                    size={44}
-                                />
-                            </Protected>
-                        </div>
-
-                        <NovoComentarioModal
-                            isOpen={openNewCommentModal}
-                            onClose={() => setOpenNewCommentModal(false)}
-                            userId={loggedInUserId}
-                            avaliacaoId={pub.id}
-                            reload={() => setMakeReload((prev) => !prev)}
-                        />
-                    </>
-                )}
+            { commentOpen && (
+                /** Comentários encapsulados */
+                <ComentariosDaPublicacao
+                  isOpen={commentOpen}
+                  comentarios={pub.comentarios}
+                  avaliacaoId={pub.id}
+                  loggedInUserId={loggedInUserId}
+                  reload={() => setMakeReload((prev) => !prev)}
+                />
+              )
+            }
           </div>
         ))
       ) : (

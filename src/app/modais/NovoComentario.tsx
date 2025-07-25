@@ -51,7 +51,6 @@ const NovoComentarioModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center transition-colors bg-black/80">
-
             <div className="relative bg-green-400 p-7 rounded-lg w-11/12 md:w-2/3  
                lg:w-1/2 xl:w-1/2  max-h-[90vh] overflow-y-auto flex flex-col gap-4"          
             >
