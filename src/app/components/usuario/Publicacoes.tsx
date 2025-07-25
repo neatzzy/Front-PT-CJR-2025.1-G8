@@ -12,6 +12,12 @@ import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
 import EditarAvaliacao from "./AvaliacaoOptions/EditarAvaliacao";
 import ToggleFeed from "../seletor/toggleFeed";
 import { jwtDecode } from "jwt-decode";
+import Protected from "../Protected";
+import { CiCirclePlus } from "react-icons/ci";
+import NovoComentarioModal from "@/app/modais/NovoComentario";
+import { formatDate } from "@/app/utils/format";
+import Comentario from "@/app/professor/components/Comentario";
+import ComentariosDaPublicacao from "./components/ComentariosDaPublicacao";
 
 export default function Publicacoes() {
   const params = useParams();
@@ -33,6 +39,9 @@ export default function Publicacoes() {
   const [token, setToken] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
   const [orderValue, setOrderValue] = useState<"asc" | "desc">("desc");
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [openNewCommentModal, setOpenNewCommentModal] = useState<boolean>(false);
+  const [makeReload, setMakeReload] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,7 +73,7 @@ export default function Publicacoes() {
       }
     }
     if (profileuserId) fetchPublicacoes();
-  }, [profileuserId]);
+  }, [profileuserId, makeReload]);
 
   useEffect(() => {
     async function checkOwner() {
@@ -100,9 +109,13 @@ export default function Publicacoes() {
     return orderValue === "asc" ? dateA - dateB : dateB - dateA;
   });
 
-  function handleCommentClick(): void {
-    throw new Error("Function not implemented.");
-  }
+  const handleCommentClick = () => {
+    setCommentOpen((prev) => !prev);
+  };
+
+  const handlerNewComment = () => {
+    setOpenNewCommentModal(true);
+  };
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
@@ -169,7 +182,7 @@ export default function Publicacoes() {
                       color="black"
                       size={28}
                       style={{ cursor: "pointer" }}
-                      onClick={handleCommentClick}
+                      onClick={handleCommentClick} // Remover ou ajustar se necessário
                   />
                   <p className='w-fit text-black text-base'>{pub.comentarios.length || 0} comentários</p>
               </div>
@@ -198,6 +211,18 @@ export default function Publicacoes() {
                 </>
               )}
             </div>
+
+            { commentOpen && (
+                /** Comentários encapsulados */
+                <ComentariosDaPublicacao
+                  isOpen={commentOpen}
+                  comentarios={pub.comentarios}
+                  avaliacaoId={pub.id}
+                  loggedInUserId={loggedInUserId}
+                  reload={() => setMakeReload((prev) => !prev)}
+                />
+              )
+            }
           </div>
         ))
       ) : (
