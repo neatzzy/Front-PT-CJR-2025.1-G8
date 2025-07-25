@@ -12,6 +12,11 @@ import DeletarAvaliacao from "./AvaliacaoOptions/DeletarAvaliacao";
 import EditarAvaliacao from "./AvaliacaoOptions/EditarAvaliacao";
 import ToggleFeed from "../seletor/toggleFeed";
 import { jwtDecode } from "jwt-decode";
+import Protected from "../Protected";
+import { CiCirclePlus } from "react-icons/ci";
+import NovoComentarioModal from "@/app/modais/NovoComentario";
+import { formatDate } from "@/app/utils/format";
+import Comentario from "@/app/professor/components/Comentario";
 
 export default function Publicacoes() {
   const params = useParams();
@@ -33,6 +38,9 @@ export default function Publicacoes() {
   const [token, setToken] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
   const [orderValue, setOrderValue] = useState<"asc" | "desc">("desc");
+  const [commentOpen, setComentariosAbertos] = useState(false);
+  const [openNewCommentModal, setOpenNewCommentModal] = useState<boolean>(false);
+  const [makeReload, setMakeReload] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,7 +72,7 @@ export default function Publicacoes() {
       }
     }
     if (profileuserId) fetchPublicacoes();
-  }, [profileuserId]);
+  }, [profileuserId, makeReload]);
 
   useEffect(() => {
     async function checkOwner() {
@@ -100,9 +108,13 @@ export default function Publicacoes() {
     return orderValue === "asc" ? dateA - dateB : dateB - dateA;
   });
 
-  function handleCommentClick(): void {
-    throw new Error("Function not implemented.");
-  }
+  const handleCommentClick = () => {
+    setComentariosAbertos((prev) => !prev);
+  };
+
+  const handlerNewComment = () => {
+    setOpenNewCommentModal(true);
+  };
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md border border-gray-300 p-6 mt-4">
@@ -198,6 +210,56 @@ export default function Publicacoes() {
                 </>
               )}
             </div>
+
+            {commentOpen && (
+                    <>
+                        <hr className="w-full border-gray-700 border-0.5" />
+                        <div className='flex flex-col w-full w-min-fit h-fit p-2 justify-center items-center'>
+                            {pub.comentarios 
+                                .filter((comentario: any)  => comentario && comentario.usuarioID)
+                                .map(
+                                  (
+                                    comentario: any,
+                                    index: number,
+                                    arr: any[]
+                                  ) => (
+                                    <React.Fragment key={comentario?.id}>
+                                        <Comentario
+                                            key={comentario?.id}
+                                            comentarioId={comentario?.id}
+                                            conteudo={comentario?.conteudo || ''}
+                                            updatedAt={formatDate(comentario?.updatedAt)}
+                                            userId={comentario?.usuarioID}
+                                            userNome={comentario?.usuario.nome}
+                                            userAvatar={comentario?.usuario.fotoPerfil}
+                                        />
+                                        {index < arr.length - 1 && (
+                                            <hr className="w-full border-gray-600 border-0.25" />
+                                        )}
+                                    </React.Fragment>
+                                  )
+                                )}
+
+                            <Protected
+                                singin={true}
+                            >
+                                <CiCirclePlus
+                                    className='m-2 center cursor-pointer hover:text-black transition-colors'
+                                    onClick={handlerNewComment}
+                                    size={44}
+                                />
+                            </Protected>
+                        </div>
+
+                        <NovoComentarioModal
+                            isOpen={openNewCommentModal}
+                            onClose={() => setOpenNewCommentModal(false)}
+                            userId={loggedInUserId}
+                            avaliacaoId={pub.id}
+                            reload={() => setMakeReload((prev) => !prev)}
+                        />
+                    </>
+                )}
           </div>
         ))
       ) : (
